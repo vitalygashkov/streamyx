@@ -1,4 +1,4 @@
-const { parseNumberRange } = require('../src/utilities');
+const { parseNumberRange, parseArrayFromString } = require('../src/utilities');
 
 test('Utilities parse number range', () => {
   expect(parseNumberRange('1,4,34,7')).toEqual([1, 4, 34, 7]);
@@ -10,4 +10,14 @@ test('Utilities parse number range', () => {
   expect(parseNumberRange('five')).toEqual(NaN);
   expect(parseNumberRange('two, 91')).toEqual([NaN, 91]);
   expect(parseNumberRange()).toEqual(NaN);
+});
+
+test('Utilities parse array from string', () => {
+  expect(parseArrayFromString('1,4,34,7')).toEqual(['1', '4', '34', '7']);
+  expect(parseArrayFromString('19')).toEqual(['19']);
+  expect(parseArrayFromString('ru, en, jp')).toEqual(['ru', 'en', 'jp']);
+  expect(parseArrayFromString('nl,pt,es')).toEqual(['nl', 'pt', 'es']);
+  expect(parseArrayFromString('uk')).toEqual(['uk']);
+  expect(parseArrayFromString('')).toEqual([]);
+  expect(parseArrayFromString()).toEqual([]);
 });
