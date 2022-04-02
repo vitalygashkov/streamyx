@@ -1,9 +1,12 @@
 const { Args } = require('../src/args');
 
-test('args', () => {
-  const link = 'https://www.wakanim.tv/ru/v2/catalogue/episode/34641/';
-  const args = new Args([link, '-q', '720p']).parse();
-  expect(args).toMatchObject({ _: [link], q: '720p' });
-  const args2 = new Args(['-q', '720p', '-d', link]).parse();
-  expect(args2).toMatchObject({ _: [link], q: '720p', d: true });
+test('Args parsing', () => {
+  const url =
+    'https://hd.kinopoisk.ru/?continueWatching=1&episode=27&rt=4e408995ea402cafb36eaab1d1b9ba0a&season=4&watch=';
+  expect(new Args([url, '-q', '720p']).parse()).toMatchObject({ _: [url], q: '720p' });
+  expect(new Args(['-q', '720p', '-d', url]).parse()).toMatchObject({
+    _: [url],
+    q: '720p',
+    d: true,
+  });
 });
