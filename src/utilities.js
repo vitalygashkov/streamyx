@@ -3,7 +3,7 @@
 const { createInterface } = require('readline');
 
 const parseNumberRange = (rangeStr) => {
-  if (!rangeStr?.replace(/\D/g, '').trim()) return;
+  if (!rangeStr?.replace(/\D/g, '').trim()) return NaN;
   const numbers = [];
   rangeStr
     .replaceAll(' ', '')
@@ -20,7 +20,7 @@ const parseNumberRange = (rangeStr) => {
 };
 
 const parseArrayFromString = (value) => {
-  if (!value) return;
+  if (!value) return [];
   return value.replaceAll(' ', '').trim().split(',');
 };
 

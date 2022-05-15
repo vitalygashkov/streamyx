@@ -37,7 +37,7 @@
     "format:check": "prettier --loglevel warn --check \"**/*.{ts,js,json,yaml}\""
   },
   "dependencies": {
-    "dasha": "^2.2.5",
+    "dasha": "^2.2.6",
     "segasync": "^2.0.4",
     "undici": "^5.0.0"
   },
@@ -52,7 +52,6 @@
     "prettier": "^2.6.1",
     "typescript": "^4.6.3"
   },
-  "private": true,
   "engines": {
     "node": ">=16",
     "npm": ">=8"
