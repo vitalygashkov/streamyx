@@ -31,23 +31,25 @@ class Downloader {
     await this.#downloadSubtitles();
     await this.download(tracks);
 
-    logger.info(`Starting decryption`);
-    const pssh = manifest.getPssh();
     const { drmConfig } = this.#config;
-    const keys = await getDecryptionKeys(pssh, drmConfig);
-    const hasDecryptionKeys = keys.some((key) => !!key.key);
-    const decryptQueue = [];
-    for (let i = 0; i < tracks.length; i++) {
-      const track = tracks[i];
-      if (track.type === 'text' || !hasDecryptionKeys) continue;
-      const key = keys[0].key;
-      const kid = keys[0].kid;
-      const input = this.getFilepath(this.getTrackFilename(track.type, track.id, 'enc'));
-      const output = this.getFilepath(this.getTrackFilename(track.type, track.id, 'dec'));
-      decryptQueue.push(decryptFile(key, kid, input, output, true));
+    if (drmConfig) {
+      logger.info(`Starting decryption`);
+      const pssh = manifest.getPssh();
+      const keys = await getDecryptionKeys(pssh, drmConfig);
+      const hasDecryptionKeys = keys.some((key) => !!key.key);
+      const decryptQueue = [];
+      for (let i = 0; i < tracks.length; i++) {
+        const track = tracks[i];
+        if (track.type === 'text' || !hasDecryptionKeys) continue;
+        const key = keys[0].key;
+        const kid = keys[0].kid;
+        const input = this.getFilepath(this.getTrackFilename(track.type, track.id, 'enc'));
+        const output = this.getFilepath(this.getTrackFilename(track.type, track.id, 'dec'));
+        decryptQueue.push(decryptFile(key, kid, input, output, true));
+      }
+      await Promise.all(decryptQueue);
+      logger.info(`Decrypted successfully`);
     }
-    await Promise.all(decryptQueue);
-    logger.info(`Decrypted successfully`);
 
     logger.info('Muxing');
     const inputs = [];
@@ -60,7 +62,7 @@ class Downloader {
           this.getTrackFilename(
             isSubtitle ? `${track.type}.${track.language}` : track.type,
             track.id,
-            isSubtitle ? '' : 'dec',
+            isSubtitle ? '' : drmConfig ? 'dec' : 'enc',
             track.format
           )
         ),
