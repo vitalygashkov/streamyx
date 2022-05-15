@@ -108,7 +108,11 @@ class Kinopoisk extends Provider {
       logger.error(`Can't fetch streams metadata. ${streamsMetadata.watchingRejection.details}`);
       process.exit(1);
     }
-    const stream = streamsMetadata.streams.find((stream) => stream.drmType === 'widevine');
+    const stream = streamsMetadata.streams.find((stream) => stream.streamType === 'DASH');
+    if (!stream) {
+      logger.error(`Can't find suitable stream`);
+      process.exit(1);
+    }
     const subtitles = stream.subtitles.map(({ url, language, title }) => ({
       url,
       language,
@@ -119,16 +123,19 @@ class Kinopoisk extends Provider {
     const response = await this.#http.request(stream.uri);
     const manifest = response.body;
 
-    const drmConfig = {
-      server: stream.drmConfig.servers['com.widevine.alpha'],
-      individualizationServer: stream.drmConfig.servers['com.widevine.alpha'],
-      headers: {
-        ...this.#http.headers,
-        'Content-Type': 'application/json',
-        Referer: DOMAINS.default,
-      },
-      params: stream.drmConfig.requestParams,
-    };
+    let drmConfig = null;
+    if (streamsMetadata.drmRequirement === 'DRM_REQUIRED') {
+      drmConfig = {
+        server: stream.drmConfig.servers['com.widevine.alpha'],
+        individualizationServer: stream.drmConfig.servers['com.widevine.alpha'],
+        headers: {
+          ...this.#http.headers,
+          'Content-Type': 'application/json',
+          Referer: DOMAINS.default,
+        },
+        params: stream.drmConfig.requestParams,
+      };
+    }
 
     return { manifest, drmConfig, subtitles };
   }
