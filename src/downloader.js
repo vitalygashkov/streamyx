@@ -130,6 +130,7 @@ class Downloader {
     folderName += `.${this.#config.provider}`;
     folderName += `.WEBRip`;
     folderName += `.x264`;
+    folderName = this.sanitizeFilename(folderName);
     const path = join(process.cwd(), 'downloads', folderName);
     this.#files.setWorkDir(path);
   }
@@ -194,28 +195,30 @@ class Downloader {
   get filename() {
     const { movie, show, season, episode, provider, audioType } = this.#config;
     const { movieTemplate, episodeTemplate, videoHeight } = this.#args;
+    let filename = '';
     if (movie)
-      return movieTemplate
+      filename = movieTemplate
         .replace('{title}', movie.title.replaceAll(' ', '.'))
-        .replace('{audioType}.', audioType ? audioType.toUpperCase() + '.' : '')
-        .replace('{quality}', videoHeight + 'p')
-        .replace('{provider}', provider || 'UND')
-        .replace('{format}', 'WEBRip')
-        .replace('{codec}', 'x264')
-        .replaceAll('..', '.')
-        .replaceAll('  ', ' ');
+        .replace('{audioType}.', audioType ? audioType.toUpperCase() + '.' : '');
     else
-      return episodeTemplate
+      filename = episodeTemplate
         .replace('{title}', show.title.replaceAll(' ', '.'))
         .replace('{s}', season?.number ? season.number.toString().padStart(2, '0') : '')
         .replace('{e}', episode?.number ? episode.number.toString().padStart(2, '0') : '')
-        .replace('{audioType}.', audioType ? audioType.toUpperCase() + '.' : '')
-        .replace('{quality}', videoHeight + 'p')
-        .replace('{provider}', provider || 'UND')
-        .replace('{format}', 'WEBRip')
-        .replace('{codec}', 'x264')
-        .replaceAll('..', '.')
-        .replaceAll('  ', ' ');
+        .replace('{audioType}.', audioType ? audioType.toUpperCase() + '.' : '');
+    filename = filename
+      .replace('{quality}', videoHeight + 'p')
+      .replace('{provider}', provider || 'UND')
+      .replace('{format}', 'WEBRip')
+      .replace('{codec}', 'x264')
+      .replaceAll('..', '.')
+      .replaceAll('  ', ' ');
+    filename = this.sanitizeFilename(filename);
+    return filename;
+  }
+
+  sanitizeFilename(text) {
+    return text.replaceAll(':', '');
   }
 
   getTrackFilename(type, id, suffix = '', format) {
