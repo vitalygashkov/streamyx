@@ -5,7 +5,7 @@ const { Http } = require('../../network');
 const { logger } = require('../../logger');
 const { KinopoiskAuth } = require('./kinopoisk.auth');
 const { KinopoiskApi } = require('./kinopoisk.api');
-const { DOMAINS } = require('./kinopoisk.constants');
+const { DOMAINS, PROVIDER_TAG } = require('./kinopoisk.constants');
 
 class Kinopoisk extends Provider {
   #args;
@@ -61,7 +61,7 @@ class Kinopoisk extends Provider {
   async #getMovieConfig(id, movie) {
     const { manifest, drmConfig } = await this.#getStreamConfig(id);
     return {
-      provider: 'KP',
+      provider: PROVIDER_TAG,
       movie: { title: movie.originalTitle },
       manifest,
       drmConfig,
@@ -93,7 +93,7 @@ class Kinopoisk extends Provider {
     const { contentId } = episode;
     const { manifest, drmConfig } = await this.#getStreamConfig(contentId);
     return {
-      provider: 'KP',
+      provider: PROVIDER_TAG,
       show: { title: show.originalTitle },
       season: { number: episode.season.number },
       episode: { number: episode.number, title: episode.originalTitle },

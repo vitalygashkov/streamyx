@@ -1,16 +1,14 @@
 'use strict';
 
-const { DOMAINS } = require('./kinopoisk.constants');
 const { logger } = require('../../logger');
-
-const API_VERSION = 12;
-const SERVICE_ID = 25;
+const { DOMAINS, USER_AGENTS, API_VERSION, SERVICE_ID } = require('./kinopoisk.constants');
 
 class KinopoiskApi {
   #http;
 
   constructor(http) {
     this.#http = http;
+    this.#http.setHeader('User-Agent', USER_AGENTS.tizen);
   }
 
   async fetchMe() {

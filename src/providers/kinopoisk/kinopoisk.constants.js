@@ -1,5 +1,9 @@
 'use strict';
 
+const PROVIDER_TAG = 'KP';
+const API_VERSION = 12;
+const SERVICE_ID = 25;
+
 const DOMAINS = {
   default: 'https://hd.kinopoisk.ru',
   passport: 'https://passport.yandex.ru',
@@ -17,4 +21,9 @@ const API_ROUTES = {
   challengeCommit: `${DOMAINS.passport}/registration-validations/auth/challenge/commit`,
 };
 
-module.exports = { DOMAINS, API_ROUTES };
+const USER_AGENTS = {
+  tizen:
+    'Mozilla/5.0 (Linux; U; Tizen 2.0; en-us) AppleWebKit/537.1 (KHTML, like Gecko) Mobile TizenBrowser/2.0',
+};
+
+module.exports = { PROVIDER_TAG, API_VERSION, SERVICE_ID, DOMAINS, API_ROUTES, USER_AGENTS };

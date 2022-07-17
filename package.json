@@ -1,7 +1,7 @@
 {
   "name": "streamyx",
-  "version": "3.0.3",
-  "author": "Vitaliy Gashkov <vitnore@gmail.com>",
+  "version": "3.1.0",
+  "author": "Vitaly Gashkov <vitalygashkov@outlook.com>",
   "description": "Command-line video downloader",
   "license": "Apache-2.0",
   "keywords": [
@@ -17,11 +17,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/vitnore/streamyx.git"
+    "url": "https://github.com/vitalygashkov/streamyx.git"
   },
   "funding": {
     "type": "individual",
-    "url": "https://boosty.to/vitnore"
+    "url": "https://boosty.to/vitalygashkov"
   },
   "scripts": {
     "start": "node streamyx",
@@ -39,7 +39,7 @@
   "dependencies": {
     "dasha": "^2.2.6",
     "segasync": "^2.0.4",
-    "undici": "^5.0.0"
+    "undici": "^5.7.0"
   },
   "devDependencies": {
     "@types/node": "^17.0.23",

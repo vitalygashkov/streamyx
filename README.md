@@ -4,7 +4,7 @@ Cross-platform application that allows you to download content from streaming se
 
 ## Quick start
 
-- Put **ffmpeg** and **mp4decrypt** executables into `./bin`
+- Put **[ffmpeg](https://ffmpeg.org/download.html)** and **[mp4decrypt](https://www.bento4.com/downloads/)** executables into `./bin`
 - Put **device private keys** into `./drm/devices`
 
 Open system console/terminal from the folder where the executable file is located and run the application:

@@ -1,3 +1,3 @@
 [submodule "packages/widecrypt"]
 	path = packages/widecrypt
-	url = https://github.com/vitnore/widecrypt
+	url = https://github.com/vitalygashkov/widecrypt.git
