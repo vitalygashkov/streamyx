@@ -28,6 +28,22 @@ const API_ROUTES = {
   authPin: `${DOMAINS.ctx}/screenapi/v1/pin/androidtv3/1`,
   mergeProfiles: `${DOMAINS.ctx}/screenapi/v1/mergeprofiles/android/2`,
   profile: `${DOMAINS.ctx}/screenapi/v3/profile/android/3`,
+  movieCard: `${DOMAINS.ctx}/screenapi/v2/moviecard/web/1`,
+  preparePlayback: `${DOMAINS.ctx}/screenapi/v2/prepareplayback/web/1`,
+};
+
+const ELEMENT_TYPE = {
+  MOVIE: 'MOVIE',
+  TV: 'SERIAL',
+  FRANCHISE: 'MP_MOVIE',
+  SEASON: 'SEASON',
+  EPISODE: 'EPISODE',
+};
+
+const QUALITY = {
+  FULL_HD: 'Q_FULL_HD',
+  HD: 'Q_HD',
+  SD: 'Q_SD',
 };
 
 module.exports = {
@@ -43,4 +59,6 @@ module.exports = {
   TOKEN_TYPE,
   DOMAINS,
   API_ROUTES,
+  ELEMENT_TYPE,
+  QUALITY,
 };

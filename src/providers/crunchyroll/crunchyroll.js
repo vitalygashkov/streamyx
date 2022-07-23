@@ -90,8 +90,7 @@ class Crunchyroll extends Provider {
     }
 
     const stream = streams[0];
-    const manifestResponse = await this.#http.request(stream.url);
-    const manifest = manifestResponse.body;
+    const manifestUrl = stream.url;
 
     const audioType = playbackData.audio_locale === 'ja-JP' ? 'JAPANESE' : 'DUBBED';
 
@@ -118,7 +117,7 @@ class Crunchyroll extends Provider {
 
     const config = {
       provider: 'CR',
-      manifest,
+      manifestUrl,
       subtitles,
       drmConfig,
       audioType,

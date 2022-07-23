@@ -56,10 +56,7 @@ class Wakanim extends Provider {
       format: subtitle.format,
       isDefault: subtitle.isDefault,
     }));
-    const duration = episode.duration || episode.assetDuration / 1e7;
 
-    const response = await this.#http.request(episode.episodeSVODStreaming, { http2: false });
-    const manifest = response.body;
     const manifestUrl = new URL(episode.episodeSVODStreaming);
     const kid = manifestUrl.searchParams.get('kid');
     const token = manifestUrl.searchParams.get('token').replace('Bearer=', '');
@@ -75,7 +72,7 @@ class Wakanim extends Provider {
       show: { title: this.getShowName(episode.show) },
       season: { number: this.getSeasonNumber(episode.season) },
       episode: { number: this.getEpisodeNumber(episode), title: this.getEpisodeTitle(episode) },
-      manifest,
+      manifestUrl,
       subtitles,
       drmConfig,
       audioType,

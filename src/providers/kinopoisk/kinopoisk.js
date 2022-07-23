@@ -91,14 +91,13 @@ class Kinopoisk extends Provider {
 
   async #getEpisodeConfig(episode, show) {
     const { contentId } = episode;
-    const { manifest, drmConfig } = await this.#getStreamConfig(contentId);
+    const streamConfig = await this.#getStreamConfig(contentId);
     return {
       provider: PROVIDER_TAG,
       show: { title: show.originalTitle },
       season: { number: episode.season.number },
       episode: { number: episode.number, title: episode.originalTitle },
-      manifest,
-      drmConfig,
+      ...streamConfig,
     };
   }
 
@@ -113,15 +112,13 @@ class Kinopoisk extends Provider {
       logger.error(`Can't find suitable stream`);
       process.exit(1);
     }
+    const manifestUrl = stream.uri;
     const subtitles = stream.subtitles.map(({ url, language, title }) => ({
       url,
       language,
       title,
       format: url.includes('.ass') ? 'ass' : url.includes('.vtt') ? 'vtt' : 'srt',
     }));
-
-    const response = await this.#http.request(stream.uri);
-    const manifest = response.body;
 
     let drmConfig = null;
     if (streamsMetadata.drmRequirement === 'DRM_REQUIRED') {
@@ -137,7 +134,7 @@ class Kinopoisk extends Provider {
       };
     }
 
-    return { manifest, drmConfig, subtitles };
+    return { manifestUrl, drmConfig, subtitles };
   }
 }
 

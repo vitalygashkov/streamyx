@@ -23,7 +23,7 @@ class Downloader {
 
   async start(config) {
     this.#config = config;
-    const manifest = this.getManifest();
+    const manifest = await this.getManifest();
     const tracks = this.getTracks(manifest);
     this.setWorkDir();
     this.outputInfo(tracks);
@@ -76,12 +76,15 @@ class Downloader {
     this.#http.disconnect();
   }
 
-  getManifest() {
-    const manifest = parseManifest(this.#config.manifest);
+  async getManifest() {
+    const response = await this.#http.request(this.#config.manifestUrl);
+    const manifest = parseManifest(response.body);
     if (!manifest) {
       logger.error(`Unable to parse manifest`);
       process.exit(1);
     }
+    if (!manifest.baseUrls?.length)
+      manifest.addBaseUrl(this.#config.manifestUrl.replace('Manifest.mpd', ''));
     return manifest;
   }
 

@@ -34,11 +34,11 @@ class OkkoAuth {
   #softwareId;
   #deviceSoftware;
 
-  constructor() {
+  constructor(http = new Http()) {
     this.#files = new Files();
     this.#files.setWorkDir(WORK_DIR);
 
-    this.#http = new Http();
+    this.#http = http;
     this.#http.setHeader('User-Agent', USER_AGENT);
 
     this.#config = {};
@@ -51,12 +51,30 @@ class OkkoAuth {
     this.#deviceSoftware = DEVICE_SOFTWARE.replaceAll('{softwareId}', this.#softwareId);
   }
 
+  get config() {
+    return this.#config;
+  }
+
   async login(username, password) {
     logger.debug(`Loading auth config`);
     await this.#loadConfig(username, password);
     logger.debug(`Requesting credentials`);
     if (!this.#config.username || !this.#config.password) await this.#requestCredentials();
+    logger.debug(`Checking auth config`);
+    if (
+      this.#config.persistentToken &&
+      this.#config.sessionToken &&
+      this.#config.accessKey &&
+      this.#config.cookies
+    )
+      return {
+        persistentToken: this.#config.persistentToken,
+        sessionToken: this.#config.sessionToken,
+        accessKey: this.#config.accessKey,
+        cookies: this.#config.cookies,
+      };
 
+    logger.debug(`Logging`);
     const initToken = await this.#getInitToken();
     const tempTokens = await this.#getAuthTokens(initToken, TOKEN_TYPE.temporary);
     const pin = await this.#getPin(tempTokens.accessKey, tempTokens.sessionToken);
@@ -71,7 +89,7 @@ class OkkoAuth {
     // this.#http.setHeader('authorization', `Bearer ${this.#config.accessToken}`);
     await this.#files.write(CONFIG_NAME, this.#config);
 
-    return authTokens;
+    return this.#config;
   }
 
   async #loadConfig(username, password) {
@@ -156,7 +174,7 @@ class OkkoAuth {
     const headers = {
       'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
       'X-SCRAPI-CLIENT-TS': timestamp,
-      'X-SCRAPI-SIGNATURE': this.#generateSignature(SECRET, timestamp, query),
+      'X-SCRAPI-SIGNATURE': this.generateSignature(SECRET, timestamp, query),
     };
 
     const response = await this.#http.request(API_ROUTES.authToken, {
@@ -178,7 +196,7 @@ class OkkoAuth {
     const headers = {
       'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
       'X-SCRAPI-CLIENT-TS': timestamp,
-      'X-SCRAPI-SIGNATURE': this.#generateSignature(accessKey, timestamp, query),
+      'X-SCRAPI-SIGNATURE': this.generateSignature(accessKey, timestamp, query),
     };
     const url = API_ROUTES.authPin + '?' + query.toString();
     const response = await this.#http.request(url, { headers });
@@ -195,7 +213,7 @@ class OkkoAuth {
     return crypto.createHash('sha1').update(Buffer.from(value, 'utf-8')).digest('hex');
   }
 
-  #generateSignature(secret, timestamp, data) {
+  generateSignature(secret, timestamp, data) {
     let rawData = `${secret}${timestamp}`;
     for (const key of Object.keys(data)) rawData += `${key}${data[key]}`;
     return crypto.createHash('md5').update(rawData).digest('hex');
