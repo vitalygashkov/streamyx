@@ -6,7 +6,8 @@ Supported providers: Kinopoisk, Okko, Crunchyroll, Wakanim.
 
 ## Quick start
 
-- Put **[ffmpeg](https://ffmpeg.org/download.html)** and **[mp4decrypt](https://www.bento4.com/downloads/)** executables into `/files/bin/`
+- Download **[latest release](https://github.com/vitalygashkov/streamyx/releases/latest)**
+- Download **[ffmpeg](https://ffmpeg.org/download.html)**, **[mp4decrypt](https://www.bento4.com/downloads/)** and put executables into `/files/bin/`
 - Put folder with **device private keys** into `/files/cdm/`
 
 Open system console/terminal from the folder where the executable file is located and run the application:
@@ -22,13 +23,7 @@ Use `-h` option to see all available options.
 - Install dependencies: `npm i`
 - Build executables: `npm run build`
 
-You can start script then:
-
-```
-node streamyx
-```
-
-## Requirements
+## Requirements for development
 
 - [Node.js](https://nodejs.org) v16 or later
 - **Widecrypt** closed-source library (located in `./packages`)
