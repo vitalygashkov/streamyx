@@ -2,7 +2,7 @@
 
 Cross-platform application that allows you to download content from streaming services.
 
-Supported providers: Kinopoisk, Crunchyroll, Wakanim.
+Supported providers: Kinopoisk, Okko, Crunchyroll, Wakanim.
 
 ## Quick start
 
