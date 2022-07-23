@@ -1,5 +1,6 @@
 module.exports = {
-  ...require('./crunchyroll'),
   ...require('./kinopoisk'),
+  ...require('./okko'),
+  ...require('./crunchyroll'),
   ...require('./wakanim'),
 };

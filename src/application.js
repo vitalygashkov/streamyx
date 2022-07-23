@@ -3,7 +3,7 @@
 const { logger, LOG_LEVEL } = require('./logger');
 const { parseNumberRange, parseArrayFromString, question } = require('./utilities');
 const { Downloader } = require('./downloader');
-const { Crunchyroll, Kinopoisk, Wakanim } = require('./providers');
+const { Kinopoisk, Okko, Crunchyroll, Wakanim } = require('./providers');
 
 class Application {
   #rawArgs;
@@ -79,8 +79,9 @@ class Application {
   async #getProvider(name) {
     const providerName = name || this.#args.url;
     let Provider;
-    if (providerName.includes('crunchyroll')) Provider = Crunchyroll;
-    else if (providerName.includes('kinopoisk')) Provider = Kinopoisk;
+    if (providerName.includes('kinopoisk')) Provider = Kinopoisk;
+    else if (providerName.includes('okko')) Provider = Okko;
+    else if (providerName.includes('crunchyroll')) Provider = Crunchyroll;
     else if (providerName.includes('wakanim')) Provider = Wakanim;
     else {
       logger.error(`Provider not found`);

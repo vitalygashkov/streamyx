@@ -35,4 +35,24 @@ const question = async (message, type = 'input') => {
   return result;
 };
 
-module.exports = { parseNumberRange, parseArrayFromString, question };
+const getRandomElements = (array, count = 1) => {
+  const elements = [];
+  for (let i = 1; i <= count; i++) elements.push(array[Math.floor(Math.random() * array.length)]);
+  return elements;
+};
+
+const getRandomInRange = (min = 0, max = 100) => Math.floor(Math.random() * (max - min)) + min;
+
+const generateMacAddress = () =>
+  'XX:XX:XX:XX:XX:XX'.replace(/X/g, () =>
+    '0123456789ABCDEF'.charAt(Math.floor(Math.random() * 16))
+  );
+
+module.exports = {
+  parseNumberRange,
+  parseArrayFromString,
+  question,
+  getRandomElements,
+  getRandomInRange,
+  generateMacAddress,
+};
