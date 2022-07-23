@@ -60,9 +60,9 @@ class Http {
 
   async #httpsRequest(url, options) {
     const requestOptions = {
+      maxRedirections: 5,
       ...options,
       headers: { ...this.#headers, ...options?.headers },
-      maxRedirections: 5,
     };
     const { statusCode, headers, body } = await request(url, requestOptions);
     this.appendCookies(headers['set-cookie']);
