@@ -4,13 +4,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Third party files
-/bin
-/drm
-
-# App generated stuff
-/config
-/providers
+# App files
+/files
 /downloads
 
 # Dependency directories
