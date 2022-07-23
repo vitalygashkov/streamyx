@@ -18,6 +18,7 @@ class Logger {
 
   constructor() {
     this.#files = new Files();
+    this.#files.goTo('files');
     this.#files.goTo('logs');
     this.#logFilename = `${CURRENT_DATETIME}_${process.pid}.log`;
   }

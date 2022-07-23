@@ -19,7 +19,7 @@ const {
   SECRET,
 } = require('./okko.constants');
 
-const WORK_DIR = join(process.cwd(), 'providers', 'okko');
+const WORK_DIR = join(process.cwd(), 'files', 'providers', 'okko');
 const CONFIG_NAME = 'auth.json';
 const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const DIGITS = '1234567890';

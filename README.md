@@ -6,8 +6,8 @@ Supported providers: Kinopoisk, Okko, Crunchyroll, Wakanim.
 
 ## Quick start
 
-- Put **[ffmpeg](https://ffmpeg.org/download.html)** and **[mp4decrypt](https://www.bento4.com/downloads/)** executables into `./bin`
-- Put folder with **device private keys** into `./drm/devices`
+- Put **[ffmpeg](https://ffmpeg.org/download.html)** and **[mp4decrypt](https://www.bento4.com/downloads/)** executables into `/files/bin/`
+- Put folder with **device private keys** into `/files/cdm/`
 
 Open system console/terminal from the folder where the executable file is located and run the application:
 

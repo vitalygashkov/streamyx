@@ -8,7 +8,7 @@ const { Files } = require('../../files');
 const { question } = require('../../utilities');
 const { API_ROUTES } = require('./kinopoisk.constants');
 
-const WORK_DIR = join(process.cwd(), 'providers', 'kinopoisk');
+const WORK_DIR = join(process.cwd(), 'files', 'providers', 'kinopoisk');
 const CONFIG_NAME = 'auth.json';
 
 class KinopoiskAuth {

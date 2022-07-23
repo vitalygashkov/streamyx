@@ -1,15 +1,13 @@
 'use strict';
 
-const path = require('path');
-const fs = require('fs');
-const childProcess = require('child_process');
+const childProcess = require('node:child_process');
 const { platform } = require('node:process');
 const { logger } = require('./logger');
 const { Files } = require('./files');
 const { join } = require('path');
 
 const FFMPEG_NAME = 'ffmpeg' + (platform === 'win32' ? '.exe' : '');
-const FFMPEG_PATH = join(process.cwd(), 'bin', FFMPEG_NAME);
+const FFMPEG_PATH = join(process.cwd(), 'files', 'bin', FFMPEG_NAME);
 
 const files = new Files();
 

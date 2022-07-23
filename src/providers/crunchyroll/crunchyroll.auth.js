@@ -7,7 +7,7 @@ const { Files } = require('../../files');
 const { question } = require('../../utilities');
 const { AUTH_TOKENS, API_ROUTES } = require('./crunchyroll.constants');
 
-const WORK_DIR = join(process.cwd(), 'providers', 'crunchyroll');
+const WORK_DIR = join(process.cwd(), 'files', 'providers', 'crunchyroll');
 const CONFIG_NAME = 'auth.json';
 const SCOPE = 'offline_access';
 const HEADERS = {

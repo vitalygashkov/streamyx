@@ -7,7 +7,7 @@ const { Files } = require('../../files');
 const { question } = require('../../utilities');
 const { CLIENTS, API_ROUTES } = require('./wakanim.constants');
 
-const WORK_DIR = join(process.cwd(), 'providers', 'wakanim');
+const WORK_DIR = join(process.cwd(), 'files', 'providers', 'wakanim');
 const CONFIG_NAME = 'auth.json';
 const CLIENT_ID = CLIENTS.windows.id;
 const CLIENT_SECRET = CLIENTS.windows.secret;

@@ -7,9 +7,9 @@ const { Widecrypt } = require('../packages/widecrypt');
 const { logger } = require('./logger');
 const { Files } = require('./files');
 
-const DEVICES_PATH = join(process.cwd(), 'drm', 'devices');
+const DEVICES_PATH = join(process.cwd(), 'files', 'cdm');
 const MP4DECRYPT_NAME = 'mp4decrypt' + (platform === 'win32' ? '.exe' : '');
-const MP4DECRYPT_PATH = join(process.cwd(), 'bin', MP4DECRYPT_NAME);
+const MP4DECRYPT_PATH = join(process.cwd(), 'files', 'bin', MP4DECRYPT_NAME);
 
 const files = new Files();
 
