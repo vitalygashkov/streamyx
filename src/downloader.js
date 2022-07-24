@@ -214,7 +214,7 @@ class Downloader {
     filename = filename
       .replace('{quality}', videoHeight + 'p')
       .replace('{provider}', provider || 'UND')
-      .replace('{format}', 'WEBRip')
+      .replace('{format}', 'WEB-DL')
       .replace('{codec}', 'x264')
       .replaceAll('..', '.')
       .replaceAll('  ', ' ');

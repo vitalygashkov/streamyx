@@ -20,7 +20,7 @@ const args = new Args()
   .setOption('--movie-template', 'movie filename template')
   .setOption(
     '--episode-template',
-    'episode filename template, example: "{title}.S{s}E{e}.{quality}.{provider}.{format}.{codec}"'
+    'episode filename template, example: "{show}.S{s}E{e}.{title}.{quality}.{provider}.{format}.{codec}"'
   )
   .setOption('-p, --proxy', 'set http(s)/socks proxy (WHATWG URL standard)')
   .setOption('--part-size', 'set segments count per part (default: 32)')
