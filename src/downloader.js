@@ -205,9 +205,11 @@ class Downloader {
         .replace('{audioType}.', audioType ? audioType.toUpperCase() + '.' : '');
     else
       filename = episodeTemplate
-        .replace('{title}', show.title.replaceAll(' ', '.'))
+        .replace('{show}', show.title.replaceAll(' ', '.'))
+        .replace('S{s}', season?.number ? season.number.toString().padStart(2, '0') : '')
         .replace('{s}', season?.number ? season.number.toString().padStart(2, '0') : '')
         .replace('{e}', episode?.number ? episode.number.toString().padStart(2, '0') : '')
+        .replace('{title}', episode.title.replaceAll(' ', '.'))
         .replace('{audioType}.', audioType ? audioType.toUpperCase() + '.' : '');
     filename = filename
       .replace('{quality}', videoHeight + 'p')

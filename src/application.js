@@ -46,7 +46,7 @@ class Application {
         this.#rawArgs.movieTemplate || '{title}.{audioType}.{quality}.{provider}.{format}.{codec}',
       episodeTemplate:
         this.#rawArgs.episodeTemplate ||
-        '{title}.S{s}E{e}.{audioType}.{quality}.{provider}.{format}.{codec}',
+        '{show}.S{s}E{e}.{title}.{audioType}.{quality}.{provider}.{format}.{codec}',
       proxy: this.#rawArgs.p || this.#rawArgs.proxy,
       partSize: parseInt(this.#rawArgs.partSize) || this.#rawArgs.partSize || 24,
       hardsub: this.#rawArgs.hardsub,
