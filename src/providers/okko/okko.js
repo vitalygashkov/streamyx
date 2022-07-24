@@ -33,27 +33,21 @@ class Okko extends Provider {
     const type = urlElements.pop().toUpperCase();
 
     const movieCard = await this.#api.movieCard(alias, type);
+    const show = movieCard.element;
 
     if (type === ELEMENT_TYPE.MOVIE) {
-      const { id } = movieCard.element;
-
-      const playbackInfo = await this.#api.preparePlayback([{ id, type }]);
+      const playbackInfo = await this.#api.preparePlayback([{ id: show.id, type }]);
       const item = playbackInfo.elements.items[0];
-
       const assetItems = item.assets.items;
       const assets = assetItems.filter(({ media }) => !media.drmType || media.drmType === 'CENC');
-
-      const manifestUrl = assets[0].url;
-      const drmConfig = {
-        server: item.licenses.items[0].licenseServerUrls.CENC_WIDEVINE,
-        http2: true,
-      };
-
       const config = {
         provider: PROVIDER_TAG,
         movie: { title: item.originalName },
-        manifestUrl,
-        drmConfig,
+        manifestUrl: assets[0].url,
+        drmConfig: {
+          server: item.licenses.items[0].licenseServerUrls.CENC_WIDEVINE,
+          http2: true,
+        },
       };
       configList.push(config);
     } else if (type === ELEMENT_TYPE.FRANCHISE) {
@@ -63,13 +57,23 @@ class Okko extends Provider {
       const configs = await this.#getEpisodeConfigs(episodes);
       configList.push(...configs);
     } else if (type === ELEMENT_TYPE.TV) {
-      const seasons = movieCard.element.children.items.map((item) => item.element);
+      const seasons = movieCard.element.children.items
+        .map((item) => item.element)
+        .filter(({ seqNo }) => !this.#args.seasons || this.#args.seasons.includes(seqNo));
+      for (const season of seasons) {
+        const episodes = season.children.items
+          .map((item) => item.element)
+          .filter(({ seqNo }) => !this.#args.episodes || this.#args.episodes.includes(seqNo));
+        const configs = await this.#getEpisodeConfigs(episodes, season, show);
+        configList.push(...configs);
+      }
     }
 
     return configList;
   }
 
-  async #getEpisodeConfigs(episodes) {
+  async #getEpisodeConfigs(episodes, season, show) {
+    if (!episodes?.length) return [];
     const configs = [];
     const elements = episodes.map(({ id, type }) => ({ id, type }));
     for (const element of elements) {
@@ -87,10 +91,10 @@ class Okko extends Provider {
       };
       if (item.type === ELEMENT_TYPE.MOVIE) config.movie = { title: item.originalName };
       if (item.type === ELEMENT_TYPE.EPISODE) {
-        const showTitle = item.originalName.replace(`. Серия ${item.seqNo}`, '');
+        const showTitle = show.originalName;
         const episodeTitle = episodes.find((ep) => ep.id === item.id)?.title;
         config.show = { title: showTitle };
-        config.season = { number: null };
+        config.season = { number: season.seqNo };
         config.episode = {
           number: item.seqNo,
           title: showTitle === episodeTitle ? null : episodeTitle,

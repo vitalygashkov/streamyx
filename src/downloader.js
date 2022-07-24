@@ -206,10 +206,10 @@ class Downloader {
     else
       filename = episodeTemplate
         .replace('{show}', show.title.replaceAll(' ', '.'))
-        .replace('S{s}', season?.number ? season.number.toString().padStart(2, '0') : '')
+        .replace('S{s}', season?.number ? 'S' + season.number.toString().padStart(2, '0') : '')
         .replace('{s}', season?.number ? season.number.toString().padStart(2, '0') : '')
         .replace('{e}', episode?.number ? episode.number.toString().padStart(2, '0') : '')
-        .replace('{title}', episode.title.replaceAll(' ', '.'))
+        .replace('{title}', episode?.title ? episode.title.replaceAll(' ', '.') : '')
         .replace('{audioType}.', audioType ? audioType.toUpperCase() + '.' : '');
     filename = filename
       .replace('{quality}', videoHeight + 'p')
