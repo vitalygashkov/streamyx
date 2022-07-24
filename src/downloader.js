@@ -131,7 +131,7 @@ class Downloader {
     if (this.#config.audioType) folderName += `.${this.#config.audioType.toUpperCase()}`;
     folderName += `.${this.#args.videoHeight}p`;
     folderName += `.${this.#config.provider}`;
-    folderName += `.WEBRip`;
+    folderName += `.WEB-DL`;
     folderName += `.x264`;
     folderName = this.sanitizeFilename(folderName);
     const path = join(process.cwd(), 'downloads', folderName);
