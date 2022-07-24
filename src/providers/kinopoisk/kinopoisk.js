@@ -59,12 +59,11 @@ class Kinopoisk extends Provider {
   }
 
   async #getMovieConfig(id, movie) {
-    const { manifest, drmConfig } = await this.#getStreamConfig(id);
+    const streamConfig = await this.#getStreamConfig(id);
     return {
       provider: PROVIDER_TAG,
       movie: { title: movie.originalTitle },
-      manifest,
-      drmConfig,
+      ...streamConfig,
     };
   }
 
