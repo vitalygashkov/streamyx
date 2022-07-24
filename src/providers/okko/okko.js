@@ -28,9 +28,12 @@ class Okko extends Provider {
   async getConfigList() {
     const configList = [];
     const { url } = this.#args;
-    const urlElements = url.split('/');
-    const alias = urlElements.pop();
-    const type = urlElements.pop().toUpperCase();
+    const urlObject = new URL(url);
+    const { pathname } = urlObject;
+    const pathElements = pathname.split('/');
+    const type = pathElements[1].toUpperCase();
+    const alias = pathElements[2];
+    const seasonNumber = pathname.includes('season/') ? Number(pathElements[4]) : null;
 
     const movieCard = await this.#api.movieCard(alias, type);
     const show = movieCard.element;
@@ -59,7 +62,11 @@ class Okko extends Provider {
     } else if (type === ELEMENT_TYPE.TV) {
       const seasons = movieCard.element.children.items
         .map((item) => item.element)
-        .filter(({ seqNo }) => !this.#args.seasons || this.#args.seasons.includes(seqNo));
+        .filter(
+          ({ seqNo }) =>
+            (!this.#args.seasons || this.#args.seasons.includes(seqNo)) &&
+            (!seasonNumber || seasonNumber === seqNo)
+        );
       for (const season of seasons) {
         const episodes = season.children.items
           .map((item) => item.element)
@@ -92,7 +99,7 @@ class Okko extends Provider {
       if (item.type === ELEMENT_TYPE.MOVIE) config.movie = { title: item.originalName };
       if (item.type === ELEMENT_TYPE.EPISODE) {
         const showTitle = show.originalName;
-        const episodeTitle = episodes.find((ep) => ep.id === item.id)?.title;
+        const episodeTitle = episodes.find((ep) => ep.id === item.id)?.originalName;
         config.show = { title: showTitle };
         config.season = { number: season.seqNo };
         config.episode = {
