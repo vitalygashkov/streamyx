@@ -37,16 +37,13 @@ class OkkoAuth {
   constructor(http = new Http()) {
     this.#files = new Files();
     this.#files.setWorkDir(WORK_DIR);
-
     this.#http = http;
     this.#http.setHeader('User-Agent', USER_AGENT);
-
     this.#config = {};
 
     this.#deviceId = Array(26).fill('a').join('');
     this.#deviceId += getRandomElements(LETTERS_AND_DIGITS, 5).join('');
     this.#deviceId = Buffer.from(this.#deviceId, 'utf-8').toString('base64').replace(/=+$/, '');
-
     this.#softwareId = crypto.randomUUID();
     this.#deviceSoftware = DEVICE_SOFTWARE.replaceAll('{softwareId}', this.#softwareId);
   }
