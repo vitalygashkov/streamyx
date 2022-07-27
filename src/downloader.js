@@ -223,7 +223,7 @@ class Downloader {
   }
 
   sanitizeFilename(text) {
-    return text.replaceAll(':', '');
+    return text.replace(/[^a-z0-9.-]/gi, '');
   }
 
   getTrackFilename(type, id, suffix = '', format) {
