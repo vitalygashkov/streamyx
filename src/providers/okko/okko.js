@@ -4,6 +4,7 @@ const { Provider } = require('../provider');
 const { Http } = require('../../network');
 const { OkkoApi } = require('./okko.api');
 const { ELEMENT_TYPE, QUALITY, PROVIDER_TAG } = require('./okko.constants');
+const { logger } = require('../../logger');
 
 class Okko extends Provider {
   #args;
@@ -87,6 +88,10 @@ class Okko extends Provider {
       const playbackInfo = await this.#api.preparePlayback([element]);
       const item = playbackInfo.elements.items[0];
       const assetItems = item.assets.items;
+      if (!assetItems.length) {
+        logger.error(`No streams available`);
+        process.exit(1);
+      }
       const assets = assetItems.filter(({ media }) => !media.drmType || media.drmType === 'CENC');
       const config = {
         provider: PROVIDER_TAG,
