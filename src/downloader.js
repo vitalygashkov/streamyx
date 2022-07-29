@@ -133,7 +133,7 @@ class Downloader {
     folderName += `.${this.#config.provider}`;
     folderName += `.WEB-DL`;
     folderName += `.x264`;
-    folderName = this.sanitizeFilename(folderName);
+    folderName = this.sanitizeFilename(folderName).replaceAll('..', '.');
     const path = join(process.cwd(), 'downloads', folderName);
     this.#files.setWorkDir(path);
   }
@@ -216,9 +216,8 @@ class Downloader {
       .replace('{provider}', provider || 'UND')
       .replace('{format}', 'WEB-DL')
       .replace('{codec}', 'x264')
-      .replaceAll('..', '.')
       .replaceAll('  ', ' ');
-    filename = this.sanitizeFilename(filename);
+    filename = this.sanitizeFilename(filename).replaceAll('..', '.');
     return filename;
   }
 
