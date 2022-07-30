@@ -2,11 +2,14 @@ name: Release
 
 on:
   pull_request:
+    types:
+      - closed
     branches:
       - main
 
 jobs:
   setup:
+    if: github.event.pull_request.merged == true
     name: Setup
     runs-on: ubuntu-latest
     strategy:
