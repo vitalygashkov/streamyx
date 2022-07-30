@@ -8,7 +8,7 @@ Supported providers: Kinopoisk, Okko, Crunchyroll, Wakanim.
 
 - Download **[latest release](https://github.com/vitalygashkov/streamyx/releases/latest)**
 - Download **[ffmpeg](https://ffmpeg.org/download.html)**, **[mp4decrypt](https://www.bento4.com/downloads/)** and put executables into `/files/bin/`
-- Put folder with **device private keys** into `/files/cdm/`
+- Put folder with **device private keys** into `/files/cdm/` (required for DRM-protected content)
 
 Open system console/terminal from the folder where the executable file is located and run the application:
 

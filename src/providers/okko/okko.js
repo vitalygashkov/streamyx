@@ -46,6 +46,10 @@ class Okko extends Provider {
 
     if (type === ELEMENT_TYPE.MOVIE) {
       const playbackInfo = await this.#api.preparePlayback([{ id: show.id, type }]);
+      if (!playbackInfo.elements && playbackInfo.status) {
+        logger.error(`Stream metadata not available. Status code: ${playbackInfo.status}.`);
+        process.exit(1);
+      }
       const item = playbackInfo.elements.items[0];
       const assetItems = item.assets.items;
       const assets = assetItems.filter(({ media }) => !media.drmType || media.drmType === 'CENC');
