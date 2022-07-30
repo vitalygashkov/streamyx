@@ -32,10 +32,37 @@ class IviAuth {
     await this.#loadConfig(username, password);
     logger.debug(`Requesting credentials`);
     if (!this.#config.username || !this.#config.password) await this.#requestCredentials();
-    logger.debug(`Checking auth config`);
-    // ...
+
+    logger.debug(`Checking auth`);
+    if (!this.#config.userUid) this.#config.userUid = this.getUserUid();
+    if (!this.#config.session) this.#config.session = await this.userRegister();
+    const { actualAppVersion, userAbBucket } = await this.geoCheck();
+    if (this.#config.appVersion !== actualAppVersion) this.#config.appVersion = actualAppVersion;
+    if (this.#config.userAbBucket !== userAbBucket) this.#config.userAbBucket = userAbBucket;
+    const { subsiteId } = await this.appVersionInfo();
+    if (this.#config.subsiteId !== subsiteId) this.#config.subsiteId = subsiteId;
 
     logger.debug(`Logging`);
+    let session = '';
+    const { action, what } = await this.userValidate();
+    if (action === 'login') {
+      if (what === 'email') {
+        session = await this.userLoginIvi();
+      } else if (what === 'phone') {
+        const success = await this.userRegisterPhone();
+        if (!success) return;
+        const code = await question('Enter code');
+        session = await this.userLoginPhone(code);
+      }
+    } else if (action === 'register') {
+      logger.error(`Sign up is not possible`);
+      process.exit(1);
+    }
+
+    this.#config.session = session;
+    this.#config.cookies = this.#http.headers.cookie;
+    await this.#files.write(CONFIG_NAME, this.#config);
+    return this.#config;
   }
 
   async #loadConfig(username, password) {
@@ -55,27 +82,73 @@ class IviAuth {
     this.#config.password = await question('Password');
   }
 
-  async #getSession() {
-    const response = await this.#http.request(DOMAINS.default, {
-      method: HTTP_METHOD.GET,
-      headers: {
-        'User-Agent':
-          'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.114 Safari/537.36 Edg/103.0.1264.62',
-      },
+  async getUserUid() {
+    return (1e6 * Math.random() + Math.random()).toString().slice(0, 15);
+  }
+
+  async userValidate(username) {
+    const params = new URLSearchParams({
+      value: username || this.#config.username,
+      user_ab_bucket: this.#config.userAbBucket,
+      session: this.#config.session,
     });
+    const response = await this.#http.request(API_ROUTES.userValidate, {
+      method: HTTP_METHOD.POST,
+      headers: {
+        'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      },
+      body: params.toString(),
+    });
+    const data = JSON.parse(response.body);
+    const { action, what } = data.result;
+    return { action, what };
+  }
 
-    let session = '';
-    let sessionData = '';
-    let userAbBucket = '';
-    for (const cookie of response.headers['set-cookie']) {
-      if (cookie.includes('sessivi')) session = cookie.split('sessivi=')[1].split(';')[0];
-      if (cookie.includes('session_data'))
-        sessionData = cookie.split('session_data=')[1].split(';')[0];
-      if (cookie.includes('user_ab_bucket'))
-        userAbBucket = cookie.split('user_ab_bucket=')[1].split(';')[0];
-    }
+  async userLoginIvi(email, password) {
+    const params = new URLSearchParams({
+      email: email || this.#config.username,
+      password: password || this.#config.password,
+      session: this.#config.session,
+    });
+    const response = await this.#http.request(API_ROUTES.userLoginIvi, {
+      method: HTTP_METHOD.POST,
+      headers: { 'content-type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+      body: params.toString(),
+    });
+    const data = JSON.parse(response.body);
+    const { session } = data.result;
+    return session;
+  }
 
-    return { session, sessionData, userAbBucket };
+  async userRegisterPhone(phone) {
+    const params = new URLSearchParams({
+      phone: phone || this.#config.username,
+      session: this.#config.session,
+    });
+    const response = await this.#http.request(API_ROUTES.userRegisterPhone, {
+      method: HTTP_METHOD.POST,
+      headers: { 'content-type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+      body: params.toString(),
+    });
+    const data = JSON.parse(response.body);
+    const { success } = data.result;
+    return success;
+  }
+
+  async userLoginPhone(code, phone) {
+    const params = new URLSearchParams({
+      code,
+      phone: phone || this.#config.username,
+      session: this.#config.session,
+    });
+    const response = await this.#http.request(API_ROUTES.userRegisterPhone, {
+      method: HTTP_METHOD.POST,
+      headers: { 'content-type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+      body: params.toString(),
+    });
+    const data = JSON.parse(response.body);
+    const { session } = data.result;
+    return session;
   }
 
   async userRegister() {
@@ -97,6 +170,20 @@ class IviAuth {
       countryPlaceId: result['country_place_id'],
       userAbBucket: result['user_ab_bucket'],
       actualAppVersion: result['actual_app_version'],
+    };
+  }
+
+  async appVersionInfo() {
+    const response = await this.#http.request(API_ROUTES.appVersionInfo);
+    const data = JSON.parse(response.body);
+    const { result } = data;
+    return {
+      lastVersionId: result['last_version_id'],
+      applicationId: result['application_id'],
+      description: result['description'],
+      subsiteId: result['subsite_id'],
+      subsiteTitle: result['subsite_title'],
+      id: result['id'],
     };
   }
 }
