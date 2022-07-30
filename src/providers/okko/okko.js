@@ -4,6 +4,7 @@ const { Provider } = require('../provider');
 const { Http } = require('../../network');
 const { OkkoApi } = require('./okko.api');
 const { ELEMENT_TYPE, QUALITY, PROVIDER_TAG } = require('./okko.constants');
+const { logger } = require('../../logger');
 
 class Okko extends Provider {
   #args;
@@ -34,12 +35,21 @@ class Okko extends Provider {
     const type = pathElements[1].toUpperCase();
     const alias = pathElements[2];
     const seasonNumber = pathname.includes('season/') ? Number(pathElements[4]) : null;
+    const episodeNumber = pathname.includes('episode/') ? Number(pathElements[6]) : null;
 
     const movieCard = await this.#api.movieCard(alias, type);
+    if (!movieCard.authorized) {
+      logger.error(`Authorization failed. Please, login again.`);
+      process.exit(1);
+    }
     const show = movieCard.element;
 
     if (type === ELEMENT_TYPE.MOVIE) {
       const playbackInfo = await this.#api.preparePlayback([{ id: show.id, type }]);
+      if (!playbackInfo.elements && playbackInfo.status) {
+        logger.error(`Stream metadata not available. Status code: ${playbackInfo.status}.`);
+        process.exit(1);
+      }
       const item = playbackInfo.elements.items[0];
       const assetItems = item.assets.items;
       const assets = assetItems.filter(({ media }) => !media.drmType || media.drmType === 'CENC');
@@ -56,7 +66,11 @@ class Okko extends Provider {
     } else if (type === ELEMENT_TYPE.FRANCHISE) {
       const episodes = movieCard.element.children.items
         .map((item) => item.element)
-        .filter(({ seqNo }) => !this.#args.episodes || this.#args.episodes.includes(seqNo));
+        .filter(
+          ({ seqNo }) =>
+            (!this.#args.episodes || this.#args.episodes.includes(seqNo)) &&
+            (!episodeNumber || episodeNumber === seqNo)
+        );
       const configs = await this.#getEpisodeConfigs(episodes);
       configList.push(...configs);
     } else if (type === ELEMENT_TYPE.TV) {
@@ -70,7 +84,11 @@ class Okko extends Provider {
       for (const season of seasons) {
         const episodes = season.children.items
           .map((item) => item.element)
-          .filter(({ seqNo }) => !this.#args.episodes || this.#args.episodes.includes(seqNo));
+          .filter(
+            ({ seqNo }) =>
+              (!this.#args.episodes || this.#args.episodes.includes(seqNo)) &&
+              (!episodeNumber || episodeNumber === seqNo)
+          );
         const configs = await this.#getEpisodeConfigs(episodes, season, show);
         configList.push(...configs);
       }
@@ -87,6 +105,12 @@ class Okko extends Provider {
       const playbackInfo = await this.#api.preparePlayback([element]);
       const item = playbackInfo.elements.items[0];
       const assetItems = item.assets.items;
+      if (!assetItems.length) {
+        logger.error(
+          `No streams available. Make sure you have paid subscription or bought this movie/series.`
+        );
+        process.exit(1);
+      }
       const assets = assetItems.filter(({ media }) => !media.drmType || media.drmType === 'CENC');
       const config = {
         provider: PROVIDER_TAG,

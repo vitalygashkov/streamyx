@@ -1,21 +1,15 @@
 name: Release
 
 on:
-  workflow_dispatch:
-    inputs:
-      draft:
-        description: 'Draft'
-        required: false
-        default: true
-        type: boolean
-      prerelease:
-        description: 'Pre-release'
-        required: false
-        default: false
-        type: boolean
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
 
 jobs:
   setup:
+    if: github.event.pull_request.merged == true
     name: Setup
     runs-on: ubuntu-latest
     strategy:
@@ -63,6 +57,4 @@ jobs:
             ${{ env.PACKAGE_NAME }}-${{ env.PACKAGE_VERSION }}-windows.zip'
           tag: 'v${{ env.PACKAGE_VERSION }}'
           token: ${{ secrets.GITHUB_TOKEN }}
-          draft: ${{ github.event.inputs.draft }}
-          prerelease: ${{ github.event.inputs.prerelease }}
           generateReleaseNotes: true
