@@ -1,5 +1,5 @@
-[submodule "app"]
-	path = app
+[submodule "gui"]
+	path = gui
 	url = https://github.com/vitalygashkov/streamyx-gui.git
 [submodule "cli"]
 	path = cli
