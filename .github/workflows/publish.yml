@@ -56,9 +56,9 @@ jobs:
       - name: Create release draft
         uses: ncipollo/release-action@v1
         with:
-          artifacts: '${{ env.PACKAGE_NAME }}-${{ env.PACKAGE_VERSION }}-linux.zip,
-            ${{ env.PACKAGE_NAME }}-${{ env.PACKAGE_VERSION }}-macos.zip,
-            ${{ env.PACKAGE_NAME }}-${{ env.PACKAGE_VERSION }}-windows.zip'
+          artifacts: './cli/${{ env.PACKAGE_NAME }}-${{ env.PACKAGE_VERSION }}-linux.zip,
+            ./cli/${{ env.PACKAGE_NAME }}-${{ env.PACKAGE_VERSION }}-macos.zip,
+            ./cli/${{ env.PACKAGE_NAME }}-${{ env.PACKAGE_VERSION }}-windows.zip'
           tag: 'v${{ env.PACKAGE_VERSION }}'
           token: ${{ secrets.GITHUB_TOKEN }}
           draft: true
