@@ -1,46 +1,65 @@
 name: 'publish'
 on:
-  push:
+  pull_request:
+    types:
+      - closed
     branches:
       - main
 
 jobs:
-  publish-tauri:
+  setup:
+    if: github.event.pull_request.merged == true
+    name: Setup
+    runs-on: ubuntu-latest
     strategy:
-      fail-fast: false
       matrix:
-        platform: [macos-latest, ubuntu-20.04, windows-latest]
-
-    runs-on: ${{ matrix.platform }}
+        node-version: [16.x]
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
         with:
           token: ${{ secrets.CONTROL_REPO_TOKEN }}
           submodules: recursive
-      - name: setup node
-        uses: actions/setup-node@v1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
         with:
-          node-version: 16
-      - name: install Rust stable
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-      - name: install dependencies (ubuntu only)
-        if: matrix.platform == 'ubuntu-20.04'
-        working-directory: ./app
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install submodule dependencies
+        working-directory: ./cli
+        run: cd packages/widecrypt && npm ci
+
+      - name: Install app dependencies
+        working-directory: ./cli
+        run: npm ci
+
+      - name: Get package name and version
+        working-directory: ./cli
         run: |
-          sudo apt-get update
-          sudo apt-get install -y libgtk-3-dev webkit2gtk-4.0 libappindicator3-dev librsvg2-dev patchelf
-      - name: install app dependencies and build it
-        working-directory: ./app
-        run: yarn && yarn build
-      - uses: tauri-apps/tauri-action@v0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          test -n $(node -p -e "require('./package.json').name") &&
+          test -n $(node -p -e "require('./package.json').version") &&
+          echo PACKAGE_NAME=$(node -p -e "require('./package.json').name") >> $GITHUB_ENV &&
+          echo PACKAGE_VERSION=$(node -p -e "require('./package.json').version") >> $GITHUB_ENV || exit 1
+
+      - name: Generating executables
+        working-directory: ./cli
+        run: npm run build --if-present
+
+      - name: Compressing builds
+        working-directory: ./cli
+        run: |
+          zip -j ${{ env.PACKAGE_NAME }}-${{ env.PACKAGE_VERSION }}-linux.zip ./build/${{ env.PACKAGE_NAME }}-linux/${{ env.PACKAGE_NAME }}
+          zip -j ${{ env.PACKAGE_NAME }}-${{ env.PACKAGE_VERSION }}-macos.zip ./build/${{ env.PACKAGE_NAME }}-macos/${{ env.PACKAGE_NAME }}
+          zip -j ${{ env.PACKAGE_NAME }}-${{ env.PACKAGE_VERSION }}-windows.zip ./build/${{ env.PACKAGE_NAME }}-windows/${{ env.PACKAGE_NAME }}.exe
+
+      - name: Create release draft
+        uses: ncipollo/release-action@v1
         with:
-          projectPath: ./app
-          tagName: v__VERSION__
-          releaseName: 'v__VERSION__'
-          releaseBody: 'See the assets to download this version and install.'
-          releaseDraft: true
-          prerelease: false
+          artifacts: '${{ env.PACKAGE_NAME }}-${{ env.PACKAGE_VERSION }}-linux.zip,
+            ${{ env.PACKAGE_NAME }}-${{ env.PACKAGE_VERSION }}-macos.zip,
+            ${{ env.PACKAGE_NAME }}-${{ env.PACKAGE_VERSION }}-windows.zip'
+          tag: 'v${{ env.PACKAGE_VERSION }}'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          draft: true
+          generateReleaseNotes: true
