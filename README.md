@@ -10,9 +10,6 @@
   <a href="https://github.com/vitalygashkov/streamyx/releases">
     <img src="https://img.shields.io/github/downloads/vitalygashkov/streamyx/total" alt="Total downloads">
   </a>
-  <a href="https://github.com/vitalygashkov/streamyx/releases">
-    <img src="https://img.shields.io/github/license/vitalygashkov/streamyx" alt="License">
-  </a>
 </div>
 
 Streamyx is a command-line tool that allows you to download videos from streaming services for offline-viewing.
