@@ -2,7 +2,16 @@
 
 <div align="center">
   <a href="https://github.com/vitalygashkov/streamyx/releases">
-    <img src="https://img.shields.io/github/release/vitalygashkov/streamyx.svg?style=flat-square" alt="GitHub release">
+    <img src="https://img.shields.io/github/release/vitalygashkov/streamyx.svg" alt="GitHub release">
+  </a>
+  <a href="https://github.com/vitalygashkov/streamyx/releases">
+    <img src="https://img.shields.io/github/downloads/vitalygashkov/streamyx/latest/total" alt="Latest downloads">
+  </a>
+  <a href="https://github.com/vitalygashkov/streamyx/releases">
+    <img src="https://img.shields.io/github/downloads/vitalygashkov/streamyx/total" alt="Total downloads">
+  </a>
+  <a href="https://github.com/vitalygashkov/streamyx/releases">
+    <img src="https://img.shields.io/github/license/vitalygashkov/streamyx" alt="License">
   </a>
 </div>
 
