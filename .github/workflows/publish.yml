@@ -48,7 +48,6 @@ jobs:
         run: |
           zip -j ${{ env.PACKAGE_NAME }}-${{ env.PACKAGE_VERSION }}-linux.zip ./build/${{ env.PACKAGE_NAME }}-linux/${{ env.PACKAGE_NAME }}
           zip -j ${{ env.PACKAGE_NAME }}-${{ env.PACKAGE_VERSION }}-macos.zip ./build/${{ env.PACKAGE_NAME }}-macos/${{ env.PACKAGE_NAME }}
-          zip -j ${{ env.PACKAGE_NAME }}-${{ env.PACKAGE_VERSION }}-macos-arm.zip ./build/${{ env.PACKAGE_NAME }}-macos-arm/${{ env.PACKAGE_NAME }}
           zip -j ${{ env.PACKAGE_NAME }}-${{ env.PACKAGE_VERSION }}-windows.zip ./build/${{ env.PACKAGE_NAME }}-windows/${{ env.PACKAGE_NAME }}.exe
 
       - name: Create release draft
@@ -56,9 +55,7 @@ jobs:
         with:
           artifacts: './cli/${{ env.PACKAGE_NAME }}-${{ env.PACKAGE_VERSION }}-linux.zip,
             ./cli/${{ env.PACKAGE_NAME }}-${{ env.PACKAGE_VERSION }}-macos.zip,
-            ./cli/${{ env.PACKAGE_NAME }}-${{ env.PACKAGE_VERSION }}-macos-arm.zip,
             ./cli/${{ env.PACKAGE_NAME }}-${{ env.PACKAGE_VERSION }}-windows.zip'
           tag: 'v${{ env.PACKAGE_VERSION }}'
           token: ${{ secrets.GITHUB_TOKEN }}
           draft: true
-          generateReleaseNotes: true
