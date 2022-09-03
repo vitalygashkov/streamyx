@@ -60,4 +60,5 @@ jobs:
             ./cli/${{ env.PACKAGE_NAME }}-${{ env.PACKAGE_VERSION }}-windows.zip'
           tag: 'v${{ env.PACKAGE_VERSION }}'
           token: ${{ secrets.GITHUB_TOKEN }}
+          draft: true
           generateReleaseNotes: true
