@@ -150,6 +150,11 @@ jobs:
           token: ${{ secrets.CONTROL_REPO_TOKEN }}
           submodules: recursive
 
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
       - name: Download Windows build
         uses: actions/download-artifact@v3
         with:
@@ -164,6 +169,14 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: linux
+
+      - name: Get package name and version
+        working-directory: ./cli
+        run: |
+          test -n $(node -p -e "require('./package.json').name") &&
+          test -n $(node -p -e "require('./package.json').version") &&
+          echo PACKAGE_NAME=$(node -p -e "require('./package.json').name") >> $GITHUB_ENV &&
+          echo PACKAGE_VERSION=$(node -p -e "require('./package.json').version") >> $GITHUB_ENV || exit 1
 
       - name: Create release
         uses: ncipollo/release-action@v1
