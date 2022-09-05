@@ -87,7 +87,7 @@ jobs:
 
       - name: Compress
         working-directory: ./cli
-        run: tar -cvzf streamyx-v${{ env.PACKAGE_VERSION }}-win-x64.zip /build/streamyx-win-x64.exe
+        run: powershell Compress-Archive build\streamyx-win-x64.exe streamyx-v${{ env.PACKAGE_VERSION }}-win-x64.zip
 
       - name: Upload build
         uses: actions/upload-artifact@v3
