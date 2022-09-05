@@ -5,51 +5,6 @@ on:
       - main
 
 jobs:
-  build-macos:
-    name: Build for macOS
-    runs-on: macos-latest
-    steps:
-      - name: Clone repository
-        uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.CONTROL_REPO_TOKEN }}
-          submodules: recursive
-
-      - name: Install Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-
-      - name: Install submodule dependencies
-        working-directory: ./cli
-        run: cd packages/wvcdm && npm ci
-
-      - name: Install app dependencies
-        working-directory: ./cli
-        run: npm ci
-
-      - name: Get package name and version
-        working-directory: ./cli
-        run: |
-          test -n $(node -p -e "require('./package.json').name") &&
-          test -n $(node -p -e "require('./package.json').version") &&
-          echo PACKAGE_NAME=$(node -p -e "require('./package.json').name") >> $GITHUB_ENV &&
-          echo PACKAGE_VERSION=$(node -p -e "require('./package.json').version") >> $GITHUB_ENV || exit 1
-
-      - name: Build
-        working-directory: ./cli
-        run: npm run build:macos
-
-      - name: Compress
-        working-directory: ./cli
-        run: npm run zip:macos
-
-      - name: Upload build
-        uses: actions/upload-artifact@v3
-        with:
-          name: macos
-          path: ./cli/${{ env.PACKAGE_NAME }}-v${{ env.PACKAGE_VERSION }}-macos-x64.zip
-
   build-win:
     name: Build for Windows
     runs-on: windows-latest
@@ -95,6 +50,51 @@ jobs:
           name: win
           path: ./cli/streamyx-win-x64.zip
 
+  build-macos:
+    name: Build for macOS
+    runs-on: macos-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.CONTROL_REPO_TOKEN }}
+          submodules: recursive
+
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install submodule dependencies
+        working-directory: ./cli
+        run: cd packages/wvcdm && npm ci
+
+      - name: Install app dependencies
+        working-directory: ./cli
+        run: npm ci
+
+      - name: Get package name and version
+        working-directory: ./cli
+        run: |
+          test -n $(node -p -e "require('./package.json').name") &&
+          test -n $(node -p -e "require('./package.json').version") &&
+          echo PACKAGE_NAME=$(node -p -e "require('./package.json').name") >> $GITHUB_ENV &&
+          echo PACKAGE_VERSION=$(node -p -e "require('./package.json').version") >> $GITHUB_ENV || exit 1
+
+      - name: Build
+        working-directory: ./cli
+        run: npm run build:macos
+
+      - name: Compress
+        working-directory: ./cli
+        run: zip -9 -j ${{ env.PACKAGE_NAME }}-macos-x64.zip ./build/${{ env.PACKAGE_NAME }}-macos-x64
+
+      - name: Upload build
+        uses: actions/upload-artifact@v3
+        with:
+          name: macos
+          path: ./cli/${{ env.PACKAGE_NAME }}-macos-x64.zip
+
   build-linux:
     name: Build for Linux
     runs-on: ubuntu-latest
@@ -132,13 +132,13 @@ jobs:
 
       - name: Compress
         working-directory: ./cli
-        run: npm run zip:linux
+        run: zip -9 -j ${{ env.PACKAGE_NAME }}-linux-x64.zip ./build/${{ env.PACKAGE_NAME }}-linux-x64
 
       - name: Upload build
         uses: actions/upload-artifact@v3
         with:
           name: linux
-          path: ./cli/${{ env.PACKAGE_NAME }}-v${{ env.PACKAGE_VERSION }}-linux-x64.zip
+          path: ./cli/${{ env.PACKAGE_NAME }}-linux-x64.zip
 
   upload:
     runs-on: ubuntu-latest
@@ -182,8 +182,8 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: '${{ env.PACKAGE_NAME }}-win-x64.zip,
-            ${{ env.PACKAGE_NAME }}-v${{ env.PACKAGE_VERSION }}-macos-x64.zip,
-            ${{ env.PACKAGE_NAME }}-v${{ env.PACKAGE_VERSION }}-linux-x64.zip'
+            ${{ env.PACKAGE_NAME }}-macos-x64.zip,
+            ${{ env.PACKAGE_NAME }}-linux-x64.zip'
           tag: 'v${{ env.PACKAGE_VERSION }}'
           token: ${{ secrets.GITHUB_TOKEN }}
           draft: true
