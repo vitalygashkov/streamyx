@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [18.x]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -39,23 +39,21 @@ jobs:
           echo PACKAGE_NAME=$(node -p -e "require('./package.json').name") >> $GITHUB_ENV &&
           echo PACKAGE_VERSION=$(node -p -e "require('./package.json').version") >> $GITHUB_ENV || exit 1
 
-      - name: Generating executables
+      - name: Build
         working-directory: ./cli
-        run: npm run build --if-present
+        run: npm run build
 
-      - name: Compressing builds
+      - name: Compress
         working-directory: ./cli
-        run: |
-          zip -j ${{ env.PACKAGE_NAME }}-${{ env.PACKAGE_VERSION }}-linux.zip ./build/${{ env.PACKAGE_NAME }}-linux/${{ env.PACKAGE_NAME }}
-          zip -j ${{ env.PACKAGE_NAME }}-${{ env.PACKAGE_VERSION }}-macos.zip ./build/${{ env.PACKAGE_NAME }}-macos/${{ env.PACKAGE_NAME }}
-          zip -j ${{ env.PACKAGE_NAME }}-${{ env.PACKAGE_VERSION }}-windows.zip ./build/${{ env.PACKAGE_NAME }}-windows/${{ env.PACKAGE_NAME }}.exe
+        run: npm run zip
 
-      - name: Create release draft
+      - name: Create release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: './cli/${{ env.PACKAGE_NAME }}-${{ env.PACKAGE_VERSION }}-linux.zip,
-            ./cli/${{ env.PACKAGE_NAME }}-${{ env.PACKAGE_VERSION }}-macos.zip,
-            ./cli/${{ env.PACKAGE_NAME }}-${{ env.PACKAGE_VERSION }}-windows.zip'
+          artifacts: './cli/${{ env.PACKAGE_NAME }}-v${{ env.PACKAGE_VERSION }}-win-x64.zip,
+            ./cli/${{ env.PACKAGE_NAME }}-v${{ env.PACKAGE_VERSION }}-macos-x64.zip,
+            ./cli/${{ env.PACKAGE_NAME }}-v${{ env.PACKAGE_VERSION }}-macos-arm64.zip,
+            ./cli/${{ env.PACKAGE_NAME }}-v${{ env.PACKAGE_VERSION }}-linux-x64.zip'
           tag: 'v${{ env.PACKAGE_VERSION }}'
           token: ${{ secrets.GITHUB_TOKEN }}
           draft: true
