@@ -5,7 +5,7 @@ on:
       - main
 
 jobs:
-  build-mac:
+  build-macos:
     name: Build for macOS
     runs-on: macos-latest
     steps:
