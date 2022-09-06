@@ -1,4 +1,4 @@
-name: 'publish'
+name: Publish
 on:
   push:
     branches:
@@ -141,6 +141,7 @@ jobs:
           path: ./cli/${{ env.PACKAGE_NAME }}-linux-x64.zip
 
   upload:
+    name: Upload builds to Release
     runs-on: ubuntu-latest
     needs: [build-win, build-macos, build-linux]
     steps:
