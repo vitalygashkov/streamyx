@@ -1,0 +1,21 @@
+{
+  "env": { "es2021": true, "node": true },
+  "extends": ["eslint:recommended", "plugin:prettier/recommended"],
+  "parserOptions": { "ecmaVersion": "latest" },
+  "rules": {
+    "arrow-parens": ["error", "always"],
+    "no-unused-vars": "warn",
+    "class-methods-use-this": "off",
+    "no-process-exit": "off",
+    "import/no-commonjs": "off",
+    "import/prefer-default-export": "off"
+  },
+  "overrides": [
+    {
+      "files": ["**/*.test.js"],
+      "env": {
+        "jest": true
+      }
+    }
+  ]
+}
