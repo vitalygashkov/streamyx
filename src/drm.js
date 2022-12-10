@@ -2,7 +2,7 @@
 
 const path = require('node:path');
 const { platform, arch } = require('node:process');
-const { getContentKeys, getSegmentDecrypter, setLogger } = require('../packages/wvcdm');
+const { getContentKeys, getSegmentDecrypter, setLogger } = require('../packages/keystone');
 const { logger } = require('./logger');
 const fs = require('./fs');
 
@@ -103,7 +103,7 @@ const getCdmDir = async (defaultDir) => {
 
 const getDecryptersPool = async (pssh, drmConfig, count = 1) => {
   setLogger(logger);
-  const addonDir = fs.join(fs.appDir, 'packages', 'wvcdm', 'build', 'Release');
+  const addonDir = fs.join(fs.appDir, 'packages', 'keystone', 'build', 'Release');
   const cdmDir = await getCdmDir(fs.join(fs.appDir, 'files', 'cdm'));
   const params = {
     ...drmConfig,
