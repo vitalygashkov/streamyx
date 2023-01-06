@@ -1,15 +1,28 @@
 'use strict';
 
 const fs = require('./fs');
-const { fetch } = require('./http');
+const { fetch, Http } = require('./http');
 const { Progress } = require('./progress');
 
 const DEFAULT_CONNECTIONS = 24;
 const DEFAULT_FILEPATH = fs.join(fs.appDir, 'mediafile');
 
-const downloadSegment = async (url, headers, index) => {
+const httpClient = new Http();
+
+const downloadSegment = async (url, headers, index, http2 = false) => {
   try {
-    const { data } = await fetch(url, { headers });
+    let data = null;
+    if (http2) {
+      const response = await httpClient.request(url, {
+        http2: true,
+        responseType: 'buffer',
+        headers,
+      });
+      data = response.body;
+    } else {
+      const response = await fetch(url, { headers });
+      data = response.data;
+    }
     return { data, index };
   } catch (e) {
     console.error({ url, index });
@@ -21,6 +34,7 @@ const downloadSegments = async (urls, options) => {
   const {
     filepath = DEFAULT_FILEPATH,
     headers,
+    http2,
     connections = DEFAULT_CONNECTIONS,
     decryptersPool,
     codec,
@@ -42,7 +56,7 @@ const downloadSegments = async (urls, options) => {
       segmentIndex++
     ) {
       const url = urls[segmentIndex];
-      partSegments.set(segmentIndex, downloadSegment(url, headers, segmentIndex));
+      partSegments.set(segmentIndex, downloadSegment(url, headers, segmentIndex, http2));
     }
 
     const segments = [];

@@ -149,7 +149,7 @@ class Downloader {
         trackInfo += ` ∙ ${track.bitrate} Mbps`;
       }
       if (track.type === 'audio') {
-        trackInfo += ` ∙ ${track.language.toUpperCase()}`;
+        trackInfo += ` ∙ ${track.language?.toUpperCase()}`;
         if (track.label) trackInfo += ` (${track.label})`;
         trackInfo += ` ∙ ${track.audioSamplingRate} kHz`;
         trackInfo += ` ∙ ${track.bitrate} Kbps`;
@@ -166,6 +166,8 @@ class Downloader {
         await download(urls, {
           filepath,
           connections,
+          headers: this._config.downloadConfig.headers,
+          http2: this._config.downloadConfig.http2,
           logger,
           logPrefix,
           decryptersPool,

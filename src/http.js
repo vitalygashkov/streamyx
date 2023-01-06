@@ -86,18 +86,31 @@ class Http {
   }
 
   async #http2Request(url, options) {
+    const sameOrigin = this.#lastOrigin === url.origin;
+    if ((!sameOrigin && this.#lastOrigin) || !this.#session || this.#session.destroyed) {
+      if (!!this.#session && !this.#session.closed) {
+        await new Promise(this.#session.close);
+        this.#session.destroy();
+      }
+      if (!this.#session || this.#session.destroyed || this.#session.closed) {
+        this.#session = http2.connect(url.href);
+        this.#session.on('error', (e) => {
+          logger.error('HTTP2 session error');
+          logger.debug(url);
+          logger.debug(e);
+        });
+      }
+    }
+
     return new Promise((resolve, reject) => {
       const requestOptions = {
+        ':authority': url.host,
         ':path': url.pathname + url.search,
         ':method': options?.method || HTTP_METHOD.GET,
+        ':scheme': url.protocol.replace(':', ''),
         ...this.#headers,
         ...options?.headers,
       };
-      const sameOrigin = this.#lastOrigin === url.origin;
-      if ((!sameOrigin && this.#lastOrigin) || !this.#session) {
-        this.#session?.destroy();
-        this.#session = http2.connect(url.href);
-      }
 
       const stream = this.#session.request(requestOptions);
       if (options?.responseType !== 'buffer') stream.setEncoding('utf8');
@@ -126,13 +139,6 @@ class Http {
           else body = body.join('');
           resolve({ body, statusCode: parseInt(statusCode) });
         });
-
-      this.#session.on('error', (e) => {
-        logger.error('HTTP2 session error');
-        logger.debug(url);
-        logger.debug(e);
-        reject(e);
-      });
 
       stream.end();
     });
