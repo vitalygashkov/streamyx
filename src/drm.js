@@ -22,7 +22,7 @@ const getRequestBodyFilter = (params) => (requestBody) => {
 const responseDataFilter = (responseData) => {
   if (responseData[0] === /* '{' */ 0x7b) {
     const dataObject = JSON.parse(responseData.toString('utf8'));
-    return dataObject.license || dataObject.payload || dataObject;
+    return Buffer.from(dataObject.license || dataObject.payload || dataObject, 'base64');
   }
   return responseData;
 };
