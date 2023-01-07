@@ -62,27 +62,30 @@ class Downloader {
       logger.info(`Decrypted successfully`);
     }
 
-    logger.info('Muxing');
-    const inputs = [];
-    for (let i = 0; i < tracks.length; i++) {
-      const track = tracks[i];
-      const isSubtitle = track.type === 'text';
-      inputs.push({
-        ...track,
-        path: this.getFilepath(
-          this.getTrackFilename(
-            isSubtitle ? `${track.type}.${track.language}` : track.type,
-            track.id,
-            isSubtitle ? '' : 'dec',
-            track.format
-          )
-        ),
-      });
+    if (!this._params.skipMux) {
+      logger.info('Muxing');
+      const inputs = [];
+      for (let i = 0; i < tracks.length; i++) {
+        const track = tracks[i];
+        const isSubtitle = track.type === 'text';
+        inputs.push({
+          ...track,
+          id: track.id || i,
+          path: this.getFilepath(
+            this.getTrackFilename(
+              isSubtitle ? `${track.type}.${track.language}` : track.type,
+              track.id,
+              isSubtitle ? '' : 'dec',
+              track.format
+            )
+          ),
+        });
+      }
+      const output = this.getFilepath(this.getTrackFilename('', '', '', 'mkv'));
+      const { trimBegin, trimEnd } = this._params;
+      await mux({ inputs, output, trimBegin, trimEnd, cleanup: true });
+      logger.info(`Muxed successfully`);
     }
-    const output = this.getFilepath(this.getTrackFilename('', '', '', 'mkv'));
-    const { trimBegin, trimEnd } = this._params;
-    await mux({ inputs, output, trimBegin, trimEnd, cleanup: true });
-    logger.info(`Muxed successfully`);
 
     this._http.disconnect();
   }
@@ -102,8 +105,20 @@ class Downloader {
   getTracks(manifest) {
     const height = this._params.videoHeight;
     const video = manifest.getVideoTrack(height);
-    const audios = manifest.getAudioTracks(this._params.audioLanguages);
+    const audios = manifest
+      .getAudioTracks(this._params.audioLanguages)
+      .map((audio) => ({ ...audio, language: audio.language || this._config.audioLanguage }));
     const subtitles = manifest.getSubtitleTracks(this._params.subtitleLanguages);
+    if (this._config.subtitles) {
+      subtitles.push(
+        ...this._config.subtitles.map((subtitle) => ({
+          type: 'text',
+          language: subtitle.language,
+          format: subtitle.format,
+          segments: [{ url: subtitle.url }],
+        }))
+      );
+    }
     this._params.videoHeight = video.qualityLabel.replace('p', '');
     return [video, ...audios, ...subtitles].filter((track) => {
       if (track.type === 'video' && this._params.skipVideo) return false;
@@ -166,8 +181,8 @@ class Downloader {
         await download(urls, {
           filepath,
           connections,
-          headers: this._config.downloadConfig.headers,
-          http2: this._config.downloadConfig.http2,
+          headers: this._config.headers,
+          http2: this._config.http2,
           logger,
           logPrefix,
           decryptersPool,
