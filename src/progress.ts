@@ -60,4 +60,4 @@ class Progress {
   }
 }
 
-module.exports = { Progress };
+export { Progress };

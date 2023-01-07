@@ -1,8 +1,6 @@
-'use strict';
+import { platform, arch, version } from 'node:process';
 
-const { platform } = require('node:process');
-
-const formatArgLabel = (rawLabel) => {
+const formatArgLabel = (rawLabel: string) => {
   const labelParts = rawLabel
     .replace(/--/g, '-')
     .split('-')
@@ -14,7 +12,13 @@ const formatArgLabel = (rawLabel) => {
 
 class Args {
   #argv;
-  #data;
+  #data: {
+    arguments: { name: string; description: string }[];
+    options: { flags: string; description: string; defaultValue?: string }[];
+    name?: string;
+    description?: string;
+    version?: string;
+  };
   parsed;
 
   constructor(argv = process.argv.slice(2)) {
@@ -23,27 +27,27 @@ class Args {
     this.#data = { arguments: [], options: [] };
   }
 
-  setName(name) {
+  setName(name: string) {
     this.#data.name = name;
     return this;
   }
 
-  setDescription(description) {
+  setDescription(description: string) {
     this.#data.description = description;
     return this;
   }
 
-  setVersion(version) {
+  setVersion(version: string) {
     this.#data.version = version;
     return this;
   }
 
-  setArgument(name, description) {
+  setArgument(name: string, description: string) {
     this.#data.arguments.push({ name, description });
     return this;
   }
 
-  setOption(flags, description, defaultValue) {
+  setOption(flags: string, description: string, defaultValue?: string | number | boolean) {
     this.#data.options.push({ flags, description, defaultValue });
     return this;
   }
@@ -56,7 +60,7 @@ class Args {
       this.#argv.splice(indexOfNamelessArg, 1);
     }
 
-    const parsedArgs = {};
+    const parsedArgs: Record<string, string | number | boolean | string[]> = {};
     const argv = this.#argv;
 
     for (let i = 0; i < argv.length; i++) {
@@ -126,7 +130,6 @@ class Args {
   }
 
   outputVersion() {
-    const { arch, version } = process;
     console.log(`\x1b[1mVERSION\x1b[0m`);
     console.log(`  ${this.#data.name}/${this.#data.version} ${platform}-${arch} node-${version}\n`);
   }
@@ -271,4 +274,4 @@ const parse = (args, options) => {
   return parsed;
 };
 
-module.exports = { Args, parse };
+export { Args, parse };
