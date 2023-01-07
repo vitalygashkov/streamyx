@@ -1,28 +1,26 @@
-'use strict';
-
-const { existsSync, createWriteStream } = require('node:fs');
-const { readdir, mkdir, writeFile, appendFile, readFile, unlink } = require('node:fs/promises');
-const { join, parse } = require('node:path');
-const { cwd } = require('node:process');
-const { homedir, tmpdir } = require('node:os');
+import { createWriteStream, existsSync, WriteStream } from 'node:fs';
+import { appendFile, mkdir, readdir, readFile, unlink, writeFile } from 'node:fs/promises';
+import { join, parse } from 'node:path';
+import { cwd } from 'node:process';
+import { homedir, tmpdir } from 'node:os';
 
 const fs = {
   appDir: cwd(),
   homeDir: homedir(),
   tempDir: tmpdir(),
-  join(...paths) {
+  join(...paths: string[]) {
     return join(...paths);
   },
-  parse(path) {
+  parse(path: string) {
     return parse(path);
   },
-  async readDir(dir) {
+  async readDir(dir: string) {
     return readdir(dir);
   },
-  async createDir(dir, recursive = true) {
+  async createDir(dir: string, recursive = true) {
     if (!this.exists(dir)) await mkdir(dir, { recursive });
   },
-  async writeBinary(path, data) {
+  async writeBinary(path: string, data: Buffer) {
     const dir = this.parse(path).dir;
     try {
       if (!this.exists(dir)) await this.createDir(dir);
@@ -31,7 +29,7 @@ const fs = {
       throw Error(`Failed to save data to file: ${path}`);
     }
   },
-  async writeText(path, data) {
+  async writeText(path: string, data: string) {
     const dir = this.parse(path).dir;
     try {
       if (!this.exists(dir)) await this.createDir(dir);
@@ -40,7 +38,7 @@ const fs = {
       throw Error(`Failed to save data to file: ${path}`);
     }
   },
-  async writeJson(path, data) {
+  async writeJson(path: string, data: object) {
     const dir = this.parse(path).dir;
     try {
       if (!this.exists(dir)) await this.createDir(dir);
@@ -49,7 +47,7 @@ const fs = {
       throw Error(`Failed to save data to file: ${path}`);
     }
   },
-  async appendBinary(path, data) {
+  async appendBinary(path: string, data: Buffer) {
     const dir = this.parse(path).dir;
     try {
       if (!this.exists(dir)) await this.createDir(dir);
@@ -59,7 +57,7 @@ const fs = {
       throw Error(`Failed to append data to binary file: ${path}`);
     }
   },
-  async appendText(path, data) {
+  async appendText(path: string, data: string) {
     const dir = this.parse(path).dir;
     try {
       if (!this.exists(dir)) await this.createDir(dir);
@@ -69,7 +67,7 @@ const fs = {
       throw Error(`Failed to append data to text file: ${path}`);
     }
   },
-  async readBinary(path) {
+  async readBinary(path: string) {
     try {
       const data = await readFile(path);
       return data;
@@ -77,7 +75,7 @@ const fs = {
       throw Error(`Failed to read binary file: ${path}`);
     }
   },
-  async readText(path) {
+  async readText(path: string) {
     try {
       const data = await readFile(path, { encoding: 'utf8' });
       return data;
@@ -85,7 +83,7 @@ const fs = {
       throw Error(`Failed to read text file: ${path}`);
     }
   },
-  async readJson(path) {
+  async readJson<T = unknown>(path: string): Promise<T> {
     try {
       const data = await readFile(path, { encoding: 'utf8' });
       return JSON.parse(data);
@@ -93,7 +91,7 @@ const fs = {
       throw Error(`Failed to read JSON file: ${path}`);
     }
   },
-  async delete(path) {
+  async delete(path: string) {
     if (!this.exists(path)) return;
     try {
       await unlink(path);
@@ -101,21 +99,21 @@ const fs = {
       throw Error(`Failed to delete file or folder: ${path}`);
     }
   },
-  exists(path) {
+  exists(path: string) {
     return existsSync(path);
   },
-  async createWriteStream(path) {
+  async createWriteStream(path: string) {
     const dir = this.parse(path).dir;
     if (!this.exists(dir)) await this.createDir(dir);
     return createWriteStream(path);
   },
-  async streamWrite(stream, data) {
-    return new Promise((resolve, reject) =>
+  async streamWrite(stream: WriteStream, data: any) {
+    return new Promise<void>((resolve, reject) =>
       stream.write(data, (err) => (err ? reject(err) : resolve()))
     );
   },
-  async streamClose(stream) {
-    return new Promise((resolve, reject) => {
+  async streamClose(stream: WriteStream) {
+    return new Promise<void>((resolve, reject) => {
       stream.end(() => {
         stream.close();
         stream.destroy();
@@ -125,4 +123,4 @@ const fs = {
   },
 };
 
-module.exports = fs;
+export default fs;
