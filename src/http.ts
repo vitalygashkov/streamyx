@@ -1,9 +1,9 @@
-'use strict';
-
-const http2 = require('node:http2');
-const { request } = require('undici');
-const { logger } = require('./logger');
-const { sleep } = require('./utils');
+import http2, { ClientHttp2Session } from 'node:http2';
+import { request } from 'undici';
+import BodyReadable from 'undici/types/readable';
+import { logger } from './logger';
+import { sleep } from './utils';
+import { Buffer } from 'protobufjs';
 
 const HTTP_METHOD = {
   GET: 'GET',
@@ -23,10 +23,10 @@ const USER_AGENTS = {
 };
 
 class Http {
-  #headers;
-  #cookies;
-  #session;
-  #lastOrigin;
+  #headers: Record<string, string>;
+  #cookies: string[];
+  #session?: ClientHttp2Session;
+  #lastOrigin?: string;
   #retryCount;
   #retryThreshold;
 
@@ -47,7 +47,7 @@ class Http {
     return this.#headers;
   }
 
-  async request(url, options) {
+  async request(url: string, options) {
     const requestUrl = new URL(url);
     const forceHttp2 = options?.http2;
     delete options?.http2;
@@ -59,7 +59,7 @@ class Http {
     }
   }
 
-  async #httpsRequest(url, options) {
+  async #httpsRequest(url: string | URL, options) {
     const requestOptions = {
       maxRedirections: 5,
       ...options,
@@ -85,24 +85,25 @@ class Http {
     return { statusCode, headers, body: data };
   }
 
-  async #http2Request(url, options) {
+  async #http2Request(url: URL, options) {
     const sameOrigin = this.#lastOrigin === url.origin;
     if ((!sameOrigin && this.#lastOrigin) || !this.#session || this.#session.destroyed) {
-      if (!!this.#session && !this.#session.closed) {
-        await new Promise(this.#session.close);
+      if (this.#session && !this.#session.closed) {
+        await new Promise<void>(this.#session.close);
         this.#session.destroy();
       }
       if (!this.#session || this.#session.destroyed || this.#session.closed) {
         this.#session = http2.connect(url.href);
         this.#session.on('error', (e) => {
           logger.error('HTTP2 session error');
-          logger.debug(url);
+          logger.debug(url.toString());
           logger.debug(e);
         });
       }
     }
 
     return new Promise((resolve, reject) => {
+      if (!this.#session) return;
       const requestOptions = {
         ':authority': url.host,
         ':path': url.pathname + url.search,
@@ -118,15 +119,16 @@ class Http {
 
       let statusCode = '';
       stream.on('response', (headers) => {
-        statusCode = headers[':status'].toString();
-        this.appendCookies(headers['set-cookie']);
+        if (headers[':status']) statusCode = headers[':status'].toString();
+        if (headers['set-cookie']) this.appendCookies(headers['set-cookie']);
       });
 
-      let body = [];
+      const chunks: Buffer[] | string[] = [];
+      let body: Buffer | string = '';
       stream
         .on('data', (chunk) => {
-          if (options?.responseType === 'buffer') body.push(Buffer.from(chunk));
-          else body.push(chunk);
+          if (options?.responseType === 'buffer') (chunks as Buffer[]).push(Buffer.from(chunk));
+          else (chunks as string[]).push(chunk);
         })
         .on('error', (e) => {
           logger.error(`HTTP2 request stream error`);
@@ -135,8 +137,8 @@ class Http {
           reject(e);
         })
         .on('end', () => {
-          if (options?.responseType === 'buffer') body = Buffer.concat(body);
-          else body = body.join('');
+          if (options?.responseType === 'buffer') body = Buffer.concat(chunks as Buffer[]);
+          else body = (chunks as string[]).join('');
           resolve({ body, statusCode: parseInt(statusCode) });
         });
 
@@ -144,7 +146,7 @@ class Http {
     });
   }
 
-  appendCookies(setCookie) {
+  appendCookies(setCookie: string | string[]) {
     const newCookies = typeof setCookie === 'string' ? [setCookie] : setCookie;
     if (!newCookies || !newCookies?.length) return;
     this.#cookies = this.#cookies.filter((cookie) => {
@@ -160,20 +162,20 @@ class Http {
     this.setCookies([...this.#cookies, ...newCookies]);
   }
 
-  setCookies(cookies) {
+  setCookies(cookies: string[]) {
     this.#cookies = cookies;
     this.#headers.cookie = this.#cookies.join('; ');
   }
 
-  setHeader(name, value) {
+  setHeader(name: string, value: string) {
     this.#headers[name] = value;
   }
 
-  setHeaders(headers) {
+  setHeaders(headers: Record<string, string>) {
     this.#headers = { ...this.#headers, ...headers };
   }
 
-  removeHeader(name) {
+  removeHeader(name: string) {
     delete this.#headers[name];
   }
 
@@ -182,13 +184,13 @@ class Http {
   }
 }
 
-const receiveData = async (body) => {
-  const buffers = [];
+const receiveData = async (body: BodyReadable) => {
+  const buffers: Buffer[] = [];
   for await (const chunk of body) buffers.push(chunk);
   return Buffer.concat(buffers);
 };
 
-const httpRequest = async (url, options = {}) => {
+const httpRequest = async (url: string, options = {}) => {
   const { statusCode, headers, body } = await request(url, {
     bodyTimeout: 5000,
     headersTimeout: 5000,
@@ -200,11 +202,11 @@ const httpRequest = async (url, options = {}) => {
 
 const RETRY_THRESHOLD = 3;
 
-const httpFetch = async (url, options) => {
+const httpFetch = async (url: string, options) => {
   const retryCount = options.retryCount || RETRY_THRESHOLD;
   let currentRetry = 0;
-  let error = null;
-  let response = {};
+  let error: { message: string } | null = null;
+  let response: { statusCode: number; headers: Record<string, string>; data: Buffer } = {};
   do {
     try {
       response = await httpRequest(url, options);

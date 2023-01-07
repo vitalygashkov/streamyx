@@ -44,4 +44,4 @@ const decrypt = async (
   if (cleanup) await fs.delete(input);
 };
 
-module.exports = { decrypt };
+export { decrypt };

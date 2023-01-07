@@ -78,4 +78,4 @@ const mux = async ({ inputs, output, trimBegin, trimEnd, cleanup }: MuxOptions) 
   if (cleanup) for (const input of inputs) await fs.delete(input.path);
 };
 
-module.exports = { mux };
+export { mux };
