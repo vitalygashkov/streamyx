@@ -1,12 +1,10 @@
-'use strict';
+import { spawn } from 'node:child_process';
+import { platform } from 'node:process';
+import { logger } from './logger';
+import fs from './fs';
+import { findExecutable } from './utils';
 
-const { spawn } = require('node:child_process');
-const { platform } = require('node:process');
-const { logger } = require('./logger');
-const fs = require('./fs');
-const { findExecutable } = require('./utils');
-
-const findPath = async (exeName) => {
+const findPath = async (exeName: string) => {
   const globalPath = await findExecutable(exeName);
   const localPath = fs.join(
     fs.appDir,
@@ -18,7 +16,15 @@ const findPath = async (exeName) => {
   return fs.exists(path) ? path : null;
 };
 
-const mux = async ({ inputs, output, trimBegin, trimEnd, cleanup }) => {
+interface MuxOptions {
+  inputs: { id: number; language?: string; label?: string; type: string; path: string }[];
+  output: string;
+  trimBegin?: string;
+  trimEnd?: string;
+  cleanup?: boolean;
+}
+
+const mux = async ({ inputs, output, trimBegin, trimEnd, cleanup }: MuxOptions) => {
   const exeName = 'ffmpeg';
   const exePath = await findPath(exeName);
   if (!exePath) {
@@ -28,7 +34,8 @@ const mux = async ({ inputs, output, trimBegin, trimEnd, cleanup }) => {
   const args = ['-y', '-hide_banner', '-loglevel', '8'];
   for (const input of inputs) args.push('-i', `${input.path}`);
   if (trimBegin) args.push('-ss', trimBegin);
-  const getTrackTypeSymbol = (track) => (track.type[0] === 't' ? 's' : track.type[0]);
+  const getTrackTypeSymbol = (track: { type: string }) =>
+    track.type[0] === 't' ? 's' : track.type[0];
   for (let i = 0; i < inputs.length; i++)
     args.push(`-map`, `${i}:${getTrackTypeSymbol(inputs[i])}`);
   for (const input of inputs) {
