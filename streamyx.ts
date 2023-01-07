@@ -1,20 +1,17 @@
-'use strict';
+import packageInfo from './package.json';
+import { Args, parse } from './src/args';
+import { LOG_LEVEL, logger } from './src/logger';
+import { bold, parseArrayFromString, parseNumberRange, prompt } from './src/utils';
+import { getDecryptionKeys } from './src/drm';
+import { findProviderByUrl } from './src/providers';
+import { Downloader } from './src/downloader';
 
 process.title = 'streamyx';
 
-const { arch } = require('node:process');
-const { description, name, version } = require('./package.json');
-const { Args, parse } = require('./src/args');
-const { LOG_LEVEL, logger } = require('./src/logger');
-const { prompt, parseNumberRange, parseArrayFromString, bold } = require('./src/utils');
-const { getDecryptionKeys } = require('./src/drm');
-const { findProviderByUrl } = require('./src/providers');
-const { Downloader } = require('./src/downloader');
-
 const args = new Args()
-  .setName(name)
-  .setVersion(version)
-  .setDescription(description)
+  .setName(packageInfo.name)
+  .setVersion(packageInfo.version)
+  .setDescription(packageInfo.description)
   .setArgument('URL', 'item link from a streaming service')
   .setOption('-q, --video-quality', 'sets video quality')
   .setOption('-a, --audio-quality', 'sets audio quality')
@@ -48,10 +45,10 @@ const args = new Args()
   .setOption('-h, --help', 'output help')
   .parse();
 
-const parseOptions = (args) => ({
+const parseOptions = (args: any) => ({
   ...args,
   urls: args._,
-  videoHeight: parseInt((args.q || args.videoQuality || '').replaceAll('p', '')),
+  videoHeight: parseInt(String(args.q || args.videoQuality || '').replaceAll('p', '')),
   audioQuality: args.a || args.audioQuality,
   episodes: parseNumberRange(args.e || args.episodes),
   seasons: parseNumberRange(args.s || args.seasons),
@@ -61,28 +58,32 @@ const parseOptions = (args) => ({
     args.episodeTemplate ||
     '{show}.S{s}E{e}.{title}.{audioType}.{quality}.{provider}.{format}.{codec}',
   proxy: args.p || args.proxy,
-  connections: parseInt(args.c || args.connections) || args.c || args.connections || 16,
+  connections: parseInt(String(args.c || args.connections)) || args.c || args.connections || 16,
   subtitleLanguages: parseArrayFromString(args.subsLang),
   audioLanguages: parseArrayFromString(args.audioLang),
   skipSubtitles: args.skipSubs,
   debug: args.d ?? args.debug,
 });
 
-const parseUrl = async (url) => {
+const parseUrl = async (url: string) => {
   let isValid = false;
-  let currentUrl = url;
+  let currentUrl: string | null = url;
   do {
     try {
-      const urlObject = new URL(currentUrl);
-      isValid = !!urlObject;
+      if (currentUrl) {
+        const urlObject = new URL(currentUrl);
+        isValid = !!urlObject;
+      } else {
+        isValid = false;
+      }
     } catch (e) {
       currentUrl = await prompt('URL');
     }
   } while (!isValid);
-  return currentUrl;
+  return currentUrl!;
 };
 
-const extractDecryptionKeys = async (licenseUrl, pssh) => {
+const extractDecryptionKeys = async (licenseUrl: string, pssh: string) => {
   const drmConfig = { server: licenseUrl, individualizationServer: licenseUrl };
   const keys = await getDecryptionKeys(pssh, drmConfig);
   if (!keys?.length) logger.error('Decryption keys not found');
@@ -90,18 +91,19 @@ const extractDecryptionKeys = async (licenseUrl, pssh) => {
 };
 
 const run = async () => {
-  const options = parseOptions(args);
+  const options: Record<string, string | boolean | number | number[] | string[]> =
+    parseOptions(args);
 
-  for (const url of args._) {
-    options.url = await parseUrl(url);
+  for (const urlString of options.urls as Array<string>) {
+    const url = await parseUrl(urlString);
     logger.setLogLevel(options.debug ? LOG_LEVEL.debug : LOG_LEVEL.info);
 
     if (options.pssh) {
-      await extractDecryptionKeys(options.url, options.pssh);
+      await extractDecryptionKeys(url, options.pssh as string);
       process.exit();
     }
 
-    const provider = findProviderByUrl(options.url, options);
+    const provider = findProviderByUrl(url, options);
     if (!provider) {
       logger.error(`Provider not found`);
       process.exit(1);

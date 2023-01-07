@@ -2,10 +2,14 @@
   "compilerOptions": {
     "target": "ESNext",
     "moduleResolution": "node",
+    "module": "CommonJS",
+    "outDir": "./dist",
+    "rootDir": "./",
     "strict": true,
-    "baseUrl": ".",
-    "preserveWatchOutput": true,
-    "skipLibCheck": true
-  },
-  "include": ["types/**/*.ts"]
+    "allowJs": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true
+  }
 }

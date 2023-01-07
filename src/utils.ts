@@ -1,11 +1,9 @@
-'use strict';
+import { createInterface } from 'node:readline/promises';
+import { stdin, stdout } from 'node:process';
+import { delimiter, join } from 'node:path';
+import { stat } from 'node:fs/promises';
 
-const { createInterface } = require('node:readline/promises');
-const { stdin, stdout } = require('node:process');
-const { delimiter, join } = require('node:path');
-const { stat } = require('node:fs/promises');
-
-const prompt = async (message, type = 'input') => {
+const prompt = async <T = string>(message: string, type = 'input') => {
   const readline = createInterface({ input: stdin, output: stdout });
   const question = { message, type };
   const isBooleanQuestion = question.type === 'confirm';
@@ -13,16 +11,17 @@ const prompt = async (message, type = 'input') => {
   const answer = await readline.question(formattedMessage);
   const result = isBooleanQuestion ? answer === 'y' : answer.trim();
   readline.close();
-  return result;
+  return result as T;
 };
 
-const sleep = async (seconds) => new Promise((resolve) => setTimeout(resolve, seconds * 1000));
+const sleep = async (seconds: number) =>
+  new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 
-const bold = (text) => `\x1b[1m${text}\x1b[0m`;
+const bold = (text: string) => `\x1b[1m${text}\x1b[0m`;
 
-const parseNumberRange = (rangeStr) => {
+const parseNumberRange = (rangeStr: string) => {
   if (!rangeStr?.replace(/\D/g, '').trim()) return NaN;
-  const numbers = [];
+  const numbers: number[] = [];
   rangeStr
     .replaceAll(' ', '')
     .trim()
@@ -37,12 +36,12 @@ const parseNumberRange = (rangeStr) => {
   return numbers;
 };
 
-const parseArrayFromString = (value) => {
+const parseArrayFromString = (value: string) => {
   if (!value) return [];
   return value.replaceAll(' ', '').trim().split(',');
 };
 
-const getRandomElements = (array, count = 1) => {
+const getRandomElements = <T = unknown>(array: T[], count = 1) => {
   const elements = [];
   for (let i = 1; i <= count; i++) elements.push(array[Math.floor(Math.random() * array.length)]);
   return elements;
@@ -55,7 +54,7 @@ const generateMacAddress = () =>
     '0123456789ABCDEF'.charAt(Math.floor(Math.random() * 16))
   );
 
-const findExecutable = async (exe) => {
+const findExecutable = async (exe: string) => {
   const envPath = process.env.PATH || '';
   const envExt = process.env.PATHEXT || '';
   const pathDirs = envPath.replace(/["]+/g, '').split(delimiter).filter(Boolean);
@@ -66,13 +65,13 @@ const findExecutable = async (exe) => {
   } catch (e) {
     return null;
   }
-  async function checkFileExists(filePath) {
+  async function checkFileExists(filePath: string) {
     if ((await stat(filePath)).isFile()) return filePath;
     throw new Error('Not a file');
   }
 };
 
-module.exports = {
+export {
   prompt,
   sleep,
   bold,
