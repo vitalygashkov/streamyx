@@ -1,12 +1,10 @@
-'use strict';
+import { spawn } from 'node:child_process';
+import { platform } from 'node:process';
+import { logger } from './logger';
+import fs from './fs';
+import { findExecutable } from './utils';
 
-const { spawn } = require('node:child_process');
-const { platform } = require('node:process');
-const { logger } = require('./logger');
-const fs = require('./fs');
-const { findExecutable } = require('./utils');
-
-const findPath = async (exeName) => {
+const findPath = async (exeName: string) => {
   const globalPath = await findExecutable(exeName);
   const localPath = fs.join(
     fs.appDir,
@@ -18,7 +16,13 @@ const findPath = async (exeName) => {
   return fs.exists(path) ? path : null;
 };
 
-const decrypt = async (key, kid, input, output, cleanup) => {
+const decrypt = async (
+  key: string,
+  kid: string,
+  input: string,
+  output: string,
+  cleanup?: boolean
+) => {
   const exeName = 'mp4decrypt';
   const exePath = await findPath(exeName);
   if (!exePath) {
@@ -30,14 +34,14 @@ const decrypt = async (key, kid, input, output, cleanup) => {
   mp4decrypt.stdout.setEncoding('utf8');
   mp4decrypt.stdout.on('data', (data) => logger.debug(data));
   mp4decrypt.stderr.setEncoding('utf8');
-  mp4decrypt.stderr.on('error', (data) => logger.error(data));
-  await new Promise((resolve) =>
+  mp4decrypt.stderr.on('error', (data) => logger.error(String(data)));
+  await new Promise<void>((resolve) =>
     mp4decrypt.on('close', () => {
       mp4decrypt.kill('SIGINT');
       resolve();
     })
   );
-  if (cleanup) await fs.delete(input, true);
+  if (cleanup) await fs.delete(input);
 };
 
 module.exports = { decrypt };
