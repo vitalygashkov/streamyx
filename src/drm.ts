@@ -1,25 +1,24 @@
-'use strict';
-
-const path = require('node:path');
-const { platform, arch } = require('node:process');
-const { getContentKeys, getSegmentDecrypter, setLogger } = require('../packages/keystone');
-const { logger } = require('./logger');
-const fs = require('./fs');
+import path from 'node:path';
+import { arch, platform } from 'node:process';
+import { getContentKeys, getSegmentDecrypter, setLogger } from '../packages/keystone';
+import { logger } from './logger';
+import fs from './fs';
 
 const DEVICES_DIR = fs.join(fs.appDir, 'files', 'cdm');
 
-const getRequestBodyFilter = (params) => (requestBody) => {
-  return params
-    ? JSON.stringify({
-        rawLicenseRequestBase64: Buffer.isBuffer(requestBody)
-          ? requestBody.toString('base64')
-          : requestBody,
-        ...params,
-      })
-    : requestBody;
-};
+const getRequestBodyFilter =
+  (params: Record<string, string | number>) => (requestBody: Buffer | string) => {
+    return params
+      ? JSON.stringify({
+          rawLicenseRequestBase64: Buffer.isBuffer(requestBody)
+            ? requestBody.toString('base64')
+            : requestBody,
+          ...params,
+        })
+      : requestBody;
+  };
 
-const responseDataFilter = (responseData) => {
+const responseDataFilter = (responseData: Buffer) => {
   if (responseData[0] === /* '{' */ 0x7b) {
     const dataObject = JSON.parse(responseData.toString('utf8'));
     return Buffer.from(dataObject.license || dataObject.payload || dataObject, 'base64');
@@ -27,11 +26,11 @@ const responseDataFilter = (responseData) => {
   return responseData;
 };
 
-const getDecryptionKeys = async (pssh, drmConfig) => {
+const getDecryptionKeys = async (pssh: string, drmConfig: any) => {
   setLogger(logger);
   if (!fs.exists(DEVICES_DIR)) return [];
   const devicesDirNames = await fs.readDir(DEVICES_DIR);
-  const deviceDir = devicesDirNames.length ? fs.join(DEVICES_DIR, devicesDirNames.pop()) : null;
+  const deviceDir = devicesDirNames.length ? fs.join(DEVICES_DIR, devicesDirNames.pop()!) : null;
   try {
     const contentKeys = await getContentKeys(pssh, {
       ...drmConfig,
@@ -41,7 +40,7 @@ const getDecryptionKeys = async (pssh, drmConfig) => {
     });
     return contentKeys;
   } catch (e) {
-    logger.debug(e);
+    logger.debug(String(e));
     return [];
   }
 };
@@ -64,7 +63,7 @@ const CDM_DIRS = {
   linux: ['/opt/google/chrome/WidevineCdm/_platform_specific/$platform/'],
 };
 
-const parseCdmDir = async (dir, { platform = '' }) => {
+const parseCdmDir = async (dir: string, { platform = '' }) => {
   let parsedDir = dir.replace('$platform', platform);
   if (dir.includes('$browserVersion')) {
     const browserDir = dir.split('$browserVersion')[0];
@@ -72,7 +71,7 @@ const parseCdmDir = async (dir, { platform = '' }) => {
     const entries = await fs.readDir(browserDir);
     const versions = entries.filter(parseFloat).map(parseFloat).sort();
     const latestVersion = Math.max(...versions);
-    const browserVersion = entries.find((entry) => parseFloat(entry) === latestVersion);
+    const browserVersion = entries.find((entry) => parseFloat(entry) === latestVersion) ?? '';
     parsedDir = parsedDir.replace('$browserVersion', browserVersion);
   }
   return parsedDir;
@@ -91,7 +90,7 @@ const getOS = () => {
   }
 };
 
-const getCdmDir = async (defaultDir) => {
+const getCdmDir = async (defaultDir: string) => {
   const os = getOS();
   const platform = `${os}_${arch}`;
   for (const dir of CDM_DIRS[os]) {
@@ -101,7 +100,7 @@ const getCdmDir = async (defaultDir) => {
   return defaultDir;
 };
 
-const getDecryptersPool = async (pssh, drmConfig, count = 1) => {
+const getDecryptersPool = async (pssh: string, drmConfig: any, count = 1) => {
   setLogger(logger);
   const addonDir = fs.join(fs.appDir, 'packages', 'keystone', 'build', 'Release');
   const cdmDir = await getCdmDir(fs.join(fs.appDir, 'files', 'cdm'));
@@ -117,4 +116,4 @@ const getDecryptersPool = async (pssh, drmConfig, count = 1) => {
   return Promise.all(decryptersPool);
 };
 
-module.exports = { getDecryptionKeys, getDecryptersPool };
+export { getDecryptionKeys, getDecryptersPool };
