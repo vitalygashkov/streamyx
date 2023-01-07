@@ -1,6 +1,6 @@
 import packageInfo from './package.json';
 import { Args, parse } from './src/args';
-import { LOG_LEVEL, logger } from './src/logger';
+import { logger } from './src/logger';
 import { bold, parseArrayFromString, parseNumberRange, prompt } from './src/utils';
 import { getDecryptionKeys } from './src/drm';
 import { findProviderByUrl } from './src/providers';
@@ -96,7 +96,7 @@ const run = async () => {
 
   for (const urlString of options.urls as Array<string>) {
     const url = await parseUrl(urlString);
-    logger.setLogLevel(options.debug ? LOG_LEVEL.debug : LOG_LEVEL.info);
+    logger.setLogLevel(options.debug ? 'debug' : 'info');
 
     if (options.pssh) {
       await extractDecryptionKeys(url, options.pssh as string);
