@@ -32,13 +32,22 @@ const mux = async ({ inputs, output, trimBegin, trimEnd, cleanup }) => {
   for (let i = 0; i < inputs.length; i++)
     args.push(`-map`, `${i}:${getTrackTypeSymbol(inputs[i])}`);
   for (const input of inputs) {
+    // TODO: Make FFMPEG-supported language code: ISO 639-1 (alpha-2 code)
     if (input.type === 'text') {
-      args.push(`-metadata:s:s:${input.id}`, `language=${input.language?.slice(0, 3)}`);
-      args.push(`-metadata:s:s:${input.id}`, `title="${input.label}"`);
+      if (input.language)
+        args.push(
+          `-metadata:s:s:${input.id}`,
+          `language=${input.language?.slice(0, 3)?.replace('-', '')}`
+        );
+      if (input.label) args.push(`-metadata:s:s:${input.id}`, `title="${input.label}"`);
     }
     if (input.type === 'audio') {
-      args.push(`-metadata:s:a:${input.id}`, `language=${input.language?.slice(0, 3)}`);
-      args.push(`-metadata:s:a:${input.id}`, `title="${input.label}"`);
+      if (input.language)
+        args.push(
+          `-metadata:s:a:${input.id}`,
+          `language=${input.language?.slice(0, 3)?.replace('-', '')}`
+        );
+      if (input.label) args.push(`-metadata:s:a:${input.id}`, `title="${input.label}"`);
     }
   }
 
