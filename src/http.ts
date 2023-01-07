@@ -47,7 +47,7 @@ class Http {
     return this.#headers;
   }
 
-  async request(url: string, options) {
+  async request(url: string, options: any) {
     const requestUrl = new URL(url);
     const forceHttp2 = options?.http2;
     delete options?.http2;
@@ -59,14 +59,14 @@ class Http {
     }
   }
 
-  async #httpsRequest(url: string | URL, options) {
+  async #httpsRequest(url: string | URL, options: any) {
     const requestOptions = {
       maxRedirections: 5,
       ...options,
       headers: { ...this.#headers, ...options?.headers },
     };
     const { statusCode, headers, body } = await request(url, requestOptions);
-    this.appendCookies(headers['set-cookie']);
+    if (headers['set-cookie']) this.appendCookies(headers['set-cookie']);
 
     const buffers = [];
     for await (const chunk of body) buffers.push(chunk);
@@ -85,7 +85,7 @@ class Http {
     return { statusCode, headers, body: data };
   }
 
-  async #http2Request(url: URL, options) {
+  async #http2Request(url: URL, options: any) {
     const sameOrigin = this.#lastOrigin === url.origin;
     if ((!sameOrigin && this.#lastOrigin) || !this.#session || this.#session.destroyed) {
       if (this.#session && !this.#session.closed) {

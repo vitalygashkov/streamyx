@@ -1,15 +1,18 @@
-'use strict';
-
-const fs = require('./fs');
-const { fetch, Http } = require('./http');
-const { Progress } = require('./progress');
+import fs from './fs';
+import { fetch, Http } from './http';
+import { Progress } from './progress';
 
 const DEFAULT_CONNECTIONS = 24;
 const DEFAULT_FILEPATH = fs.join(fs.appDir, 'mediafile');
 
 const httpClient = new Http();
 
-const downloadSegment = async (url, headers, index, http2 = false) => {
+const downloadSegment = async (
+  url: string,
+  headers: Record<string, string>,
+  index: number,
+  http2 = false
+) => {
   try {
     let data = null;
     if (http2) {
@@ -30,7 +33,7 @@ const downloadSegment = async (url, headers, index, http2 = false) => {
   }
 };
 
-const downloadSegments = async (urls, options) => {
+const downloadSegments = async (urls: string[], options: any) => {
   const {
     filepath = DEFAULT_FILEPATH,
     headers,
@@ -93,7 +96,7 @@ const downloadSegments = async (urls, options) => {
   writeStream.end();
 };
 
-const download = async (urls, options) => {
+const download = async (urls: string[], options: any) => {
   await downloadSegments(urls, options);
 };
 
