@@ -1,30 +1,39 @@
-'use strict';
-
-const { stdout } = require('node:process');
+import { stdout } from 'node:process';
 
 class Progress {
-  constructor({ size = 0, label = '', prefix } = {}) {
-    this.label = label;
+  label: string;
+  size: number;
+  sizeChars: number;
+  current: number;
+  stopped: boolean;
+  prefix = '[INFO]';
+
+  constructor({
+    size = 0,
+    label = '',
+    prefix,
+  }: { size?: number; label?: string; prefix?: string } = {}) {
     this.size = size;
+    this.label = label;
     this.sizeChars = 50;
     this.current = 0;
     this.stopped = false;
-    this.setPrefix(prefix);
+    if (prefix) this.setPrefix(prefix);
   }
 
-  setSize(size) {
+  setSize(size: number) {
     this.size = size;
   }
 
-  setPrefix(prefix) {
-    this.prefix = prefix || `[INFO]`;
+  setPrefix(prefix: string) {
+    this.prefix = prefix;
   }
 
   increase(value = 1) {
     this.update(this.current + value);
   }
 
-  update(progress) {
+  update(progress: number) {
     if (this.stopped) return;
     if (progress) this.current = progress;
     else this.current++;
