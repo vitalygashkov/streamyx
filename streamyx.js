@@ -28,7 +28,7 @@ const args = new Args()
     'episode filename template, example: "{show}.S{s}E{e}.{title}.{quality}.{provider}.{format}.{codec}"'
   )
   .setOption('-p, --proxy', 'set http(s)/socks proxy (WHATWG URL standard)')
-  .setOption('-c, --connections', 'number of parallel http connections (default: 8)')
+  .setOption('-c, --connections', 'number of parallel http connections (default: 16)')
   .setOption('--hdr', 'select high dynamic range if available')
   .setOption('--hardsub', 'download hardsubbed video if available')
   .setOption('--subs-lang', 'download subtitles by language tag')
@@ -61,7 +61,7 @@ const parseOptions = (args) => ({
     args.episodeTemplate ||
     '{show}.S{s}E{e}.{title}.{audioType}.{quality}.{provider}.{format}.{codec}',
   proxy: args.p || args.proxy,
-  connections: parseInt(args.c || args.connections) || args.c || args.connections || 8,
+  connections: parseInt(args.c || args.connections) || args.c || args.connections || 16,
   subtitleLanguages: parseArrayFromString(args.subsLang),
   audioLanguages: parseArrayFromString(args.audioLang),
   skipSubtitles: args.skipSubs,
