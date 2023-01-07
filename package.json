@@ -10,7 +10,6 @@
   },
   "scripts": {
     "start": "node streamyx",
-
     "build": "pkg . -t node18-win-x64,node18-macos-x64,node18-macos-arm64,node18-linux-x64 --out-path ./build/",
     "build:win": "pkg . -t node18-win-x64 -o ./build/streamyx-win-x64.exe",
     "build:macos": "pkg . -t node18-macos-x64 -o ./build/streamyx-macos-x64",
