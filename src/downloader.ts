@@ -1,26 +1,24 @@
-'use strict';
-
-const { parseManifest, CONTENT_TYPE } = require('dasha');
-const { download } = require('./download');
-const { logger } = require('./logger');
-const { Http } = require('./http');
-const fs = require('./fs');
-const { getDecryptionKeys, getDecryptersPool } = require('./drm');
-const { decrypt } = require('./mp4decrypt');
-const { mux } = require('./ffmpeg');
+import { AudioTrack, CONTENT_TYPE, Manifest, parseManifest, VideoTrack } from 'dasha';
+import { download } from './download';
+import { logger } from './logger';
+import { Http } from './http';
+import fs from './fs';
+import { getDecryptersPool, getDecryptionKeys } from './drm';
+import { decrypt } from './mp4decrypt';
+import { mux } from './ffmpeg';
 
 class Downloader {
-  _params;
-  _config;
-  _http;
+  _params: any;
+  _config: any;
+  _http: Http;
   _workDir = fs.join(fs.appDir, 'downloads');
 
-  constructor(params) {
+  constructor(params: any) {
     this._params = params;
     this._http = new Http();
   }
 
-  async start(config) {
+  async start(config: any) {
     this._config = config;
     const manifest = await this.getManifest();
     const tracks = this.getTracks(manifest);
@@ -92,7 +90,7 @@ class Downloader {
 
   async getManifest() {
     const response = await this._http.request(this._config.manifestUrl);
-    const manifest = parseManifest(response.body);
+    const manifest: any = parseManifest(response.body);
     if (!manifest) {
       logger.error(`Unable to parse manifest`);
       process.exit(1);
@@ -102,7 +100,7 @@ class Downloader {
     return manifest;
   }
 
-  getTracks(manifest) {
+  getTracks(manifest: Manifest) {
     const height = this._params.videoHeight;
     const video = manifest.getVideoTrack(height);
     const audios = manifest
@@ -111,7 +109,7 @@ class Downloader {
     const subtitles = manifest.getSubtitleTracks(this._params.subtitleLanguages);
     if (this._config.subtitles) {
       subtitles.push(
-        ...this._config.subtitles.map((subtitle) => ({
+        ...this._config.subtitles.map((subtitle: any) => ({
           type: 'text',
           language: subtitle.language,
           format: subtitle.format,
@@ -142,7 +140,7 @@ class Downloader {
     this._workDir = fs.join(fs.appDir, 'downloads', folderName);
   }
 
-  async download(tracks, decryptersPool) {
+  async download(tracks: any[], decryptersPool: any[]) {
     for (let i = 0; i < tracks.length; i++) {
       const track = tracks[i];
       const isSubtitle = track.type === 'text';
@@ -250,11 +248,11 @@ class Downloader {
     return filename;
   }
 
-  sanitizeFilename(text) {
+  sanitizeFilename(text: string) {
     return text.replace(/[^a-zа-я0-9.-]/gi, '');
   }
 
-  getTrackFilename(type, id, suffix = '', format) {
+  getTrackFilename(type: string, id: number | string, suffix = '', format?: string) {
     let filename = this.filename + '.';
     if (type) filename += type + '.';
     if (id) filename += id + '.';
@@ -263,11 +261,11 @@ class Downloader {
     return filename;
   }
 
-  getFilepath(filename) {
+  getFilepath(filename: string) {
     return fs.join(this._workDir, filename);
   }
 
-  getExtensionByContent(type) {
+  getExtensionByContent(type: string) {
     switch (type) {
       case CONTENT_TYPE.text:
         return 'vtt';

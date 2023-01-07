@@ -47,7 +47,7 @@ class Http {
     return this.#headers;
   }
 
-  async request(url: string, options: any) {
+  async request(url: string, options?: any): Promise<any> {
     const requestUrl = new URL(url);
     const forceHttp2 = options?.http2;
     delete options?.http2;
