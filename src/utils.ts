@@ -41,10 +41,14 @@ const parseArrayFromString = (value: string) => {
   return value.replaceAll(' ', '').trim().split(',');
 };
 
-const getRandomElements = <T = unknown>(array: T[], count = 1) => {
-  const elements = [];
-  for (let i = 1; i <= count; i++) elements.push(array[Math.floor(Math.random() * array.length)]);
-  return elements;
+const getRandomElements = (array: unknown, count = 1) => {
+  if (Array.isArray(array) || typeof array === 'string') {
+    const elements = [];
+    for (let i = 1; i <= count; i++) elements.push(array[Math.floor(Math.random() * array.length)]);
+    return elements;
+  } else {
+    return [];
+  }
 };
 
 const getRandomInRange = (min = 0, max = 100) => Math.floor(Math.random() * (max - min)) + min;
