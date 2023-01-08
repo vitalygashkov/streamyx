@@ -3,10 +3,9 @@
   "version": "3.6.0-beta.6",
   "author": "Vitaly Gashkov <vitalygashkov@vk.com>",
   "description": "Command-line video downloader",
-  "private": true,
-  "main": "streamyx.ts",
+  "main": "dist/streamyx.js",
   "bin": {
-    "streamyx": "streamyx.ts"
+    "streamyx": "dist/streamyx.js"
   },
   "scripts": {
     "start": "node streamyx",

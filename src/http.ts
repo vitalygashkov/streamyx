@@ -223,4 +223,4 @@ const httpFetch = async (url: string, options) => {
   else throw Error(error?.message);
 };
 
-export { Http, HTTP_METHOD, USER_AGENTS, fetch: httpFetch };
+export { Http, HTTP_METHOD, USER_AGENTS, httpFetch as fetch };
