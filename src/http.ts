@@ -4,6 +4,7 @@ import BodyReadable from 'undici/types/readable';
 import { logger } from './logger';
 import { sleep } from './utils';
 import { Buffer } from 'protobufjs';
+import { IncomingHttpHeaders } from 'http';
 
 const HTTP_METHOD = {
   GET: 'GET',
@@ -132,7 +133,7 @@ class Http {
         })
         .on('error', (e) => {
           logger.error(`HTTP2 request stream error`);
-          logger.debug(url);
+          logger.debug(url.toString());
           logger.debug(e);
           reject(e);
         })
@@ -202,16 +203,20 @@ const httpRequest = async (url: string, options = {}) => {
 
 const RETRY_THRESHOLD = 3;
 
-const httpFetch = async (url: string, options) => {
+const httpFetch = async (url: string, options: any) => {
   const retryCount = options.retryCount || RETRY_THRESHOLD;
   let currentRetry = 0;
   let error: { message: string } | null = null;
-  let response: { statusCode: number; headers: Record<string, string>; data: Buffer } = {};
+  let response: { statusCode: number; headers: IncomingHttpHeaders; data?: Buffer } = {
+    statusCode: 0,
+    headers: {},
+    data: undefined,
+  };
   do {
     try {
       response = await httpRequest(url, options);
       if (response.statusCode !== 200) error = { message: `Status code: ${response.statusCode}` };
-    } catch (e) {
+    } catch (e: any) {
       error = e;
     }
     if (response.statusCode !== 200) {

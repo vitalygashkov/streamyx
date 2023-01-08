@@ -29,7 +29,7 @@ class Downloader {
     const { drmConfig } = this._config;
 
     let contentKeys = [];
-    let decryptersPool = [];
+    let decryptersPool: ((...args: any) => any)[] = [];
     if (drmConfig) {
       contentKeys = await getDecryptionKeys(pssh, drmConfig);
       if (!contentKeys.length) {
@@ -48,7 +48,7 @@ class Downloader {
       logger.info(`Starting decryption`);
       const decryptQueue = [];
       for (let i = 0; i < tracks.length; i++) {
-        const track = tracks[i];
+        const track = tracks[i] as any;
         if (track.type === 'text') continue;
         const key = contentKeys[0].key;
         const kid = contentKeys[0].kid;
@@ -62,9 +62,9 @@ class Downloader {
 
     if (!this._params.skipMux) {
       logger.info('Muxing');
-      const inputs = [];
+      const inputs: any[] = [];
       for (let i = 0; i < tracks.length; i++) {
-        const track = tracks[i];
+        const track = tracks[i] as any;
         const isSubtitle = track.type === 'text';
         inputs.push({
           ...track,
@@ -103,9 +103,10 @@ class Downloader {
   getTracks(manifest: Manifest) {
     const height = this._params.videoHeight;
     const video = manifest.getVideoTrack(height);
-    const audios = manifest
-      .getAudioTracks(this._params.audioLanguages)
-      .map((audio) => ({ ...audio, language: audio.language || this._config.audioLanguage }));
+    const audios = manifest.getAudioTracks(this._params.audioLanguages).map((audio) => ({
+      ...audio,
+      language: (audio as any).language || this._config.audioLanguage,
+    }));
     const subtitles = manifest.getSubtitleTracks(this._params.subtitleLanguages);
     if (this._config.subtitles) {
       subtitles.push(
@@ -117,8 +118,8 @@ class Downloader {
         }))
       );
     }
-    this._params.videoHeight = video.qualityLabel.replace('p', '');
-    return [video, ...audios, ...subtitles].filter((track) => {
+    this._params.videoHeight = (video as any).qualityLabel.replace('p', '');
+    return [video, ...audios, ...subtitles].filter((track: any) => {
       if (track.type === 'video' && this._params.skipVideo) return false;
       if (track.type === 'audio' && this._params.skipAudio) return false;
       if (track.type === 'text' && this._params.skipSubtitles) return false;
@@ -151,7 +152,7 @@ class Downloader {
         track.format
       );
       const filepath = this.getFilepath(filename);
-      const urls = track.segments.map((s) => s.url);
+      const urls = track.segments.map((s: any) => s.url);
       const connections = this._params.connections;
 
       let trackInfo = '';
@@ -187,7 +188,7 @@ class Downloader {
           codec: track.codecs?.split('.')?.[0],
           contentType: track.type,
         });
-      } catch (e) {
+      } catch (e: any) {
         logger.error(`Download failed: ${e.message}`);
         process.exit(1);
       }
@@ -215,7 +216,7 @@ class Downloader {
         const content = response.body;
         const filename = this.getTrackFilename('', '', language, format);
         await fs.writeText(this.getFilepath(filename), content);
-      } catch (e) {
+      } catch (e: any) {
         logger.error(`Failed to download subtitles`);
         logger.debug(e.message);
       }
@@ -278,4 +279,4 @@ class Downloader {
   }
 }
 
-module.exports = { Downloader };
+export { Downloader };

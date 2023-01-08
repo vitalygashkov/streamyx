@@ -76,7 +76,7 @@ const downloadSegments = async (urls: string[], options: any) => {
             })
           : response.data;
       }
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
       console.error(e.message);
     }
@@ -100,4 +100,4 @@ const download = async (urls: string[], options: any) => {
   await downloadSegments(urls, options);
 };
 
-module.exports = { download };
+export { download };

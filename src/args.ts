@@ -14,12 +14,13 @@ class Args {
   #argv;
   #data: {
     arguments: { name: string; description: string }[];
-    options: { flags: string; description: string; defaultValue?: string }[];
+    options: { flags: string; description: string; defaultValue?: string | number | boolean }[];
     name?: string;
     description?: string;
     version?: string;
   };
   parsed;
+  _?: any[];
 
   constructor(argv = process.argv.slice(2)) {
     this.parsed = false;
@@ -81,12 +82,12 @@ class Args {
       }
     }
 
-    Object.keys(parsedArgs).forEach((key) => (this[key] = parsedArgs[key]));
+    Object.keys(parsedArgs).forEach((key) => ((this as any)[key] = parsedArgs[key]));
     this.parsed = true;
 
     const hasArgs = parsedArgs ? Object.keys(parsedArgs).length > 0 : false;
     if (!hasArgs || 'h' in this || 'help' in this) this.outputHelp();
-    if ('v' in this || 'version' in this) this.outputVersion();
+    if ('v' in this || 'version' in this) (this as Args).outputVersion();
 
     return this;
   }
@@ -135,12 +136,12 @@ class Args {
   }
 }
 
-const pushOrSet = (obj, key, value) => {
+const pushOrSet = (obj: any, key: any, value: any) => {
   if (Array.isArray(obj[key])) obj[key].push(value);
   else obj[key] = value;
 };
 
-const parseFlag = (parsed, args, currentIndex, opt, flag) => {
+const parseFlag = (parsed: any, args: any, currentIndex: any, opt: any, flag: any) => {
   if (opt.type === Boolean) {
     pushOrSet(parsed, opt.name, true);
   } else {
@@ -158,7 +159,7 @@ const parseFlag = (parsed, args, currentIndex, opt, flag) => {
   return currentIndex;
 };
 
-const parsePositional = (parsed, args, currentIndex, opt) => {
+const parsePositional = (parsed: any, args: any, currentIndex: any, opt: any) => {
   if (!opt.multiple) {
     parsed[opt.name] = opt.type(args[currentIndex]);
     return currentIndex;
@@ -181,26 +182,26 @@ const parsePositional = (parsed, args, currentIndex, opt) => {
 };
 
 // -abc 1 => -a -b -c 1
-const splitShortFlags = (arg) => {
+const splitShortFlags = (arg: any) => {
   if (/^-[a-zA-Z]/.test(arg)) {
     return arg
       .slice(1)
       .split('')
-      .map((flag) => `-${flag}`);
+      .map((flag: any) => `-${flag}`);
   }
   return [arg];
 };
 
-const parse = (args, options) => {
-  const parsed = { _: [] };
+const parse = (args: any, options: any) => {
+  const parsed: Record<string, string | string[] | boolean | number> = { _: [] };
   let stopped = false;
 
   // when `option.when` returns false, they will be skipped
   const skippedPositionalArgs = new Set();
 
-  args = args.reduce((res, arg) => {
+  args = args.reduce((res: any, arg: any) => {
     if (arg[0] === '-') {
-      let equalSignIndex = arg.indexOf('=');
+      const equalSignIndex = arg.indexOf('=');
       if (equalSignIndex > 0) {
         res.push(...splitShortFlags(arg.slice(0, equalSignIndex)), arg.slice(equalSignIndex + 1));
       } else {
@@ -216,12 +217,12 @@ const parse = (args, options) => {
     const flag = args[i];
     const flagName = flag.replace(/^-{1,2}/, '');
     if (stopped) {
-      parsed._.push(flag);
+      (parsed._ as string[]).push(flag);
       continue;
     }
     if (flag.startsWith('-')) {
       const opt = options.find(
-        (o) =>
+        (o: any) =>
           !o.positional &&
           (o.name === flagName || o.flags?.includes(flagName)) &&
           (!o.when || o.when(parsed))
@@ -238,7 +239,7 @@ const parse = (args, options) => {
         throw new Error(`unknown flag: ${flag}`);
       }
     } else {
-      const opt = options.find((o) => {
+      const opt = options.find((o: any) => {
         return (
           o.positional &&
           parsed[o.name] === undefined &&
