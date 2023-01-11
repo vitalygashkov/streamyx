@@ -1,6 +1,6 @@
 import path from 'node:path';
 import { arch, platform } from 'node:process';
-import { getContentKeys, getSegmentDecrypter, setLogger } from '../packages/keystone';
+import { getContentKeys, getSegmentDecrypter, setLogger } from '../packages/keystone/keystone';
 import { logger } from './logger';
 import fs from './fs';
 

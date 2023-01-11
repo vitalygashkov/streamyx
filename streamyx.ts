@@ -74,7 +74,7 @@ const parseUrl = async (url: string) => {
         const urlObject = new URL(currentUrl);
         isValid = !!urlObject;
       } else {
-        isValid = false;
+        currentUrl = await prompt('URL');
       }
     } catch (e) {
       currentUrl = await prompt('URL');
@@ -94,8 +94,10 @@ const run = async () => {
   const options: Record<string, string | boolean | number | number[] | string[]> =
     parseOptions(args);
 
-  for (const urlString of options.urls as Array<string>) {
+  const urls = (options.urls as Array<string>) ?? [''];
+  for (const urlString of urls) {
     const url = await parseUrl(urlString);
+    options.url = url;
     logger.setLogLevel(options.debug ? 'debug' : 'info');
 
     if (options.pssh) {

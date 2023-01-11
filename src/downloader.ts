@@ -29,7 +29,7 @@ class Downloader {
     const { drmConfig } = this._config;
 
     let contentKeys = [];
-    let decryptersPool: ((...args: any) => any)[] = [];
+    let decryptersPool: any = [];
     if (drmConfig) {
       contentKeys = await getDecryptionKeys(pssh, drmConfig);
       if (!contentKeys.length) {

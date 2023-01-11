@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "target": "ESNext",
-    "moduleResolution": "node",
-    "module": "CommonJS",
-    "outDir": "./dist",
+    "outDir": "dist",
     "rootDir": "./",
     "strict": true,
     "allowJs": true,
