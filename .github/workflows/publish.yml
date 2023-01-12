@@ -21,7 +21,7 @@ jobs:
           node-version: 18
 
       - name: Install submodule dependencies
-        run: cd packages/keystone && npm ci
+        run: cd packages/keystone && npm ci && npm run build
 
       - name: Install app dependencies
         run: npm ci
