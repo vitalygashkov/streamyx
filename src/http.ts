@@ -15,12 +15,14 @@ const HTTP_METHOD = {
 
 const USER_AGENTS = {
   chromeWindows:
-    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.71 Safari/537.36',
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36',
   chromeMacOS:
     'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.61 Safari/537.36',
   chromeLinux:
     'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.71 Safari/537.36',
   firefoxWindows: 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:90.0) Gecko/20100101 Firefox/90.0',
+  tizen:
+    'Mozilla/5.0 (Linux; U; Tizen 2.0; en-us) AppleWebKit/537.1 (KHTML, like Gecko) Mobile TizenBrowser/2.0',
 };
 
 class Http {
@@ -66,7 +68,7 @@ class Http {
       ...options,
       headers: { ...this.#headers, ...options?.headers },
     };
-    const { statusCode, headers, body } = await request(url, requestOptions);
+    const { statusCode, headers, body, context } = await request(url, requestOptions);
     if (headers['set-cookie']) this.appendCookies(headers['set-cookie']);
 
     const buffers = [];
@@ -83,15 +85,22 @@ class Http {
     //   const response = await this.#httpsRequest(url, options);
     // };
 
-    return { statusCode, headers, body: data };
+    return { statusCode, headers, body: data, context };
   }
 
   async #http2Request(url: URL, options: any) {
     const sameOrigin = this.#lastOrigin === url.origin;
     if ((!sameOrigin && this.#lastOrigin) || !this.#session || this.#session.destroyed) {
-      if (this.#session && !this.#session.closed) {
-        await new Promise<void>(this.#session.close);
-        this.#session.destroy();
+      if (this.#session && !this.#session?.closed) {
+        try {
+          await new Promise<void>((resolve, reject) => {
+            this.#session?.close(resolve);
+          });
+          this.#session.destroy();
+        } catch (e) {
+          console.log(e);
+          console.log(this.#session);
+        }
       }
       if (!this.#session || this.#session.destroyed || this.#session.closed) {
         this.#session = http2.connect(url.href);

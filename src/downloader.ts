@@ -90,13 +90,14 @@ class Downloader {
 
   async getManifest() {
     const response = await this._http.request(this._config.manifestUrl);
+    const lastUrl: URL | undefined = response.context?.history?.at(-1);
+    const manifestUrl = lastUrl ? lastUrl.origin + lastUrl.pathname : this._config.manifestUrl;
     const manifest: any = parseManifest(response.body);
     if (!manifest) {
       logger.error(`Unable to parse manifest`);
       process.exit(1);
     }
-    if (!manifest.baseUrls?.length)
-      manifest.addBaseUrl(this._config.manifestUrl.replace('Manifest.mpd', ''));
+    if (!manifest.baseUrls?.length) manifest.addBaseUrl(manifestUrl);
     return manifest;
   }
 
