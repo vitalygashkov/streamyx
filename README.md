@@ -54,11 +54,12 @@ $ streamyx "https://hd.kinopoisk.ru/film/46c5df252dc1a790b82d1a00fcf44812?conten
 
 ## Providers
 
-| Title       | URL                            | Status      | Details                                            |
-| ----------- | ------------------------------ | ----------- | -------------------------------------------------- |
-| Crunchyroll | <https://beta.crunchyroll.com> | Supported   | Classic version is not supported                   |
-| Kinopoisk   | <https://hd.kinopoisk.ru>      | Supported   |                                                    |
-| Okko        | <https://okko.tv>              | Supported   | 4K support & email auth in progress                |
-| IVI         | <https://www.ivi.ru>           | In progress | Auth in progress                                   |
-| NTV         | <https://www.ntv.ru>           | In progress | Only download link extracting                      |
-| Wakanim     | <https://www.wakanim.tv>       | Deprecated  | No longer maintained due to merge with Crunchyroll |
+| Network                                | Status       | Details                                            |
+|----------------------------------------|--------------|----------------------------------------------------|
+| [IVI](https://www.ivi.ru)              | Experimental | Season/series download in progress                 |
+| [Wink](https://wink.ru)                | Experimental | Season/series download in progress                 |
+| [Kinopoisk](https://hd.kinopoisk.ru)   | Supported    |                                                    |
+| [Okko](https://okko.tv)                | Supported    | 4K support & email auth in progress                |
+| [Crunchyroll](https://crunchyroll.com) | Experimental |                                                    |
+| [NTV](https://www.ntv.ru)              | In progress  | Only download link extracting                      |
+| [Wakanim](https://www.wakanim.tv)      | Deprecated   | No longer maintained due to merge with Crunchyroll |
