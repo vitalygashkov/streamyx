@@ -31,16 +31,16 @@ class Downloader {
     let contentKeys = [];
     let decryptersPool: any = [];
     if (drmConfig) {
-      if (!pssh) {
-        logger.error('PSSH not found');
-        process.exit(1);
-      }
-      contentKeys = await getDecryptionKeys(pssh, drmConfig);
-      if (!contentKeys.length) {
-        logger.error(`Decryption keys could not be obtained`);
-        process.exit(1);
-        logger.debug(`Trying to decrypt through a CDM adapter (slower process)`);
-        decryptersPool = await getDecryptersPool(pssh, drmConfig, this._params.connections);
+      if (pssh) {
+        contentKeys = await getDecryptionKeys(pssh, drmConfig);
+        if (!contentKeys.length) {
+          logger.error(`Decryption keys could not be obtained`);
+          process.exit(1);
+          logger.debug(`Trying to decrypt through a CDM adapter (slower process)`);
+          decryptersPool = await getDecryptersPool(pssh, drmConfig, this._params.connections);
+        }
+      } else {
+        logger.warn('PSSH not found');
       }
     }
 

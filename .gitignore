@@ -41,10 +41,6 @@ build/
 *.sublime-workspace
 
 .vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
 
 *.sw[a-p]
 
