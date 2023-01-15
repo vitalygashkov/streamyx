@@ -37,9 +37,9 @@ class Downloader {
       }
       contentKeys = await getDecryptionKeys(pssh, drmConfig);
       if (!contentKeys.length) {
-        logger.debug(
-          `Decryption keys could not be obtained. Trying to decrypt through a CDM adapter (slower process).`
-        );
+        logger.error(`Decryption keys could not be obtained`);
+        process.exit(1);
+        logger.debug(`Trying to decrypt through a CDM adapter (slower process)`);
         decryptersPool = await getDecryptersPool(pssh, drmConfig, this._params.connections);
       }
     }
