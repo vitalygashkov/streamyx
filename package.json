@@ -1,0 +1,65 @@
+{
+  "name": "streamyx",
+  "version": "3.6.0-beta.6",
+  "author": "Vitaly Gashkov <vitalygashkov@vk.com>",
+  "description": "Command-line video downloader",
+  "main": "dist/streamyx.js",
+  "bin": {
+    "streamyx": "dist/streamyx.js"
+  },
+  "scripts": {
+    "start": "tsc && node dist/streamyx",
+    "build": "tsc && pkg . -t node18-win-x64,node18-macos-x64,node18-macos-arm64,node18-linux-x64 --out-path ./build/",
+    "build:win": "tsc && pkg . -t node18-win-x64 -o ./build/streamyx-win-x64.exe",
+    "build:macos": "tsc && pkg . -t node18-macos-x64 -o ./build/streamyx-macos-x64",
+    "build:macos:arm": "tsc && pkg . -t node18-macos-arm64 -o ./build/streamyx-macos-arm64",
+    "build:linux": "tsc && pkg . -t node18-linux-x64 -o ./build/streamyx-linux-x64",
+    "clean": "rimraf build/*",
+    "lint": "eslint --ext .js,.ts .",
+    "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\""
+  },
+  "dependencies": {
+    "dasha": "^2.3.2",
+    "mpd-parser": "^1.0.0",
+    "protobufjs": "^7.1.2",
+    "undici": "^5.14.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.7.14",
+    "@typescript-eslint/eslint-plugin": "^5.48.0",
+    "@typescript-eslint/parser": "^5.48.0",
+    "eslint": "^8.12.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-prettier": "^4.0.0",
+    "jest": "^27.5.1",
+    "pkg": "^5.8.0",
+    "prettier": "^2.7.1",
+    "typescript": "^4.8.2",
+    "why-is-node-running": "^2.2.2"
+  },
+  "engines": {
+    "node": ">=18",
+    "npm": ">=8"
+  },
+  "pkg": {
+    "patches": {
+      "./node_modules/undici/lib/fetch/body.js": [
+        "require('stream/web')",
+        "require('stream').web"
+      ],
+      "./node_modules/undici/lib/core/util.js": [
+        "require('stream/web')",
+        "require('stream').web"
+      ],
+      "./node_modules/undici/lib/fetch/request.js": [
+        "require('stream/web')",
+        "require('stream').web"
+      ],
+      "./node_modules/undici/lib/fetch/index.js": [
+        "require('stream/web')",
+        "require('stream').web"
+      ]
+    }
+  }
+}

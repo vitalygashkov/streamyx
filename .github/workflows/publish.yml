@@ -21,15 +21,12 @@ jobs:
           node-version: 18
 
       - name: Install submodule dependencies
-        working-directory: ./cli
-        run: cd packages/wvcdm && npm ci
+        run: cd packages/keystone && npm ci && npm run build
 
       - name: Install app dependencies
-        working-directory: ./cli
         run: npm ci
 
       - name: Get package name and version
-        working-directory: ./cli
         run: |
           test -n $(node -p -e "require('./package.json').name") &&
           test -n $(node -p -e "require('./package.json').version") &&
@@ -37,18 +34,16 @@ jobs:
           echo PACKAGE_VERSION=$(node -p -e "require('./package.json').version") >> $GITHUB_ENV || exit 1
 
       - name: Build
-        working-directory: ./cli
         run: npm run build:win
 
       - name: Compress
-        working-directory: ./cli
         run: powershell Compress-Archive build\streamyx-win-x64.exe streamyx-win-x64.zip
 
       - name: Upload build
         uses: actions/upload-artifact@v3
         with:
           name: win
-          path: ./cli/streamyx-win-x64.zip
+          path: ./streamyx-win-x64.zip
 
   build-macos:
     name: Build for macOS
@@ -66,15 +61,12 @@ jobs:
           node-version: 18
 
       - name: Install submodule dependencies
-        working-directory: ./cli
-        run: cd packages/wvcdm && npm ci
+        run: cd packages/keystone && npm ci
 
       - name: Install app dependencies
-        working-directory: ./cli
         run: npm ci
 
       - name: Get package name and version
-        working-directory: ./cli
         run: |
           test -n $(node -p -e "require('./package.json').name") &&
           test -n $(node -p -e "require('./package.json').version") &&
@@ -82,18 +74,16 @@ jobs:
           echo PACKAGE_VERSION=$(node -p -e "require('./package.json').version") >> $GITHUB_ENV || exit 1
 
       - name: Build
-        working-directory: ./cli
         run: npm run build:macos
 
       - name: Compress
-        working-directory: ./cli
         run: zip -9 -j ${{ env.PACKAGE_NAME }}-macos-x64.zip ./build/${{ env.PACKAGE_NAME }}-macos-x64
 
       - name: Upload build
         uses: actions/upload-artifact@v3
         with:
           name: macos
-          path: ./cli/${{ env.PACKAGE_NAME }}-macos-x64.zip
+          path: ./${{ env.PACKAGE_NAME }}-macos-x64.zip
 
   build-linux:
     name: Build for Linux
@@ -111,15 +101,12 @@ jobs:
           node-version: 18
 
       - name: Install submodule dependencies
-        working-directory: ./cli
-        run: cd packages/wvcdm && npm ci
+        run: cd packages/keystone && npm ci
 
       - name: Install app dependencies
-        working-directory: ./cli
         run: npm ci
 
       - name: Get package name and version
-        working-directory: ./cli
         run: |
           test -n $(node -p -e "require('./package.json').name") &&
           test -n $(node -p -e "require('./package.json').version") &&
@@ -127,18 +114,16 @@ jobs:
           echo PACKAGE_VERSION=$(node -p -e "require('./package.json').version") >> $GITHUB_ENV || exit 1
 
       - name: Build
-        working-directory: ./cli
         run: npm run build:linux
 
       - name: Compress
-        working-directory: ./cli
         run: zip -9 -j ${{ env.PACKAGE_NAME }}-linux-x64.zip ./build/${{ env.PACKAGE_NAME }}-linux-x64
 
       - name: Upload build
         uses: actions/upload-artifact@v3
         with:
           name: linux
-          path: ./cli/${{ env.PACKAGE_NAME }}-linux-x64.zip
+          path: ./${{ env.PACKAGE_NAME }}-linux-x64.zip
 
   upload:
     name: Upload builds to Release
@@ -172,7 +157,6 @@ jobs:
           name: linux
 
       - name: Get package name and version
-        working-directory: ./cli
         run: |
           test -n $(node -p -e "require('./package.json').name") &&
           test -n $(node -p -e "require('./package.json').version") &&

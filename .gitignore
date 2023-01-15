@@ -1,3 +1,83 @@
-.idea/
-.vscode/
+# Logs
+/logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# App files
+/files
+/downloads
+
+# Dependency directories
+/node_modules
+/jspm_packages
+/bower_components
+
+# Build generated
+dist/
+build/
+
+# Optional npm cache directory
+.npm
+
+# Yarn Integrity file
+.yarn-integrity
+
+# Optional eslint cache
+.eslintcache
+
+# dotenv environment variables file(s)
+.env
+.env.*
+
+# Serverless generated files
+.serverless/
+
+### IDE / Editors ###
+# cache files for sublime text
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+*.sublime-workspace
+
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+*.sw[a-p]
+
+/.idea
+modules.xml
+*.ipr
+*.iml
+
+/.nova
+
+### System Files ###
+*.DS_Store
 .DS_Store
+
+# Windows thumbnail cache files
+Thumbs.db
+ehthumbs.db
+ehthumbs_vista.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
