@@ -133,6 +133,16 @@ class Http {
         if (headers['set-cookie']) this.appendCookies(headers['set-cookie']);
       });
 
+      const retryRequest = async (e: any) => {
+        logger.debug(`Retry request. URL: ${url}`);
+        if (this.#retryCount === this.#retryThreshold) reject(e);
+        this.#retryCount++;
+        const TWO_SECS = 2000;
+        await new Promise<void>((resolve) => setTimeout(() => resolve(), TWO_SECS));
+        const response = await this.#http2Request(url, options);
+        return response;
+      };
+
       const chunks: Buffer[] | string[] = [];
       let body: Buffer | string = '';
       stream
@@ -140,11 +150,13 @@ class Http {
           if (options?.responseType === 'buffer') (chunks as Buffer[]).push(Buffer.from(chunk));
           else (chunks as string[]).push(chunk);
         })
-        .on('error', (e) => {
+        .on('error', async (e) => {
           logger.error(`HTTP2 request stream error`);
           logger.debug(url.toString());
           logger.debug(e);
-          reject(e);
+          const response: any = await retryRequest(e);
+          if (response?.body) resolve(response);
+          else reject(e);
         })
         .on('end', () => {
           if (options?.responseType === 'buffer') body = Buffer.concat(chunks as Buffer[]);
