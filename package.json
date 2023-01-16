@@ -1,6 +1,6 @@
 {
   "name": "streamyx",
-  "version": "3.6.0-beta.6",
+  "version": "3.6.0-beta.7",
   "author": "Vitaly Gashkov <vitalygashkov@vk.com>",
   "description": "Command-line video downloader",
   "main": "dist/streamyx.js",
@@ -19,7 +19,7 @@
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\""
   },
   "dependencies": {
-    "dasha": "^2.3.3",
+    "dasha": "^2.3.4",
     "mpd-parser": "^1.0.0",
     "protobufjs": "^7.1.2",
     "undici": "^5.15.0"
@@ -41,25 +41,5 @@
   "engines": {
     "node": ">=18",
     "npm": ">=8"
-  },
-  "pkg": {
-    "patches": {
-      "./node_modules/undici/lib/fetch/body.js": [
-        "require('stream/web')",
-        "require('stream').web"
-      ],
-      "./node_modules/undici/lib/core/util.js": [
-        "require('stream/web')",
-        "require('stream').web"
-      ],
-      "./node_modules/undici/lib/fetch/request.js": [
-        "require('stream/web')",
-        "require('stream').web"
-      ],
-      "./node_modules/undici/lib/fetch/index.js": [
-        "require('stream/web')",
-        "require('stream').web"
-      ]
-    }
   }
 }
