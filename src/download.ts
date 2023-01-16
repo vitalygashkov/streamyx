@@ -14,7 +14,7 @@ const downloadSegment = async (
   http2 = false
 ) => {
   try {
-    let data = null;
+    let data: any = null;
     if (http2) {
       const response = await httpClient.request(url, {
         http2: true,
