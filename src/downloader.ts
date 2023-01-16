@@ -8,14 +8,14 @@ import { decrypt } from './mp4decrypt';
 import { mux } from './ffmpeg';
 
 class Downloader {
+  private http: Http;
   _params: any;
   _config: any;
-  _http: Http;
   _workDir = fs.join(fs.appDir, 'downloads');
 
   constructor(params: any) {
     this._params = params;
-    this._http = new Http();
+    this.http = new Http();
   }
 
   async start(config: any) {
@@ -87,18 +87,19 @@ class Downloader {
       logger.info(`Muxed successfully`);
     }
 
-    this._http.disconnect();
+    if (this.http.hasSessions) await this.http.destroySessions();
   }
 
   async getManifest() {
-    const response = await this._http.request(this._config.manifestUrl);
-    const lastUrl: URL | undefined = response.context?.history?.at(-1);
-    const manifestUrl = lastUrl ? lastUrl.origin + lastUrl.pathname : this._config.manifestUrl;
-    const manifest: any = parseManifest(response.body);
+    const response = await this.http.fetch(this._config.manifestUrl);
+    const text = await response.text();
+    const manifest: any = parseManifest(text);
     if (!manifest) {
       logger.error(`Unable to parse manifest`);
       process.exit(1);
     }
+    const url = new URL(response.url);
+    const manifestUrl = url.origin + url.pathname;
     if (!manifest.baseUrls?.length) manifest.addBaseUrl(manifestUrl);
     return manifest;
   }
@@ -115,6 +116,7 @@ class Downloader {
       subtitles.push(
         ...this._config.subtitles.map((subtitle: any) => ({
           type: 'text',
+          label: subtitle.label,
           language: subtitle.language,
           format: subtitle.format,
           segments: [{ url: subtitle.url }],
@@ -215,8 +217,8 @@ class Downloader {
     for (const subtitle of subtitles) {
       const { url, language, format } = subtitle;
       try {
-        const response = await this._http.request(url, { http2: false });
-        const content = response.body;
+        const response = await this.http.fetch(url);
+        const content = await response.text();
         const filename = this.getTrackFilename('', '', language, format);
         await fs.writeText(this.getFilepath(filename), content);
       } catch (e: any) {

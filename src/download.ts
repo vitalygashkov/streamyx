@@ -1,31 +1,20 @@
 import fs from './fs';
-import { fetch, Http } from './http';
+import { Http } from './http';
+import { logger } from './logger';
 import { Progress } from './progress';
 
 const DEFAULT_CONNECTIONS = 24;
 const DEFAULT_FILEPATH = fs.join(fs.appDir, 'mediafile');
 
-const httpClient = new Http();
+const http = new Http();
 
-const downloadSegment = async (
-  url: string,
-  headers: Record<string, string>,
-  index: number,
-  http2 = false
-) => {
+const downloadSegment = async (url: string, headers: Record<string, string>, index: number) => {
   try {
-    let data: any = null;
-    if (http2) {
-      const response = await httpClient.request(url, {
-        http2: true,
-        responseType: 'buffer',
-        headers,
-      });
-      data = response.body;
-    } else {
-      const response = await fetch(url, { headers });
-      data = response.data;
+    const response = await http.fetch(url, { headers });
+    if (response.status !== 200) {
+      logger.error(`Segment #${index + 1} download failed. Status code: ${response.status}`);
     }
+    const data = Buffer.from(await response.arrayBuffer());
     return { data, index };
   } catch (e) {
     console.error({ url, index });
@@ -37,7 +26,6 @@ const downloadSegments = async (urls: string[], options: any) => {
   const {
     filepath = DEFAULT_FILEPATH,
     headers,
-    http2,
     connections = DEFAULT_CONNECTIONS,
     decryptersPool,
     codec,
@@ -59,7 +47,7 @@ const downloadSegments = async (urls: string[], options: any) => {
       segmentIndex++
     ) {
       const url = urls[segmentIndex];
-      partSegments.set(segmentIndex, downloadSegment(url, headers, segmentIndex, http2));
+      partSegments.set(segmentIndex, downloadSegment(url, headers, segmentIndex));
     }
 
     const segments = [];
