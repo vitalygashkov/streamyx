@@ -19,7 +19,7 @@
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\""
   },
   "dependencies": {
-    "dasha": "^2.3.4",
+    "dasha": "^2.3.5",
     "mpd-parser": "^1.0.0",
     "protobufjs": "^7.1.2",
     "undici": "^5.15.0"
