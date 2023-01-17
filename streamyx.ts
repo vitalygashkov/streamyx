@@ -1,7 +1,7 @@
 import packageInfo from './package.json';
-import { Args, parse } from './src/args';
+import { Args } from './src/args';
 import { logger } from './src/logger';
-import { bold, parseArrayFromString, parseNumberRange, prompt } from './src/utils';
+import { parseArrayFromString, parseNumberRange, prompt } from './src/utils';
 import { getDecryptionKeys } from './src/drm';
 import { findProviderByUrl } from './src/providers';
 import { Downloader } from './src/downloader';
@@ -12,30 +12,36 @@ const args = new Args()
   .setName(packageInfo.name)
   .setVersion(packageInfo.version)
   .setDescription(packageInfo.description)
-  .setArgument('URL', 'item link from a streaming service')
-  .setOption('-q, --video-quality', 'sets video quality')
+  .setArgument(
+    'URL',
+    'Content URL like movie, season, series, etc. (use quotes "..." if URL includes specific symbols, like &)'
+  )
+  .setOption('-q, --video-quality', 'sets video quality; example: 1080p')
   .setOption('-a, --audio-quality', 'sets audio quality')
-  .setOption('-e, --episodes', 'sets episode numbers')
-  .setOption('-s, --seasons', 'sets season numbers')
-  .setOption('-f, --force', 'overwrite output files without asking')
-  .setOption('-t, --template', 'filename template ("{title} - S{s}E{e} [{quality} {translation}]")')
+  .setOption('-e, --episodes', 'sets episode numbers; example: 1,4-10,16,17')
+  .setOption('-s, --seasons', 'sets season numbers; example: 1,4,5-8')
+  // .setOption('-f, --force', 'overwrite output files without asking')
+  .setOption(
+    '-t, --template',
+    'filename template; example: "{title} - S{s}E{e} [{quality} {translation}]"'
+  )
   .setOption('--movie-template', 'movie filename template')
   .setOption(
     '--episode-template',
-    'episode filename template, example: "{show}.S{s}E{e}.{title}.{quality}.{provider}.{format}.{codec}"'
+    'episode filename template; example: "{show}.S{s}E{e}.{title}.{quality}.{provider}.{format}.{codec}"'
   )
-  .setOption('-p, --proxy', 'set http(s)/socks proxy (WHATWG URL standard)')
-  .setOption('-c, --connections', 'number of parallel http connections (default: 16)')
+  // .setOption('-p, --proxy', 'set http(s)/socks proxy (WHATWG URL standard)')
+  .setOption('-c, --connections', 'number of parallel http connections per download (default: 16)')
   .setOption('--hdr', 'select high dynamic range if available')
   .setOption('--hardsub', 'download hardsubbed video if available')
-  .setOption('--subs-lang', 'download subtitles by language tag')
-  .setOption('--audio-lang', 'download audio by language tag')
-  .setOption('--skip-subs', 'skip downloading subtitles')
-  .setOption('--skip-audio', 'skip downloading audio')
-  .setOption('--skip-video', 'skip downloading video')
-  .setOption('--skip-mux', 'skip muxing video, audio and subtitles')
-  .setOption('--trim-begin', 'trim video at the beginning')
-  .setOption('--trim-end', 'trim video at the end')
+  .setOption('--subs-lang', 'download subtitles by language tag (en, ru, etc.)')
+  .setOption('--audio-lang', 'download audio by language tag (en, ru, etc.)')
+  .setOption('--skip-subs', 'do not download subtitles')
+  .setOption('--skip-audio', 'do not download audio')
+  .setOption('--skip-video', 'do not download video')
+  .setOption('--skip-mux', 'do not mux tracks like video, audio and subtitles')
+  .setOption('--trim-begin', 'trim video at the beginning; example: 00:00:06')
+  .setOption('--trim-end', 'trim video at the end; example: 00:01:30')
   .setOption(
     '--pssh',
     'Widevine PSSH from MPD manifest (to get decryption keys without downloading; url argument should be widevine license url)'
