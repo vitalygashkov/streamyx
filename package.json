@@ -1,6 +1,6 @@
 {
   "name": "streamyx",
-  "version": "3.6.0-beta.8",
+  "version": "3.6.0-beta.9",
   "author": "Vitaly Gashkov <vitalygashkov@vk.com>",
   "description": "Command-line video downloader",
   "main": "dist/streamyx.js",
@@ -19,7 +19,7 @@
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\""
   },
   "dependencies": {
-    "dasha": "^2.3.5",
+    "dasha": "^2.3.6",
     "mpd-parser": "^1.0.0",
     "protobufjs": "^7.1.2",
     "undici": "^5.15.0"
