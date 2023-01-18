@@ -134,7 +134,7 @@ class Downloader {
 
   setWorkDir() {
     const title = this._config.show?.title || this._config.movie?.title;
-    let folderName = `${title.replaceAll(' ', '.')}`;
+    let folderName = `${title?.replaceAll(' ', '.')}`;
     if (this._config.season?.number)
       folderName += `.S${this._config.season.number.toString().padStart(2, '0')}`;
     if (this._config.audioType) folderName += `.${this._config.audioType.toUpperCase()}`;
@@ -142,7 +142,7 @@ class Downloader {
     folderName += `.${this._config.provider}`;
     folderName += `.WEB-DL`;
     folderName += `.x264`;
-    folderName = this.sanitizeFilename(folderName).replaceAll('..', '.');
+    folderName = this.sanitizeFilename(folderName)?.replaceAll('..', '.');
     this._workDir = fs.join(fs.appDir, 'downloads', folderName);
   }
 
@@ -165,7 +165,7 @@ class Downloader {
       else trackInfo += track.type.toUpperCase();
       if (track.type === 'video') {
         trackInfo += ` ∙ ${track.width}x${track.height}`;
-        trackInfo += ` ∙ ${track.bitrate} Mbps`;
+        trackInfo += ` ∙ ${track.bitrate} Kbps`;
       }
       if (track.type === 'audio') {
         trackInfo += ` ∙ ${track.language?.toUpperCase()}`;
@@ -201,11 +201,11 @@ class Downloader {
   }
 
   outputInfo() {
-    let msg = `${this._config.show?.title || this._config.movie?.title} ∙ `;
-    if (this._config.season?.number) msg += `S${this._config.season.number}, `;
-    if (this._config.episode?.number) msg += `E${this._config.episode.number}`;
-    if (this._config.episode?.title) msg += ` ∙ ${this._config.episode.title}`;
-    msg = msg.replaceAll(' ∙  ∙ ', ' ∙ ');
+    const title = this._config.show?.title ?? this._config.movie?.title ?? '';
+    const seasonNumber = this._config.season?.number ? `S${this._config.season.number}, ` : '';
+    const episodeNumber = this._config.episode?.number ? `E${this._config.episode.number}` : '';
+    const episodeTitle = this._config.episode?.title ?? '';
+    const msg = [title, seasonNumber, episodeNumber, episodeTitle].filter((el) => !!el).join(' ∙ ');
     logger.info(msg);
   }
 
@@ -234,7 +234,7 @@ class Downloader {
     let filename = '';
     if (movie)
       filename = movieTemplate
-        .replace('{title}', movie.title.replaceAll(' ', '.'))
+        .replace('{title}', movie.title?.replaceAll(' ', '.') ?? 'Untitled')
         .replace('{audioType}.', audioType ? audioType.toUpperCase() + '.' : '');
     else
       filename = episodeTemplate
