@@ -5,7 +5,7 @@ import http2, {
 } from 'node:http2';
 import { IncomingHttpHeaders } from 'node:http';
 import { URL } from 'node:url';
-import { request, fetch, Request, RequestInit, Response, Client } from 'undici';
+import { request, fetch, Request, RequestInit, Response } from 'undici';
 import BodyReadable from 'undici/types/readable';
 import { logger } from './logger';
 import { sleep } from './utils';
@@ -146,9 +146,10 @@ class Http {
     options?: RequestInit
   ): Promise<Response> {
     try {
+      const headers = { ...this.headers, ...options?.headers };
       const response = await fetch(resource, {
         ...options,
-        headers: { ...this.headers, ...options?.headers },
+        headers,
       });
       const setCookie = response.headers.get('set-cookie');
       if (setCookie) this.appendCookies(setCookie);
