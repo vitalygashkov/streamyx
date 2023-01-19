@@ -52,14 +52,18 @@ $ streamyx "https://hd.kinopoisk.ru/film/46c5df252dc1a790b82d1a00fcf44812?conten
 1/1/2022, 10:00:28 AM  INFO   █████▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ 9%
 ```
 
-## Providers
+## Streaming services
 
-| Network                                | Status       | Details                                            |
-|----------------------------------------|--------------|----------------------------------------------------|
-| [IVI](https://www.ivi.ru)              | Experimental | Season/series download in progress                 |
-| [Wink](https://wink.ru)                | Experimental | Season/series download in progress                 |
-| [Kinopoisk](https://hd.kinopoisk.ru)   | Supported    |                                                    |
-| [Okko](https://okko.tv)                | Supported    | 4K support & email auth in progress                |
-| [Crunchyroll](https://crunchyroll.com) | Experimental |                                                    |
-| [NTV](https://www.ntv.ru)              | In progress  | Only download link extracting                      |
-| [Wakanim](https://www.wakanim.tv)      | Deprecated   | No longer maintained due to merge with Crunchyroll |
+| Title                                    | Status       | Details                                            |
+| ---------------------------------------- | ------------ | -------------------------------------------------- |
+| [Кинопоиск](https://hd.kinopoisk.ru/)    | Supported    |                                                    |
+| [Иви](https://www.ivi.ru/)               | Experimental | 3D/seasons/series in progress                      |
+| [Wink](https://wink.ru/)                 | Experimental | Seasons/series in progress                         |
+| [Okko](https://okko.tv/)                 | Supported    |                                                    |
+| [KION](https://kion.ru/)                 | Planned      |                                                    |
+| [PREMIER](https://premier.one/)          | Planned      |                                                    |
+| [START](https://start.ru/)               | Planned      |                                                    |
+| [Amediateka](https://www.amediateka.ru/) | Planned      |                                                    |
+| [Crunchyroll](https://crunchyroll.com/)  | Experimental |                                                    |
+| [НТВ](https://www.ntv.ru/)               | In progress  | Only download link extracting                      |
+| [Wakanim](https://www.wakanim.tv/)       | Deprecated   | No longer maintained due to merge with Crunchyroll |
