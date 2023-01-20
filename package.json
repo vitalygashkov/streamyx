@@ -19,6 +19,7 @@
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\""
   },
   "dependencies": {
+    "blowfish-node": "^1.1.3",
     "dasha": "^2.3.6",
     "mpd-parser": "^1.0.0",
     "protobufjs": "^7.1.2",
