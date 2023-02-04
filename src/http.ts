@@ -214,7 +214,6 @@ class Http {
           this.#session.destroy();
         } catch (e) {
           console.log(e);
-          console.log(this.#session);
         }
       }
       if (!this.#session || this.#session.destroyed || this.#session.closed) {
