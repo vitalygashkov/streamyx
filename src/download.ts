@@ -16,9 +16,10 @@ const downloadSegment = async (url: string, headers: Record<string, string>, ind
     }
     const data = Buffer.from(await response.arrayBuffer());
     return { data, index };
-  } catch (e) {
-    console.error({ url, index });
-    console.error(e);
+  } catch (e: any) {
+    logger.error(`Download segment #${index + 1} failed`);
+    logger.debug(e.toString());
+    return { index };
   }
 };
 
@@ -56,17 +57,19 @@ const downloadSegments = async (urls: string[], options: any) => {
       for (let i = 0; i < responses.length; i++) {
         const response = responses[i];
         const decryptSegment = decryptersPool?.[i];
-        segments[response.index - startOffset] = decryptSegment
-          ? decryptSegment(response.data, {
-              contentType,
-              codec,
-              init: response.index === 0,
-            })
-          : response.data;
+        if (response.data) {
+          segments[response.index - startOffset] = decryptSegment
+            ? decryptSegment(response.data, {
+                contentType,
+                codec,
+                init: response.index === 0,
+              })
+            : response.data;
+        }
       }
     } catch (e: any) {
-      console.error(e);
-      console.error(e.message);
+      logger.error(`Download part ${partIndex + 1} failed`);
+      logger.debug(e.message);
     }
 
     try {
@@ -75,9 +78,9 @@ const downloadSegments = async (urls: string[], options: any) => {
       const progressValue =
         endOffset > urls.length ? urls.length - startOffset : endOffset - startOffset;
       progress.increase(progressValue);
-    } catch (e) {
-      console.error(e);
-      console.error(`Write part ${partIndex + 1} failed`);
+    } catch (e: any) {
+      logger.error(`Write part ${partIndex + 1} failed`);
+      logger.debug(e.toString());
     }
     partSegments.clear();
   }
