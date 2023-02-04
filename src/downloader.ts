@@ -202,7 +202,7 @@ class Downloader {
 
   outputInfo() {
     const title = this._config.show?.title ?? this._config.movie?.title ?? '';
-    const seasonNumber = this._config.season?.number ? `S${this._config.season.number}, ` : '';
+    const seasonNumber = this._config.season?.number ? `S${this._config.season.number}` : '';
     const episodeNumber = this._config.episode?.number ? `E${this._config.episode.number}` : '';
     const episodeTitle = this._config.episode?.title ?? '';
     const msg = [title, seasonNumber, episodeNumber, episodeTitle].filter((el) => !!el).join(' ∙ ');
