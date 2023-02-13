@@ -89,6 +89,7 @@ const downloadSegments = async (urls: string[], options: any) => {
 
 const download = async (urls: string[], options: any) => {
   await downloadSegments(urls, options);
+  await http.destroySessions();
 };
 
 export { download };
