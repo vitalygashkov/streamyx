@@ -1,6 +1,6 @@
 {
   "name": "streamyx",
-  "version": "3.6.0-beta.11",
+  "version": "3.6.0-beta.12",
   "author": "Vitaly Gashkov <vitalygashkov@vk.com>",
   "description": "Command-line video downloader",
   "main": "dist/streamyx.js",
