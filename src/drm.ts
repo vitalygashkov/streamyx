@@ -26,7 +26,12 @@ const getRequestBodyFilter =
 const responseDataFilter = (responseData: Buffer) => {
   if (responseData[0] === /* '{' */ 0x7b) {
     const dataObject = JSON.parse(responseData.toString('utf8'));
-    return Buffer.from(dataObject.license || dataObject.payload || dataObject, 'base64');
+    try {
+      return Buffer.from(dataObject.license || dataObject.payload || dataObject, 'base64');
+    } catch (e) {
+      logger.error(`Can't recognize license response`);
+      logger.error(`Response: ${JSON.stringify(dataObject)}`);
+    }
   }
   return responseData;
 };
@@ -48,12 +53,13 @@ const getDecryptionKeys = async (pssh: string, drmConfig: any) => {
   }
 };
 
-const getDecryptersPool = async (pssh: string, drmConfig: any, count = 1) => {
+const getDecryptersPool = async (pssh: string, drmConfig: any, count = 1, key?: Buffer) => {
   setLogger(logger);
   const addonDir = fs.join(fs.appDir, 'packages', 'keystone', 'build', 'Release');
   const cdmDir = fs.join(fs.appDir, 'files', 'cdm');
   const params = {
     ...drmConfig,
+    key,
     requestBodyFilter: getRequestBodyFilter(drmConfig.params),
     responseDataFilter,
     cdmDir,
