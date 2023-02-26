@@ -41,6 +41,15 @@ const parseArrayFromString = (value: string) => {
   return value.replaceAll(' ', '').trim().split(',');
 };
 
+const parseHeadersFromString = (str: string) => {
+  const headers: Record<string, string> = {};
+  for (const header of str.split('|')) {
+    const [key, value] = header.split(':');
+    headers[key.trim()] = value.trim();
+  }
+  return headers;
+};
+
 const getRandomElements = (array: unknown, count = 1) => {
   if (Array.isArray(array) || typeof array === 'string') {
     const elements = [];
@@ -81,6 +90,7 @@ export {
   bold,
   parseNumberRange,
   parseArrayFromString,
+  parseHeadersFromString,
   getRandomElements,
   getRandomInRange,
   generateMacAddress,
