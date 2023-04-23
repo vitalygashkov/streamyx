@@ -14,6 +14,11 @@ export enum SettingsVideoQuality {
   Highest = 'highest',
 }
 
+export enum SettingsVideoDynamicRange {
+  High = 'HDR',
+  Standart = 'SDR',
+}
+
 export enum SettingsAudioQuality {
   Lowest = 'lowest',
   Highest = 'highest',
