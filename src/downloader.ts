@@ -7,6 +7,19 @@ import { getDecryptersPool, getDecryptionKeys } from './drm';
 import { decrypt } from './mp4decrypt';
 import { mux } from './ffmpeg';
 
+interface DownloadOptions {
+  numberOfConnections: number;
+  preferHdr: boolean;
+  prefer3d: boolean;
+  preferHardsub: boolean;
+  skipVideo: boolean;
+  skipAudio: boolean;
+  skipSubtitles: boolean;
+  skipMuxing: boolean;
+  trimBegin: string;
+  trimEnd: string;
+}
+
 class Downloader {
   private http: Http;
   _params: any;
