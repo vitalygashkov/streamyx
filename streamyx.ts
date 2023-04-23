@@ -61,7 +61,7 @@ const args = new Args()
   .setOption('-h, --help', 'output help')
   .parse();
 
-const parseOptions = (args: any) => ({
+const parseArgs = (args: any) => ({
   ...args,
   urls: args._,
   videoHeight: parseInt(String(args.q || args.videoQuality || '').replaceAll('p', '')),
@@ -112,20 +112,20 @@ const extractDecryptionKeys = async (
 };
 
 const run = async () => {
-  const options: Record<string, any> = parseOptions(args);
+  const parsedArgs: Record<string, any> = parseArgs(args);
 
-  const urls = (options.urls as Array<string>) ?? [''];
+  const urls = (parsedArgs.urls as Array<string>) ?? [''];
   for (const urlString of urls) {
     const url = await parseUrl(urlString);
-    options.url = url;
-    logger.setLogLevel(options.debug ? 'debug' : 'info');
+    parsedArgs.url = url;
+    logger.setLogLevel(parsedArgs.debug ? 'debug' : 'info');
 
-    if (options.pssh) {
-      await extractDecryptionKeys(url, options.pssh as string, options.headers);
+    if (parsedArgs.pssh) {
+      await extractDecryptionKeys(url, parsedArgs.pssh as string, parsedArgs.headers);
       process.exit();
     }
 
-    const provider = findProviderByUrl(url, options);
+    const provider = findProviderByUrl(url, parsedArgs);
     if (!provider) {
       logger.error(`Provider not found`);
       process.exit(1);
@@ -133,7 +133,7 @@ const run = async () => {
     await provider.init();
     logger.info(`Fetching metadata and generate download configs...`);
     const configs = await provider.getConfigList();
-    const downloader = new Downloader(options);
+    const downloader = new Downloader(parsedArgs);
     for (const config of configs) await downloader.start(config);
   }
 
