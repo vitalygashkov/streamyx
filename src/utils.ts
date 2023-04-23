@@ -42,6 +42,7 @@ const parseArrayFromString = (value: string) => {
 };
 
 const parseHeadersFromString = (str: string) => {
+  if (!str) return {};
   const headers: Record<string, string> = {};
   for (const header of str.split('|')) {
     const [key, value] = header.split(':');
