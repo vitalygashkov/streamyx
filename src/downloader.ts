@@ -36,6 +36,7 @@ class Downloader {
     const manifest = await this.getManifest();
     const tracks = this.getTracks(manifest);
     this.setWorkDir();
+    await fs.createDir(this._workDir);
     this.outputInfo();
 
     const pssh = manifest.getPssh();
