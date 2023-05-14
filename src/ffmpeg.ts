@@ -68,10 +68,10 @@ const mux = async ({ inputs, output, trimBegin, trimEnd, cleanup }: MuxOptions) 
 
   let error = '';
   ffmpeg.stderr.setEncoding('utf8');
-  ffmpeg.stderr.on('data', (d) => (error += d)).on('end', () => logger.error(error));
+  ffmpeg.stderr.on('data', (d) => (error += d)).on('end', () => error && logger.error(error));
   let data = '';
   ffmpeg.stdout.setEncoding('utf8');
-  ffmpeg.stderr.on('data', (d) => (data += d)).on('end', () => logger.debug(data));
+  ffmpeg.stderr.on('data', (d) => (data += d)).on('end', () => data && logger.debug(data));
 
   await new Promise((resolve) => ffmpeg.on('close', resolve));
   ffmpeg.kill('SIGINT');

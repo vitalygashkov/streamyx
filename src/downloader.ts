@@ -89,7 +89,7 @@ class Downloader {
             this.getTrackFilename(
               isSubtitle ? `${track.type}.${track.language}` : track.type,
               track.id,
-              isSubtitle ? '' : 'dec',
+              isSubtitle ? '' : contentKeys.length ? 'dec' : 'enc',
               track.format
             )
           ),
