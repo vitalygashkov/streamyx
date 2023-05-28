@@ -7,6 +7,19 @@ import { getDecryptersPool, getDecryptionKeys } from './drm';
 import { decrypt } from './mp4decrypt';
 import { mux } from './ffmpeg';
 
+interface DownloadOptions {
+  numberOfConnections: number;
+  preferHdr: boolean;
+  prefer3d: boolean;
+  preferHardsub: boolean;
+  skipVideo: boolean;
+  skipAudio: boolean;
+  skipSubtitles: boolean;
+  skipMuxing: boolean;
+  trimBegin: string;
+  trimEnd: string;
+}
+
 class Downloader {
   private http: Http;
   _params: any;
@@ -23,6 +36,7 @@ class Downloader {
     const manifest = await this.getManifest();
     const tracks = this.getTracks(manifest);
     this.setWorkDir();
+    await fs.createDir(this._workDir);
     this.outputInfo();
 
     const pssh = manifest.getPssh();
@@ -75,7 +89,7 @@ class Downloader {
             this.getTrackFilename(
               isSubtitle ? `${track.type}.${track.language}` : track.type,
               track.id,
-              isSubtitle ? '' : 'dec',
+              isSubtitle ? '' : contentKeys.length ? 'dec' : 'enc',
               track.format
             )
           ),

@@ -1,7 +1,12 @@
 import packageInfo from './package.json';
 import { Args } from './src/args';
 import { logger } from './src/logger';
-import { parseArrayFromString, parseNumberRange, prompt } from './src/utils';
+import {
+  parseArrayFromString,
+  parseHeadersFromString,
+  parseNumberRange,
+  prompt,
+} from './src/utils';
 import { getDecryptionKeys } from './src/drm';
 import { findProviderByUrl } from './src/providers';
 import { Downloader } from './src/downloader';
@@ -47,12 +52,16 @@ const args = new Args()
     '--pssh',
     'Widevine PSSH from MPD manifest (to get decryption keys without downloading; url argument should be widevine license url)'
   )
+  .setOption(
+    '--headers',
+    'Headers for license request (--pssh argument required; example: "Content-Type:application/json|Cookie:SessionID=yIz9I")'
+  )
   .setOption('-d, --debug', 'debug mode')
   .setOption('-v, --version', 'output version')
   .setOption('-h, --help', 'output help')
   .parse();
 
-const parseOptions = (args: any) => ({
+const parseArgs = (args: any) => ({
   ...args,
   urls: args._,
   videoHeight: parseInt(String(args.q || args.videoQuality || '').replaceAll('p', '')),
@@ -68,6 +77,7 @@ const parseOptions = (args: any) => ({
   connections: parseInt(String(args.c || args.connections)) || args.c || args.connections || 16,
   subtitleLanguages: parseArrayFromString(args.subsLang),
   audioLanguages: parseArrayFromString(args.audioLang),
+  headers: parseHeadersFromString(args.headers),
   skipSubtitles: args.skipSubs,
   debug: args.d ?? args.debug,
 });
@@ -90,29 +100,32 @@ const parseUrl = async (url: string) => {
   return currentUrl!;
 };
 
-const extractDecryptionKeys = async (licenseUrl: string, pssh: string) => {
-  const drmConfig = { server: licenseUrl, individualizationServer: licenseUrl };
+const extractDecryptionKeys = async (
+  licenseUrl: string,
+  pssh: string,
+  headers?: Record<string, string>
+) => {
+  const drmConfig = { server: licenseUrl, individualizationServer: licenseUrl, headers };
   const keys = await getDecryptionKeys(pssh, drmConfig);
   if (!keys?.length) logger.error('Decryption keys not found');
   else for (const key of keys) logger.info(`KID:KEY -> ${key.kid}:${key.key}`);
 };
 
 const run = async () => {
-  const options: Record<string, string | boolean | number | number[] | string[]> =
-    parseOptions(args);
+  const parsedArgs: Record<string, any> = parseArgs(args);
 
-  const urls = (options.urls as Array<string>) ?? [''];
+  const urls = (parsedArgs.urls as Array<string>) ?? [''];
   for (const urlString of urls) {
     const url = await parseUrl(urlString);
-    options.url = url;
-    logger.setLogLevel(options.debug ? 'debug' : 'info');
+    parsedArgs.url = url;
+    logger.setLogLevel(parsedArgs.debug ? 'debug' : 'info');
 
-    if (options.pssh) {
-      await extractDecryptionKeys(url, options.pssh as string);
+    if (parsedArgs.pssh) {
+      await extractDecryptionKeys(url, parsedArgs.pssh as string, parsedArgs.headers);
       process.exit();
     }
 
-    const provider = findProviderByUrl(url, options);
+    const provider = findProviderByUrl(url, parsedArgs);
     if (!provider) {
       logger.error(`Provider not found`);
       process.exit(1);
@@ -120,7 +133,7 @@ const run = async () => {
     await provider.init();
     logger.info(`Fetching metadata and generate download configs...`);
     const configs = await provider.getConfigList();
-    const downloader = new Downloader(options);
+    const downloader = new Downloader(parsedArgs);
     for (const config of configs) await downloader.start(config);
   }
 
