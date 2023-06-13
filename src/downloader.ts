@@ -215,6 +215,7 @@ class Downloader {
   }
 
   outputInfo() {
+    logger.debug(`Manifest URL: ${this._config.manifestUrl}`);
     const title = this._config.show?.title ?? this._config.movie?.title ?? '';
     const seasonNumber = this._config.season?.number ? `S${this._config.season.number}` : '';
     const episodeNumber = this._config.episode?.number ? `E${this._config.episode.number}` : '';
