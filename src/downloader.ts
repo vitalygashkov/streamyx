@@ -178,8 +178,8 @@ class Downloader {
       if (track.type === 'text') trackInfo += 'SUBTITLES';
       else trackInfo += track.type.toUpperCase();
       if (track.type === 'video') {
-        trackInfo += ` ∙ ${track.width}x${track.height}`;
-        trackInfo += ` ∙ ${track.bitrate} Kbps`;
+        if (track.width && track.height) trackInfo += ` ∙ ${track.width}x${track.height}`;
+        if (track.bitrate) trackInfo += ` ∙ ${track.bitrate} Kbps`;
       }
       if (track.type === 'audio') {
         trackInfo += ` ∙ ${track.language?.toUpperCase()}`;
