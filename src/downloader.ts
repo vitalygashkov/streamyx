@@ -182,13 +182,13 @@ class Downloader {
         if (track.bitrate) trackInfo += ` ∙ ${track.bitrate} Kbps`;
       }
       if (track.type === 'audio') {
-        trackInfo += ` ∙ ${track.language?.toUpperCase()}`;
+        if (track.language) trackInfo += ` ∙ ${track.language.toUpperCase()}`;
         if (track.label) trackInfo += ` (${track.label})`;
-        trackInfo += ` ∙ ${track.audioSamplingRate} kHz`;
+        if (track.audioSamplingRate) trackInfo += ` ∙ ${track.audioSamplingRate} kHz`;
         trackInfo += ` ∙ ${track.bitrate} Kbps`;
       }
       if (track.type === 'text') {
-        trackInfo += ` ∙ ${track.language.toUpperCase()}`;
+        if (track.language) trackInfo += ` ∙ ${track.language.toUpperCase()}`;
         if (track.label) trackInfo += ` (${track.label})`;
       }
       if (track.type === 'video' || track.type === 'audio') trackInfo += ` ∙ ${track.size} MiB`;
