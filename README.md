@@ -58,7 +58,7 @@ $ streamyx "https://hd.kinopoisk.ru/film/46c5df252dc1a790b82d1a00fcf44812?conten
 | ---------------------------------------- | ------------ | ------------------------------------------------------------------------ |
 | [Кинопоиск](https://hd.kinopoisk.ru/)    | Supported    |                                                                          |
 | [Иви](https://www.ivi.ru/)               | Experimental | 3D/seasons/series in progress                                            |
-| [Wink](https://wink.ru/)                 | Experimental | Seasons/series in progress                                               |
+| [Wink](https://wink.ru/)                 | Supported    |                                                                          |
 | [Okko](https://okko.tv/)                 | Experimental | Sometimes the anti-bot protection triggers and requests are not executed |
 | [KION](https://kion.ru/)                 | Planned      |                                                                          |
 | [PREMIER](https://premier.one/)          | Planned      |                                                                          |

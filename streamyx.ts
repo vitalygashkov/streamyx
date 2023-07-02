@@ -134,7 +134,12 @@ const run = async () => {
     logger.info(`Fetching metadata and generate download configs...`);
     const configs = await provider.getConfigList();
     const downloader = new Downloader(parsedArgs);
-    for (const config of configs) await downloader.start(config);
+    for (const config of configs) {
+      if (typeof config.drmConfig === 'function') {
+        config.drmConfig = await config.drmConfig();
+      }
+      await downloader.start(config);
+    }
   }
 
   process.exit();
