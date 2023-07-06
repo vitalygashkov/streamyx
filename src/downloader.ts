@@ -191,7 +191,8 @@ class Downloader {
         if (track.language) trackInfo += ` ∙ ${track.language.toUpperCase()}`;
         if (track.label) trackInfo += ` (${track.label})`;
       }
-      if (track.type === 'video' || track.type === 'audio') trackInfo += ` ∙ ${track.size} MiB`;
+      if (track.type === 'video' || track.type === 'audio')
+        trackInfo += ` ∙ ${track.size || '?'} MiB`;
       logger.info(trackInfo);
       const logPrefix = logger.getPrefix('info');
 
