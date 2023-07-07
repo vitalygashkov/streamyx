@@ -7,8 +7,12 @@ import { IncomingHttpHeaders } from 'node:http';
 import { URL } from 'node:url';
 import { request, fetch, Request, RequestInit, Response } from 'undici';
 import BodyReadable from 'undici/types/readable';
+import puppeteer, { VanillaPuppeteer } from 'puppeteer-extra';
+import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import { logger } from './logger';
 import { sleep } from './utils';
+
+puppeteer.use(StealthPlugin());
 
 const HTTP_METHOD = {
   GET: 'GET',
@@ -49,6 +53,9 @@ class Http {
   #session?: ClientHttp2Session;
   #lastOrigin?: string;
 
+  #browser: VanillaPuppeteer['launch'] | null;
+  #browserPage: any;
+
   constructor() {
     this.headers = { 'User-Agent': USER_AGENTS.tizen };
     this.cookies = [];
@@ -56,6 +63,7 @@ class Http {
     this.retryCount = 0;
     this.retryThreshold = 3;
     this.retryDelayMs = 1500;
+    this.#browser = null;
   }
 
   get hasSessions() {
@@ -64,10 +72,50 @@ class Http {
 
   async fetch(resource: string | URL | Request, options?: RequestInit): Promise<Response> {
     const session = this.getHttp2Session(resource);
-    if (session) {
+    if (this.#browser) {
+      return this.fetchViaBrowser(resource, options);
+    } else if (session) {
       return this.fetchHttp2(session, resource, options);
     } else {
       return this.fetchHttp1(resource, options);
+    }
+  }
+
+  async launchBrowser() {
+    this.#browser = await puppeteer.launch({ channel: 'chrome' });
+    this.#browserPage = await this.#browser.newPage();
+  }
+
+  async fetchViaBrowser(resource: string | URL | Request, options?: RequestInit) {
+    await this.#browserPage.goto(resource);
+    const { body, init } = await this.#browserPage.evaluate(
+      (resource: any, options: any) => {
+        const fetchData = async () => {
+          const response = await globalThis.fetch(
+            resource as globalThis.RequestInfo,
+            options as globalThis.RequestInit
+          );
+          return {
+            body: await response.text(),
+            init: {
+              headers: response.headers,
+              status: response.status,
+              statusText: response.statusText,
+            },
+          };
+        };
+        return fetchData();
+      },
+      resource,
+      options
+    );
+    return new Response(body, init);
+  }
+
+  async closeBrowser() {
+    if (this.#browser) {
+      await this.#browser.close();
+      this.#browser = null;
     }
   }
 

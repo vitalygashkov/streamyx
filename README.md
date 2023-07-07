@@ -54,15 +54,15 @@ $ streamyx "https://hd.kinopoisk.ru/film/46c5df252dc1a790b82d1a00fcf44812?conten
 
 ## Streaming services
 
-| Title                                    | Status       | Details                                                                         |
-| ---------------------------------------- | ------------ | ------------------------------------------------------------------------------- |
-| [Кинопоиск](https://hd.kinopoisk.ru/)    | Supported    |                                                                                 |
-| [Иви](https://www.ivi.ru/)               | Supported    | 3D movie downloads are currently unavailable                                    |
-| [Wink](https://wink.ru/)                 | Supported    | Live video downloads are currently unavailable                                  |
-| [Okko](https://okko.tv/)                 | Experimental | For some users, anti-bot protection triggered, so the requests are not executed |
-| [KION](https://kion.ru/)                 | Planned      |                                                                                 |
-| [PREMIER](https://premier.one/)          | Planned      |                                                                                 |
-| [START](https://start.ru/)               | Planned      |                                                                                 |
-| [Amediateka](https://www.amediateka.ru/) | Planned      |                                                                                 |
-| [Crunchyroll](https://crunchyroll.com/)  | Experimental |                                                                                 |
-| [НТВ](https://www.ntv.ru/)               | In progress  | Only download link extracting                                                   |
+| Title                                    | Status       | Details                                        |
+| ---------------------------------------- | ------------ | ---------------------------------------------- |
+| [Кинопоиск](https://hd.kinopoisk.ru/)    | Supported    |                                                |
+| [Иви](https://www.ivi.ru/)               | Supported    | 3D movie downloads are currently unavailable   |
+| [Wink](https://wink.ru/)                 | Supported    | Live video downloads are currently unavailable |
+| [Okko](https://okko.tv/)                 | Experimental |                                                |
+| [KION](https://kion.ru/)                 | Planned      |                                                |
+| [PREMIER](https://premier.one/)          | Planned      |                                                |
+| [START](https://start.ru/)               | Planned      |                                                |
+| [Amediateka](https://www.amediateka.ru/) | Planned      |                                                |
+| [Crunchyroll](https://crunchyroll.com/)  | Experimental |                                                |
+| [НТВ](https://www.ntv.ru/)               | In progress  | Only download link extracting                  |
