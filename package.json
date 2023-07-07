@@ -1,6 +1,6 @@
 {
   "name": "streamyx",
-  "version": "3.6.7",
+  "version": "3.6.8",
   "author": "Vitaly Gashkov <vitalygashkov@vk.com>",
   "description": "Command-line video downloader",
   "main": "dist/streamyx.js",
@@ -9,11 +9,11 @@
   },
   "scripts": {
     "start": "tsc && node dist/streamyx",
-    "build": "tsc && pkg . -t node18-win-x64,node18-macos-x64,node18-macos-arm64,node18-linux-x64 --out-path ./build/",
-    "build:win": "tsc && pkg . -t node18-win-x64 -o ./build/streamyx-win-x64.exe",
-    "build:macos": "tsc && pkg . -t node18-macos-x64 -o ./build/streamyx-macos-x64",
-    "build:macos:arm": "tsc && pkg . -t node18-macos-arm64 -o ./build/streamyx-macos-arm64",
-    "build:linux": "tsc && pkg . -t node18-linux-x64 -o ./build/streamyx-linux-x64",
+    "build": "tsc && pkg . --public -t node18-win-x64,node18-macos-x64,node18-macos-arm64,node18-linux-x64 --out-path ./build/",
+    "build:win": "tsc && pkg . --public -t node18-win-x64 -o ./build/streamyx-win-x64.exe",
+    "build:macos": "tsc && pkg . --public -t node18-macos-x64 -o ./build/streamyx-macos-x64",
+    "build:macos:arm": "tsc && pkg . --public -t node18-macos-arm64 -o ./build/streamyx-macos-arm64",
+    "build:linux": "tsc && pkg . --public -t node18-linux-x64 -o ./build/streamyx-linux-x64",
     "clean": "rimraf build/*",
     "lint": "eslint --ext .js,.ts .",
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\""
@@ -23,6 +23,9 @@
     "dasha": "^2.3.6",
     "mpd-parser": "^1.0.0",
     "protobufjs": "^7.1.2",
+    "puppeteer-core": "^20.8.0",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
     "undici": "^5.16.0"
   },
   "devDependencies": {
@@ -40,5 +43,11 @@
   "engines": {
     "node": ">=18",
     "npm": ">=8"
+  },
+  "pkg": {
+    "assets": [
+      "node_modules/vm2/**/*",
+      "node_modules/puppeteer-extra-plugin-stealth/**/*.*"
+    ]
   }
 }
