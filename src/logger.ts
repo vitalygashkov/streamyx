@@ -58,7 +58,9 @@ class Logger {
   }
 
   get _currentDateString() {
-    return new Date().toISOString().replace(/[TZ]/g, ' ');
+    const isoDateWithTimezone = new Date().toLocaleString('sv', { timeZoneName: 'short' });
+    const [date, time] = isoDateWithTimezone.split(' ');
+    return `${date} ${time}`;
   }
 
   _allowLogging(messageLogLevel: string) {
