@@ -10,7 +10,7 @@ import BodyReadable from 'undici/types/readable';
 import puppeteer, { VanillaPuppeteer } from 'puppeteer-extra';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import { logger } from './logger';
-import { sleep } from './utils';
+import { prompt, sleep } from './utils';
 
 puppeteer.use(StealthPlugin());
 
@@ -82,8 +82,17 @@ class Http {
   }
 
   async launchBrowser() {
-    this.#browser = await puppeteer.launch({ channel: 'chrome' });
-    this.#browserPage = await this.#browser.newPage();
+    let executablePath;
+    while (!this.#browser) {
+      try {
+        const launchOptions = executablePath ? { executablePath } : { channel: 'chrome' };
+        this.#browser = await puppeteer.launch(launchOptions);
+        this.#browserPage = await this.#browser.newPage();
+      } catch (e) {
+        logger.error((e as Error).message);
+        executablePath = await prompt('Enter valid Chrome executable path');
+      }
+    }
   }
 
   async fetchViaBrowser(resource: string | URL | Request, options?: RequestInit) {
