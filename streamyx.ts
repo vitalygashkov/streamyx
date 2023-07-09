@@ -1,17 +1,18 @@
+process.title = 'streamyx';
+
 import packageInfo from './package.json';
 import { Args } from './src/args';
 import { logger } from './src/logger';
 import {
   parseArrayFromString,
   parseHeadersFromString,
+  parseMainDomain,
   parseNumberRange,
-  prompt,
+  validateUrl,
 } from './src/utils';
-import { getDecryptionKeys } from './src/drm';
-import { findProviderByUrl } from './src/providers';
+import { printDecryptionKeys } from './src/drm';
+import { createProvider } from './src/providers';
 import { Downloader } from './src/downloader';
-
-process.title = 'streamyx';
 
 const args = new Args()
   .setName(packageInfo.name)
@@ -50,7 +51,7 @@ const args = new Args()
   .setOption('--trim-end', 'trim video at the end; example: 00:01:30')
   .setOption(
     '--pssh',
-    'Widevine PSSH from MPD manifest (to get decryption keys without downloading; url argument should be widevine license url)'
+    'Widevine PSSH from MPD manifest (print decryption keys only; url argument should be license url)'
   )
   .setOption(
     '--headers',
@@ -82,69 +83,44 @@ const parseArgs = (args: any) => ({
   debug: args.d ?? args.debug,
 });
 
-const parseUrl = async (url: string) => {
-  let isValid = false;
-  let currentUrl: string | null = url;
-  do {
-    try {
-      if (currentUrl) {
-        const urlObject = new URL(currentUrl);
-        isValid = !!urlObject;
-      } else {
-        currentUrl = await prompt('URL');
-      }
-    } catch (e) {
-      currentUrl = await prompt('URL');
-    }
-  } while (!isValid);
-  return currentUrl!;
+const streamyx: any = {
+  logger,
+  downloader: null,
+  providers: new Map(),
 };
 
-const extractDecryptionKeys = async (
-  licenseUrl: string,
-  pssh: string,
-  headers?: Record<string, string>
-) => {
-  const drmConfig = { server: licenseUrl, individualizationServer: licenseUrl, headers };
-  const keys = await getDecryptionKeys(pssh, drmConfig);
-  if (!keys?.length) logger.error('Decryption keys not found');
-  else for (const key of keys) logger.info(`KID:KEY -> ${key.kid}:${key.key}`);
+const startDownload = async (config: any) => {
+  if (!streamyx.downloader) return;
+  if (typeof config.drmConfig === 'function') config.drmConfig = await config.drmConfig();
+  await streamyx.downloader.start(config);
 };
 
-const run = async () => {
-  const parsedArgs: Record<string, any> = parseArgs(args);
-
-  const urls = (parsedArgs.urls as Array<string>) ?? [''];
-  for (const urlString of urls) {
-    const url = await parseUrl(urlString);
-    parsedArgs.url = url;
-    logger.setLogLevel(parsedArgs.debug ? 'debug' : 'info');
-
-    if (parsedArgs.pssh) {
-      await extractDecryptionKeys(url, parsedArgs.pssh as string, parsedArgs.headers);
-      process.exit();
-    }
-
-    const provider = findProviderByUrl(url, parsedArgs);
-    if (!provider) {
-      logger.error(`Provider not found`);
-      process.exit(1);
-    }
+const loadProvider = async (name: string, args: any) => {
+  const provider = streamyx.providers.get(name) ?? createProvider(name, args);
+  if (provider) {
     await provider.init();
-    logger.info(`Fetching metadata and generate download configs...`);
+    const hasProvider = streamyx.providers.has(provider.name);
+    if (!hasProvider) streamyx.providers.set(provider.name, provider);
     const configs = await provider.getConfigList();
-    const downloader = new Downloader(parsedArgs);
-    for (const config of configs) {
-      if (typeof config.drmConfig === 'function') {
-        config.drmConfig = await config.drmConfig();
-      }
-      await downloader.start(config);
-    }
+    for (const config of configs) await startDownload(config);
+  } else {
+    streamyx.logger.error(`Provider <${name}> not found`);
   }
-
-  process.exit();
 };
 
-(async () => {
-  await run();
-})();
+const loadProviders = async () => {
+  const parsedArgs: Record<string, any> = parseArgs(args);
+  streamyx.logger.setLogLevel(parsedArgs.debug ? 'debug' : 'info');
+  streamyx.downloader = new Downloader(parseArgs);
+  const urls: string[] = parsedArgs.urls ?? [''];
+  for (const url of urls) {
+    if (parsedArgs.pssh) {
+      await printDecryptionKeys(url, parsedArgs.pssh, parsedArgs.headers);
+      break;
+    }
+    const domain = parseMainDomain(await validateUrl(url));
+    if (domain) await loadProvider(domain, parsedArgs);
+  }
+};
+
+loadProviders();

@@ -70,4 +70,15 @@ const getDecryptersPool = async (pssh: string, drmConfig: any, count = 1, key?: 
   return Promise.all(decryptersPool);
 };
 
-export { getDecryptionKeys, getDecryptersPool };
+const printDecryptionKeys = async (
+  licenseUrl: string,
+  pssh: string,
+  headers?: Record<string, string>
+) => {
+  const drmConfig = { server: licenseUrl, individualizationServer: licenseUrl, headers };
+  const keys = await getDecryptionKeys(pssh, drmConfig);
+  if (!keys?.length) logger.error('Decryption keys not found');
+  else for (const key of keys) logger.info(`KID:KEY -> ${key.kid}:${key.key}`);
+};
+
+export { getDecryptionKeys, getDecryptersPool, printDecryptionKeys };

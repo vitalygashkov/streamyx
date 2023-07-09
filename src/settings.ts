@@ -32,32 +32,34 @@ export enum SubtitleStoreType {
 export interface Settings {
   askForOptionsBeforeDownload: boolean;
   defaultDownloadPath: string;
-  defaultVideoQuality: SettingsVideoQuality;
-  defaultAudioQuality: string;
-  defaultHdr: boolean;
-  default3d: boolean;
+  preferredVideoQuality: SettingsVideoQuality;
+  preferredAudioQuality: string;
+  preferredAudioLanguages: string[];
+  preferredSubtitleLanguages: string[];
+  preferHdr: boolean;
+  prefer3d: boolean;
+  preferHardsub: boolean;
   downloadProxy: string | null;
   metadataProxy: string | null;
   numberOfConnections: number;
-  preferredAudioLanguages: string[];
-  preferredSubtitleLanguages: string[];
   storeSubtitlesAs: SubtitleStoreType;
   movieFilenameTemplate: string;
   seriesFilenameTemplate: string;
 }
 
-const defaultSettings = {
+const defaultSettings: Settings = {
   askForOptionsBeforeDownload: true,
   defaultDownloadPath: join(fs.homeDir, 'Downloads'),
-  defaultVideoQuality: SettingsVideoQuality.Highest,
-  defaultAudioQuality: SettingsAudioQuality.Highest,
-  defaultHdr: true,
-  default3d: false,
+  preferredVideoQuality: SettingsVideoQuality.Highest,
+  preferredAudioQuality: SettingsAudioQuality.Highest,
+  preferredAudioLanguages: [],
+  preferredSubtitleLanguages: [],
+  preferHdr: true,
+  prefer3d: false,
+  preferHardsub: false,
   downloadProxy: null,
   metadataProxy: null,
   numberOfConnections: 16,
-  preferredAudioLanguages: [],
-  preferredSubtitleLanguages: [],
   storeSubtitlesAs: SubtitleStoreType.Embedded,
   movieFilenameTemplate: '{title}.{audioType}.{quality}.{provider}.{format}.{codec}',
   seriesFilenameTemplate:

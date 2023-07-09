@@ -85,6 +85,26 @@ const findExecutable = async (exe: string) => {
   }
 };
 
+const validateUrl = async (url: string) => {
+  let isValid = false;
+  let currentUrl = url;
+  do {
+    try {
+      if (currentUrl) {
+        const urlObject = new URL(currentUrl);
+        isValid = !!urlObject;
+      } else {
+        currentUrl = await prompt('URL');
+      }
+    } catch (e) {
+      currentUrl = await prompt('URL');
+    }
+  } while (!isValid);
+  return currentUrl;
+};
+
+const parseMainDomain = (url: string) => new URL(url).host.split('.').at(-2) || null;
+
 export {
   prompt,
   sleep,
@@ -96,4 +116,6 @@ export {
   getRandomInRange,
   generateMacAddress,
   findExecutable,
+  validateUrl,
+  parseMainDomain,
 };
