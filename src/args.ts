@@ -58,20 +58,29 @@ const config: ParseArgsConfigWithDescriptions = {
       default: '16',
       description: 'number of parallel http connections per download (default: 16)',
     },
-    hdr: { type: 'boolean', description: 'select high dynamic range video track if available' },
-    '3d': { type: 'boolean', description: 'select 3D video track if available' },
-    hardsub: { type: 'boolean', description: 'download hardsubbed video if available' },
+    hdr: {
+      type: 'boolean',
+      description: 'select high dynamic range video track if available',
+      default: false,
+    },
+    '3d': { type: 'boolean', description: 'select 3D video track if available', default: false },
+    hardsub: {
+      type: 'boolean',
+      description: 'download hardsubbed video if available',
+      default: false,
+    },
     'subs-lang': {
       type: 'string',
       description: 'download subtitles by language tag (en, ru, etc.)',
     },
     'audio-lang': { type: 'string', description: 'download audio by language tag (en, ru, etc.)' },
-    'skip-subs': { type: 'boolean', description: 'do not download subtitles' },
-    'skip-audio': { type: 'boolean', description: 'do not download audio' },
-    'skip-video': { type: 'boolean', description: 'do not download video' },
+    'skip-subs': { type: 'boolean', description: 'do not download subtitles', default: false },
+    'skip-audio': { type: 'boolean', description: 'do not download audio', default: false },
+    'skip-video': { type: 'boolean', description: 'do not download video', default: false },
     'skip-mux': {
       type: 'boolean',
       description: 'do not mux tracks like video, audio and subtitles',
+      default: false,
     },
     'trim-begin': { type: 'string', description: 'trim video at the beginning; example: 00:00:06' },
     'trim-end': { type: 'string', description: 'trim video at the end; example: 00:01:30' },
@@ -91,70 +100,74 @@ const config: ParseArgsConfigWithDescriptions = {
   },
 };
 
-export const getProcessedArgs = () => {
+const getProcessedArgs = () => {
   const args = parseArgs(config);
   const { values, positionals } = args;
   return {
     urls: positionals,
     videoHeight: parseInt(String(values['video-quality'] || '').replaceAll('p', '')),
     audioQuality: values['audio-quality'],
-    episodes: parseNumberRange(String(values.episodes || '')),
-    seasons: parseNumberRange(String(values.seasons || '')),
-    movieTemplate:
-      values['movie-template'] || '{title}.{audioType}.{quality}.{provider}.{format}.{codec}',
-    episodeTemplate:
-      values['episode-template'] ||
-      '{show}.S{s}E{e}.{title}.{audioType}.{quality}.{provider}.{format}.{codec}',
-    connections: parseInt(String(values.connections)),
+    episodes: parseNumberRange(String(values['episodes'] || '')),
+    seasons: parseNumberRange(String(values['seasons'] || '')),
+    movieTemplate: values['movie-template'],
+    episodeTemplate: values['episode-template'],
+    connections: parseInt(String(values['connections'])),
+    hdr: values['hdr'],
+    '3d': values['3d'],
+    hardsub: values['hardsub'],
     subtitleLanguages: parseArrayFromString(String(values['subs-lang'] || '')),
     audioLanguages: parseArrayFromString(String(values['audio-lang'] || '')),
-    pssh: String(values.pssh || ''),
-    headers: parseHeadersFromString(String(values.headers || '')),
     skipSubtitles: values['skip-subs'],
-    debug: values.debug,
-    version: values.version,
-    help: values.help,
+    skipAudio: values['skip-audio'],
+    skipVideo: values['skip-video'],
+    skipMux: values['skip-mux'],
+    trimBegin: values['trim-begin'],
+    trimEnd: values['trim-end'],
+    pssh: String(values['pssh'] || ''),
+    headers: parseHeadersFromString(String(values['headers'] || '')),
+    debug: values['debug'],
+    version: values['version'],
+    help: values['help'],
   };
 };
 
-export const printVersion = () => {
+const printVersion = () => {
   console.log(`\x1b[1mVERSION\x1b[0m`);
   console.log(`  ${packageInfo.name}/${packageInfo.version} ${platform}-${arch} node-${version}\n`);
 };
 
 const printDescription = () => console.log(`${packageInfo.name}: ${packageInfo.description}\n`);
 
-const printUsage = (options: any, args: { name: string }[]) => {
+const printUsage = (options: Record<string, Option>, args: typeof positionals) => {
   console.log(`\x1b[1mUSAGE\x1b[0m`);
   let message = `  $ ${packageInfo.name} `;
   if (Object.keys(options).length) message += `[OPTIONS] `;
-  if (args.length) message += args.map((a) => a.name).join(' ');
+  if (Object.keys(args).length) message += Object.keys(args).join(' ');
   console.log(`${message}\n`);
 };
 
-const printArguments = (data: Record<string, { description: string }> = {}) => {
-  if (!Object.keys(data).length) return;
+const printArguments = (args: typeof positionals) => {
+  if (!Object.keys(args).length) return;
   console.log(`\x1b[1mARGUMENTS\x1b[0m`);
-  for (const [name, argument] of Object.entries(data))
-    console.log(`  ${name}  ${argument.description}\n`);
+  for (const [name, { description }] of Object.entries(args))
+    console.log(`  ${name}  ${description}\n`);
 };
 
-const printOptions = (options?: Record<string, Option>) => {
-  if (options) {
-    console.log(`\x1b[1mOPTIONS\x1b[0m`);
-    for (const [name, option] of Object.entries(options)) {
-      const flags = [option.short ? '-' + option.short : '', '--' + name]
-        .filter(Boolean)
-        .join(', ');
-      console.log(`  ${flags.padEnd(20)} ${option.description}`);
-    }
+const printOptions = (options: Record<string, Option> = {}) => {
+  if (!Object.keys(options).length) return;
+  console.log(`\x1b[1mOPTIONS\x1b[0m`);
+  for (const [name, { short, description }] of Object.entries(options)) {
+    const flags = [short ? '-' + short : '', '--' + name].filter(Boolean).join(', ');
+    console.log(`  ${flags.padEnd(20)} ${description}`);
   }
 };
 
-export const printHelp = () => {
+const printHelp = () => {
   printDescription();
   printVersion();
-  printUsage(config.options, []);
+  printUsage(config.options, positionals);
   printArguments(positionals);
   printOptions(config.options);
 };
+
+export { getProcessedArgs, printVersion, printHelp };
