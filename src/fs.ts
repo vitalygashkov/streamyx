@@ -11,6 +11,7 @@ import {
   rmdir,
   unlink,
   writeFile,
+  rename,
 } from 'node:fs/promises';
 import { join, parse } from 'node:path';
 
@@ -217,8 +218,17 @@ const fs = {
   parse(path: string) {
     return parse(path);
   },
-  async readDir(dir: string) {
-    return readdir(dir);
+  async readDir(dir: string, contentType: 'all' | 'dir' | 'file' = 'all') {
+    const dirEntries = await readdir(dir, { withFileTypes: true });
+    switch (contentType) {
+      case 'dir':
+        return dirEntries.filter((de) => de.isDirectory()).map((de) => de.name);
+      case 'file':
+        return dirEntries.filter((de) => de.isFile()).map((de) => de.name);
+      case 'all':
+      default:
+        return dirEntries.map((de) => de.name);
+    }
   },
   async createDir(dir: string, recursive = true) {
     if (!this.exists(dir)) await mkdir(dir, { recursive });
@@ -302,6 +312,7 @@ const fs = {
       throw Error(`Failed to delete file or folder: ${path}`);
     }
   },
+  rename: rename,
   exists: nodeFs.existsSync,
   createWriteStream,
   streamWrite: writeStream,

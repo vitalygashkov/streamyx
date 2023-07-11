@@ -101,4 +101,4 @@ class Logger {
 const logger = new Logger();
 
 export type { LogLevel };
-export { Logger, logger };
+export { Logger, logger, LOG_DIR, LOG_PATH };

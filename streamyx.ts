@@ -2,7 +2,7 @@ process.title = 'streamyx';
 
 import { getProcessedArgs, printHelp, printVersion } from './src/args';
 import { logger } from './src/logger';
-import { parseMainDomain, validateUrl } from './src/utils';
+import { migrateFiles, parseMainDomain, validateUrl } from './src/utils';
 import { printDecryptionKeys } from './src/drm';
 import { createProvider } from './src/providers';
 import { Downloader } from './src/downloader';
@@ -33,6 +33,7 @@ const loadProvider = async (name: string, url: string, args: any) => {
 };
 
 const loadProviders = async () => {
+  await migrateFiles().catch(() => null);
   const args = getProcessedArgs();
   if (args.version) printVersion();
   if (args.help) printHelp();
