@@ -8,6 +8,7 @@ yarn-error.log*
 /files
 /downloads
 /.config
+/config
 
 # Dependency directories
 /node_modules

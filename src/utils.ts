@@ -2,6 +2,8 @@ import { createInterface } from 'node:readline/promises';
 import { stdin, stdout } from 'node:process';
 import { delimiter, join } from 'node:path';
 import { stat } from 'node:fs/promises';
+import fs from './fs';
+import { LOG_DIR } from './logger';
 
 const prompt = async <T = string>(message: string, type = 'input') => {
   const readline = createInterface({ input: stdin, output: stdout });
@@ -85,6 +87,77 @@ const findExecutable = async (exe: string) => {
   }
 };
 
+const validateUrl = async (url: string) => {
+  let isValid = false;
+  let currentUrl = url;
+  do {
+    try {
+      if (currentUrl) {
+        const urlObject = new URL(currentUrl);
+        isValid = !!urlObject;
+      } else {
+        currentUrl = await prompt('URL');
+      }
+    } catch (e) {
+      currentUrl = await prompt('URL');
+    }
+  } while (!isValid);
+  return currentUrl;
+};
+
+const parseMainDomain = (url: string) => new URL(url).host.split('.').at(-2) || null;
+
+const joinFiles = (...paths: string[]) => fs.join(fs.appDir, 'files', ...paths);
+
+export const migrateFiles = async () => {
+  const hasBinFolder = fs.exists(joinFiles('bin'));
+  const hasCdmFolder = fs.exists(joinFiles('cdm'));
+  const hasLogsFolder = fs.exists(joinFiles('logs'));
+  const shouldMigrate = hasBinFolder || hasCdmFolder || hasLogsFolder;
+  if (!shouldMigrate) return;
+  const binaryFiles = await fs.readDir(joinFiles('bin'), 'file');
+  const binariesMoveQueue = binaryFiles.map((bin) => {
+    const oldPath = joinFiles('bin', bin);
+    const newPath = joinFiles(bin);
+    return fs.rename(oldPath, newPath);
+  });
+  const cdmFolders = await fs.readDir(joinFiles('cdm'), 'dir');
+  const cdmFolder = cdmFolders[0];
+  const cdmFiles = await fs.readDir(joinFiles('cdm', cdmFolder), 'file');
+  const cdmMoveQueue = cdmFiles.map((cdm) => {
+    const oldPath = joinFiles('cdm', cdmFolder, cdm);
+    const newPath = joinFiles(cdm);
+    return fs.rename(oldPath, newPath);
+  });
+  await Promise.all([...binariesMoveQueue, ...cdmMoveQueue]);
+  const deleteQueue = [
+    fs.delete(joinFiles('bin')).catch(() => null),
+    fs.delete(joinFiles('cdm')).catch(() => null),
+  ];
+  try {
+    await Promise.all(deleteQueue);
+  } finally {
+    if (hasLogsFolder) {
+      const oldLogsPath = fs.join(fs.appDir, 'files', 'logs');
+      const newLogsPath = LOG_DIR;
+      await fs.rename(oldLogsPath, newLogsPath);
+    }
+  }
+  const oldConfigPath = fs.join(fs.appDir, 'files', 'providers');
+  if (fs.exists(oldConfigPath)) {
+    const newConfigPath = fs.join(fs.appDir, 'config');
+    await fs.rename(oldConfigPath, newConfigPath);
+    const configFolders = await fs.readDir(fs.join(fs.appDir, 'config'), 'dir');
+    const configFilesQueue = configFolders.map((configFolder) => {
+      return fs.rename(
+        fs.join(fs.appDir, 'config', configFolder, 'auth.json'),
+        fs.join(fs.appDir, 'config', configFolder, 'config.json')
+      );
+    });
+    await Promise.all(configFilesQueue);
+  }
+};
+
 export {
   prompt,
   sleep,
@@ -96,4 +169,6 @@ export {
   getRandomInRange,
   generateMacAddress,
   findExecutable,
+  validateUrl,
+  parseMainDomain,
 };

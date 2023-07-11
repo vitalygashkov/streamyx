@@ -10,7 +10,7 @@ import BodyReadable from 'undici/types/readable';
 import puppeteer, { VanillaPuppeteer } from 'puppeteer-extra';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import { logger } from './logger';
-import { sleep } from './utils';
+import { prompt, sleep } from './utils';
 
 puppeteer.use(StealthPlugin());
 
@@ -43,31 +43,31 @@ const parseUrlFromResource = (resource: string | URL | Request) =>
     : resource;
 
 class Http {
-  public headers: Record<string, string>;
-  public cookies: string[];
-  private sessions: Map<string, ClientHttp2Session>;
-  private retryCount: number;
-  private retryThreshold: number;
-  private retryDelayMs: number;
+  headers: Record<string, string>;
+  cookies: string[];
 
+  #sessions: Map<string, ClientHttp2Session>;
+  #retryCount: number;
+  #retryThreshold: number;
+  #retryDelayMs: number;
   #session?: ClientHttp2Session;
   #lastOrigin?: string;
-
   #browser: VanillaPuppeteer['launch'] | null;
   #browserPage: any;
 
   constructor() {
     this.headers = { 'User-Agent': USER_AGENTS.tizen };
     this.cookies = [];
-    this.sessions = new Map();
-    this.retryCount = 0;
-    this.retryThreshold = 3;
-    this.retryDelayMs = 1500;
+
+    this.#sessions = new Map();
+    this.#retryCount = 0;
+    this.#retryThreshold = 3;
+    this.#retryDelayMs = 1500;
     this.#browser = null;
   }
 
   get hasSessions() {
-    return !!this.sessions.size;
+    return !!this.#sessions.size;
   }
 
   async fetch(resource: string | URL | Request, options?: RequestInit): Promise<Response> {
@@ -82,8 +82,17 @@ class Http {
   }
 
   async launchBrowser() {
-    this.#browser = await puppeteer.launch({ channel: 'chrome' });
-    this.#browserPage = await this.#browser.newPage();
+    let executablePath;
+    while (!this.#browser) {
+      try {
+        const launchOptions = executablePath ? { executablePath } : { channel: 'chrome' };
+        this.#browser = await puppeteer.launch(launchOptions);
+        this.#browserPage = await this.#browser.newPage();
+      } catch (e) {
+        logger.error((e as Error).message);
+        executablePath = await prompt('Enter valid Chrome executable path');
+      }
+    }
   }
 
   async fetchViaBrowser(resource: string | URL | Request, options?: RequestInit) {
@@ -121,7 +130,7 @@ class Http {
 
   private getHttp2Session(resource: string | URL | Request) {
     const url = parseUrlFromResource(resource);
-    const session = this.sessions.get(url.host);
+    const session = this.#sessions.get(url.host);
     if (session) {
       return session;
     } else {
@@ -131,7 +140,7 @@ class Http {
           logger.error('Http2 session error');
           logger.debug(e);
         });
-        this.sessions.set(url.host, session);
+        this.#sessions.set(url.host, session);
         return session;
       } else {
         return null;
@@ -174,9 +183,9 @@ class Http {
 
     return new Promise<Response>((resolve, reject) => {
       stream.on('error', async (err) => {
-        if (this.retryCount === this.retryThreshold) reject(err);
-        this.retryCount++;
-        await new Promise<void>((resolve) => setTimeout(resolve, this.retryDelayMs));
+        if (this.#retryCount === this.#retryThreshold) reject(err);
+        this.#retryCount++;
+        await new Promise<void>((resolve) => setTimeout(resolve, this.#retryDelayMs));
         const response = await this.fetchHttp2(session, resource, options);
         resolve(response);
       });
@@ -205,129 +214,12 @@ class Http {
       if (setCookie) this.appendCookies(setCookie);
       return response;
     } catch (e) {
-      if (this.retryCount === this.retryThreshold) throw e;
-      this.retryCount++;
-      await new Promise<void>((resolve) => setTimeout(resolve, this.retryDelayMs));
+      if (this.#retryCount === this.#retryThreshold) throw e;
+      this.#retryCount++;
+      await new Promise<void>((resolve) => setTimeout(resolve, this.#retryDelayMs));
       const response = await this.fetchHttp1(resource, options);
       return response;
     }
-  }
-
-  async request(url: string, options?: any): Promise<any> {
-    const requestUrl = new URL(url);
-    const forceHttp2 = options?.http2;
-    delete options?.http2;
-    if (forceHttp2) {
-      return this.#http2Request(requestUrl, options);
-    } else {
-      this.#session?.destroy();
-      return this.#httpsRequest(requestUrl, options);
-    }
-  }
-
-  async #httpsRequest(url: string | URL, options: any) {
-    const requestOptions = {
-      maxRedirections: 5,
-      ...options,
-      headers: { ...this.headers, ...options?.headers },
-    };
-    const { statusCode, headers, body, context } = await request(url, requestOptions);
-    if (headers['set-cookie']) this.appendCookies(headers['set-cookie']);
-
-    const buffers = [];
-    for await (const chunk of body) buffers.push(chunk);
-    const dataBuffer = Buffer.concat(buffers);
-    const data = options?.responseType === 'buffer' ? dataBuffer : dataBuffer.toString();
-
-    // const retryRequest = async (error) => {
-    //   logger.debug(`Retry request. URL: ${url}`);
-    //   if (this.#retryCount === this.#retryThreshold) reject(error);
-    //   this.#retryCount++;
-    //   const TWO_SECS = 2000;
-    //   await new Promise((resolve) => setTimeout(() => resolve(), TWO_SECS));
-    //   const response = await this.#httpsRequest(url, options);
-    // };
-
-    return { statusCode, headers, body: data, context };
-  }
-
-  async #http2Request(url: URL, options: any) {
-    const sameOrigin = this.#lastOrigin === url.origin;
-    if ((!sameOrigin && this.#lastOrigin) || !this.#session || this.#session.destroyed) {
-      if (this.#session && !this.#session?.closed) {
-        try {
-          await new Promise<void>((resolve, reject) => {
-            this.#session?.close(resolve);
-          });
-          this.#session.destroy();
-        } catch (e) {
-          console.log(e);
-        }
-      }
-      if (!this.#session || this.#session.destroyed || this.#session.closed) {
-        this.#session = http2.connect(url.href);
-        this.#session.on('error', (e) => {
-          logger.error('HTTP2 session error');
-          logger.debug(url.toString());
-          logger.debug(e);
-        });
-      }
-    }
-
-    return new Promise((resolve, reject) => {
-      if (!this.#session) return;
-      const requestOptions = {
-        ':authority': url.host,
-        ':path': url.pathname + url.search,
-        ':method': options?.method || HTTP_METHOD.GET,
-        ':scheme': url.protocol.replace(':', ''),
-        ...this.headers,
-        ...options?.headers,
-      };
-
-      const stream = this.#session.request(requestOptions);
-      if (options?.responseType !== 'buffer') stream.setEncoding('utf8');
-      if (options?.body) stream.write(options.body);
-
-      let statusCode = '';
-      stream.on('response', (headers) => {
-        if (headers[':status']) statusCode = headers[':status'].toString();
-        if (headers['set-cookie']) this.appendCookies(headers['set-cookie']);
-      });
-
-      const retryRequest = async (e: any) => {
-        logger.debug(`Retry request. URL: ${url}`);
-        if (this.retryCount === this.retryThreshold) reject(e);
-        this.retryCount++;
-        const TWO_SECS = 2000;
-        await new Promise<void>((resolve) => setTimeout(() => resolve(), TWO_SECS));
-        const response = await this.#http2Request(url, options);
-        return response;
-      };
-
-      const chunks: Buffer[] | string[] = [];
-      let body: Buffer | string = '';
-      stream
-        .on('data', (chunk) => {
-          if (options?.responseType === 'buffer') (chunks as Buffer[]).push(Buffer.from(chunk));
-          else (chunks as string[]).push(chunk);
-        })
-        .on('error', async (e) => {
-          logger.error(`HTTP2 request stream error`);
-          logger.debug(url.toString());
-          logger.debug(e);
-          const response: any = await retryRequest(e);
-          if (response?.body) resolve(response);
-          else reject(e);
-        })
-        .on('end', () => {
-          if (options?.responseType === 'buffer') body = Buffer.concat(chunks as Buffer[]);
-          else body = (chunks as string[]).join('');
-          resolve({ body, statusCode: parseInt(statusCode) });
-        });
-
-      stream.end();
-    });
   }
 
   appendCookies(setCookie: string | string[]) {
@@ -364,10 +256,10 @@ class Http {
   }
 
   async destroySessions() {
-    for (const [key, session] of this.sessions) {
+    for (const [key, session] of this.#sessions) {
       await new Promise<void>((resolve) => session.close(resolve));
       session.destroy();
-      this.sessions.delete(key);
+      this.#sessions.delete(key);
     }
     this.#session?.destroy(); // TODO: Remove
   }

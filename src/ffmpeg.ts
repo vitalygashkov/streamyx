@@ -6,12 +6,7 @@ import { findExecutable } from './utils';
 
 const findPath = async (exeName: string) => {
   const globalPath = await findExecutable(exeName);
-  const localPath = fs.join(
-    fs.appDir,
-    'files',
-    'bin',
-    exeName + (platform === 'win32' ? '.exe' : '')
-  );
+  const localPath = fs.join(fs.appDir, 'files', exeName + (platform === 'win32' ? '.exe' : ''));
   const path = globalPath || localPath;
   return fs.exists(path) ? path : null;
 };
