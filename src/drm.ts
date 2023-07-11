@@ -2,14 +2,7 @@ import { getContentKeys, getSegmentDecrypter, setLogger } from '../packages/keys
 import { logger } from './logger';
 import fs from './fs';
 
-const DEVICES_DIR = fs.join(fs.appDir, 'files', 'cdm');
-
-const findCdmClientFolder = async () => {
-  if (!fs.exists(DEVICES_DIR)) return null;
-  const folders = await fs.readDir(DEVICES_DIR);
-  const cdmClientFolder = folders.length ? fs.join(DEVICES_DIR, folders.pop() ?? '') : null;
-  return cdmClientFolder;
-};
+const FILES_DIR = fs.join(fs.appDir, 'files');
 
 const getRequestBodyFilter =
   (params: Record<string, string | number>) => (requestBody: Buffer | string) => {
@@ -38,11 +31,10 @@ const responseDataFilter = (responseData: Buffer) => {
 
 const getDecryptionKeys = async (pssh: string, drmConfig: any) => {
   setLogger(logger);
-  const deviceDir = await findCdmClientFolder();
   try {
     const contentKeys = await getContentKeys(pssh, {
       ...drmConfig,
-      deviceDir,
+      deviceDir: FILES_DIR,
       requestBodyFilter: getRequestBodyFilter(drmConfig.params),
       responseDataFilter,
     });
@@ -56,13 +48,12 @@ const getDecryptionKeys = async (pssh: string, drmConfig: any) => {
 const getDecryptersPool = async (pssh: string, drmConfig: any, count = 1, key?: Buffer) => {
   setLogger(logger);
   const addonDir = fs.join(fs.appDir, 'packages', 'keystone', 'build', 'Release');
-  const cdmDir = fs.join(fs.appDir, 'files', 'cdm');
   const params = {
     ...drmConfig,
     key,
     requestBodyFilter: getRequestBodyFilter(drmConfig.params),
     responseDataFilter,
-    cdmDir,
+    cdmDir: FILES_DIR,
     addonDir,
   };
   const decryptersPool = [];

@@ -18,27 +18,37 @@ Streamyx is a command-line tool that allows you to download videos from streamin
 
 ### Prerequisites
 
-The following dependencies are required and should be downloaded and placed in this path: `/files/bin/`.
+The following dependencies are required and should be downloaded and placed in `files` folder.
 
 - **[FFmpeg](https://ffmpeg.org/download.html)**
 - **[mp4decrypt](https://www.bento4.com/downloads/)**
 
 > **Note**: FFmpeg and mp4decrypt does not affect the download, only affects the final file merge and decryption.
 
-**Device private keys** are required for DRM-protected content and should be placed in this path: `/files/cdm/`
+**Device private keys** are required for DRM-protected content and also should be placed in `files` folder.
 
 ### Install
 
-Download the binary file from [latest release](https://github.com/vitalygashkov/streamyx/releases/latest) and put `/files/` folder with dependencies next to it.
+Download build from [latest release](https://github.com/vitalygashkov/streamyx/releases/latest) (for Windows: `streamyx-win-x64.zip`), unzip, rename executable to `streamyx` and put `files` folder with all stuff next to it.
+
+Final structure of files and folders (example for Windows):
+
+```
+/streamyx.exe
+/files/ffmpeg.exe
+/files/mp4decrypt.exe
+/files/device_client_id_blob
+/files/device_private_key
+```
 
 ## Getting Started
 
-Open terminal from the folder where the binary file is located and run the application.
+Open terminal from the folder where the executable file is located and run the application.
 
 Usage:
 
 ```
-streamyx [OPTIONS] URL
+streamyx [OPTIONS] URL [URL...]
 ```
 
 Use `-h` option to see all available options.
@@ -46,11 +56,19 @@ Use `-h` option to see all available options.
 ### Download a video
 
 ```console
-$ streamyx "https://hd.kinopoisk.ru/film/46c5df252dc1a790b82d1a00fcf44812?content_tab=series&episode=10&season=5&watch="
-1/1/2022, 10:00:27 AM  INFO   Fetching metadata and generate download configs...
-1/1/2022, 10:00:28 AM  INFO   Rick and Morty • S5:E10 • Rickmurai Jack • Full HD • 1017 MB
-1/1/2022, 10:00:28 AM  INFO   █████▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒ 9%
+$ streamyx -q 720p "https://wink.ru/movies/dostat-nozhi-year-2019-93328166"
+2023-07-11 21:24:07 INFO   Knives Out
+2023-07-11 21:24:07 INFO   VIDEO ∙ 1280x720 ∙ 2160 Kbps ∙ 2024 MiB
+2023-07-11 21:24:07 INFO   ██████████████████████████████████████████████████ 100%
+2023-07-11 21:26:57 INFO   AUDIO ∙ 48 kHz ∙ 320 Kbps ∙ 300 MiB
+2023-07-11 21:26:57 INFO   ██████████████████████████████████████████████████ 100%
+2023-07-11 21:27:26 INFO   Starting decryption
+2023-07-11 21:27:36 INFO   Decrypted successfully
+2023-07-11 21:27:36 INFO   Muxing
+2023-07-11 21:27:42 INFO   Muxed successfully
 ```
+
+Output: `/downloads/Knives.Out.720p.WINK.WEB-DL.x264/Knives.Out.720p.WINK.WEB-DL.x264.mkv`
 
 ## Streaming services
 
