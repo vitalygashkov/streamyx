@@ -5,10 +5,22 @@ import fs from './fs';
 type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
 const CURRENT_DATETIME = new Date().toJSON().slice(0, 16).replace(/[-T:]/g, '');
-const LOG_PATH = fs.join(fs.appDir, 'files', 'logs', `${CURRENT_DATETIME}_${pid}.log`);
+const LOG_DIR = fs.join(fs.appDir, 'logs');
+const LOG_PATH = fs.join(LOG_DIR, `${CURRENT_DATETIME}_${pid}.log`);
+const LOGS_COUNT_THRESHOLD = 50;
 
 class Logger {
   logLevel: LogLevel = 'info';
+
+  constructor() {
+    fs.createDir(LOG_DIR).then(() =>
+      fs.readDir(LOG_DIR).then((files: string[]) => {
+        const oldLogs = files.sort().slice(LOGS_COUNT_THRESHOLD);
+        const deleteQueue = oldLogs.map((logName) => fs.delete(fs.join(LOG_DIR, logName)));
+        Promise.all(deleteQueue);
+      })
+    );
+  }
 
   setLogLevel(logLevel: LogLevel) {
     this.logLevel = logLevel;
