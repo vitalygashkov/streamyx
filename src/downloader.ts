@@ -81,14 +81,15 @@ class Downloader {
       const inputs: any[] = [];
       for (let i = 0; i < tracks.length; i++) {
         const track = tracks[i] as any;
+        const id = track.id ?? (i ? (tracks[i - 1] as any).id : i);
         const isSubtitle = track.type === 'text';
         inputs.push({
           ...track,
-          id: track.id ?? (i ? tracks[i - 1].id : i),
+          id,
           path: this.getFilepath(
             this.getTrackFilename(
               isSubtitle ? `${track.type}.${track.language}` : track.type,
-              track.id ?? (i ? tracks[i - 1].id : i),
+              id,
               isSubtitle ? '' : contentKeys.length ? 'dec' : 'enc',
               track.format
             )
