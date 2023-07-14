@@ -7,12 +7,10 @@ import { IncomingHttpHeaders } from 'node:http';
 import { URL } from 'node:url';
 import { request, fetch, Request, RequestInit, Response } from 'undici';
 import BodyReadable from 'undici/types/readable';
-import puppeteer, { VanillaPuppeteer } from 'puppeteer-extra';
-import StealthPlugin from 'puppeteer-extra-plugin-stealth';
+import { Browser } from 'puppeteer-core';
 import { logger } from './logger';
-import { prompt, sleep } from './utils';
-
-puppeteer.use(StealthPlugin());
+import { sleep } from './utils';
+import { launchBrowser } from './browser';
 
 const HTTP_METHOD = {
   GET: 'GET',
@@ -52,7 +50,7 @@ class Http {
   #retryDelayMs: number;
   #session?: ClientHttp2Session;
   #lastOrigin?: string;
-  #browser: VanillaPuppeteer['launch'] | null;
+  browser: Browser | null;
   #browserPage: any;
 
   constructor() {
@@ -63,7 +61,7 @@ class Http {
     this.#retryCount = 0;
     this.#retryThreshold = 3;
     this.#retryDelayMs = 1500;
-    this.#browser = null;
+    this.browser = null;
   }
 
   get hasSessions() {
@@ -72,7 +70,7 @@ class Http {
 
   async fetch(resource: string | URL | Request, options?: RequestInit): Promise<Response> {
     const session = this.getHttp2Session(resource);
-    if (this.#browser) {
+    if (this.browser) {
       return this.fetchViaBrowser(resource, options);
     } else if (session) {
       return this.fetchHttp2(session, resource, options);
@@ -82,17 +80,10 @@ class Http {
   }
 
   async launchBrowser() {
-    let executablePath;
-    while (!this.#browser) {
-      try {
-        const launchOptions = executablePath ? { executablePath } : { channel: 'chrome' };
-        this.#browser = await puppeteer.launch(launchOptions);
-        this.#browserPage = await this.#browser.newPage();
-      } catch (e) {
-        logger.error((e as Error).message);
-        executablePath = await prompt('Enter valid Chrome executable path');
-      }
-    }
+    return launchBrowser().then(({ browser, page }) => {
+      this.browser = browser;
+      this.#browserPage = page;
+    });
   }
 
   async fetchViaBrowser(resource: string | URL | Request, options?: RequestInit) {
@@ -122,9 +113,9 @@ class Http {
   }
 
   async closeBrowser() {
-    if (this.#browser) {
-      await this.#browser.close();
-      this.#browser = null;
+    if (this.browser) {
+      await this.browser.close();
+      this.browser = null;
     }
   }
 
@@ -156,7 +147,7 @@ class Http {
     }
   }
 
-  private async fetchHttp2(
+  async fetchHttp2(
     session: ClientHttp2Session,
     resource: string | URL | Request,
     options?: RequestInit
@@ -200,10 +191,7 @@ class Http {
     });
   }
 
-  private async fetchHttp1(
-    resource: string | URL | Request,
-    options?: RequestInit
-  ): Promise<Response> {
+  async fetchHttp1(resource: string | URL | Request, options?: RequestInit): Promise<Response> {
     try {
       const headers = { ...this.headers, ...options?.headers };
       const response = await fetch(resource, {
