@@ -44,12 +44,14 @@ const config: ParseArgsConfigWithDescriptions = {
     },
     'movie-template': {
       type: 'string',
-      description: 'movie filename template',
+      description:
+        'movie filename template (default: "{title}.{audioType}.{quality}.{provider}.{format}.{codec}")',
       default: '{title}.{audioType}.{quality}.{provider}.{format}.{codec}',
     },
     'episode-template': {
       type: 'string',
-      description: 'episode filename template',
+      description:
+        'episode filename template (default: "{show}.S{s}E{e}.{title}.{audioType}.{quality}.{provider}.{format}.{codec}")',
       default: '{show}.S{s}E{e}.{title}.{audioType}.{quality}.{provider}.{format}.{codec}',
     },
     connections: {
