@@ -80,10 +80,9 @@ class Http {
   }
 
   async launchBrowser() {
-    return launchBrowser().then(({ browser, page }) => {
-      this.browser = browser;
-      this.#browserPage = page;
-    });
+    const { browser, page } = await launchBrowser();
+    this.browser = browser;
+    this.#browserPage = page;
   }
 
   async fetchViaBrowser(resource: string | URL | Request, options?: RequestInit) {
