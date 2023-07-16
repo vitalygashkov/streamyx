@@ -23,6 +23,8 @@ export const launchBrowser = async (options: LaunchOptions = {}) => {
       executablePath = await prompt('Enter valid Chrome executable path');
     }
   }
+  const aboutBlankPage = (await browser.pages())[0];
+  if (aboutBlankPage) await aboutBlankPage.close();
   return { browser, page, executablePath };
 };
 
