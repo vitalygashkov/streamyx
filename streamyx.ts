@@ -45,8 +45,9 @@ const loadProviders = async () => {
       await printDecryptionKeys(url, args.pssh, args.headers);
       break;
     }
-    const domain = parseMainDomain(await validateUrl(url));
-    if (domain) await loadProvider(domain, url, args);
+    const validUrl = await validateUrl(url);
+    const domain = parseMainDomain(validUrl);
+    if (domain) await loadProvider(domain, validUrl, args);
   }
 };
 
