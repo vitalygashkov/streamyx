@@ -247,7 +247,7 @@ class Downloader {
 
   get filename() {
     const { movie, show, season, episode, provider, audioType } = this._config;
-    const { movieTemplate, episodeTemplate, videoHeight } = this._params;
+    const { movieTemplate = '', episodeTemplate = '', videoHeight } = this._params;
     let filename = '';
     if (movie)
       filename = movieTemplate
@@ -255,7 +255,7 @@ class Downloader {
         .replace('{audioType}.', audioType ? audioType.toUpperCase() + '.' : '');
     else
       filename = episodeTemplate
-        .replace('{show}', show.title.replaceAll(' ', '.'))
+        .replace('{show}', show.title?.replaceAll(' ', '.'))
         .replace('S{s}', season?.number ? 'S' + season.number.toString().padStart(2, '0') : '')
         .replace('{s}', season?.number ? season.number.toString().padStart(2, '0') : '')
         .replace('{e}', episode?.number ? episode.number.toString().padStart(2, '0') : '')

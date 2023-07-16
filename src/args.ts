@@ -102,6 +102,9 @@ const config: ParseArgsConfigWithDescriptions = {
   },
 };
 
+// TODO: Remove when parseArgs will be stable
+const getDefault = (key: string) => config.options[key].default;
+
 const getProcessedArgs = () => {
   const args = parseArgs(config);
   const { values, positionals } = args;
@@ -111,8 +114,8 @@ const getProcessedArgs = () => {
     audioQuality: values['audio-quality'],
     episodes: parseNumberRange(String(values['episodes'] || '')),
     seasons: parseNumberRange(String(values['seasons'] || '')),
-    movieTemplate: values['movie-template'],
-    episodeTemplate: values['episode-template'],
+    movieTemplate: values['movie-template'] ?? getDefault('movie-template'),
+    episodeTemplate: values['episode-template'] ?? getDefault('episode-template'),
     connections: parseInt(String(values['connections'])),
     hdr: values['hdr'],
     '3d': values['3d'],
