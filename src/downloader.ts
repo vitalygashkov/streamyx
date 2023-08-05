@@ -81,15 +81,14 @@ class Downloader {
       const inputs: any[] = [];
       for (let i = 0; i < tracks.length; i++) {
         const track = tracks[i] as any;
-        const id = track.id ?? (i ? (tracks[i - 1] as any).id : i);
         const isSubtitle = track.type === 'text';
         inputs.push({
           ...track,
-          id,
+          id: track.id,
           path: this.getFilepath(
             this.getTrackFilename(
               isSubtitle ? `${track.type}.${track.language}` : track.type,
-              id,
+              track.id,
               isSubtitle ? '' : contentKeys.length ? 'dec' : 'enc',
               track.format
             )
@@ -139,12 +138,17 @@ class Downloader {
       );
     }
     this._params.videoHeight = (video as any).qualityLabel.replace('p', '');
-    return [video, ...audios, ...subtitles].filter((track: any) => {
+    const tracks = [video, ...audios, ...subtitles].filter((track: any) => {
       if (track.type === 'video' && this._params.skipVideo) return false;
       if (track.type === 'audio' && this._params.skipAudio) return false;
       if (track.type === 'text' && this._params.skipSubtitles) return false;
       return true;
     });
+    const getStreamIndex = (tracks: any, track: any) =>
+      tracks.filter(({ type }: any) => type === track.type).indexOf(track);
+    for (const track of tracks)
+      if (track.id === undefined) track.id = getStreamIndex(tracks, track);
+    return tracks;
   }
 
   setWorkDir() {
@@ -172,6 +176,7 @@ class Downloader {
         track.format
       );
       const filepath = this.getFilepath(filename);
+      if (fs.exists(filepath)) continue;
       const urls = track.segments.map((s: any) => s.url);
       const connections = this._params.connections;
 
