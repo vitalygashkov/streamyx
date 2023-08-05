@@ -36,20 +36,16 @@ const mux = async ({ inputs, output, trimBegin, trimEnd, cleanup }: MuxOptions) 
   for (const input of inputs) {
     // TODO: Make FFMPEG-supported language code: ISO 639-1 (alpha-2 code)
     if (input.type === 'text') {
+      const metadata = `-metadata:s:s:${input.id}`;
       if (input.language)
-        args.push(
-          `-metadata:s:s:${input.id}`,
-          `language=${input.language?.slice(0, 3)?.replace('-', '')}`
-        );
-      if (input.label) args.push(`-metadata:s:s:${input.id}`, `title="${input.label}"`);
+        args.push(metadata, `language=${input.language?.slice(0, 3)?.replace('-', '')}`);
+      if (input.label) args.push(metadata, `title="${input.label}"`);
     }
     if (input.type === 'audio') {
+      const metadata = `-metadata:s:a:${input.id}`;
       if (input.language)
-        args.push(
-          `-metadata:s:a:${input.id}`,
-          `language=${input.language?.slice(0, 3)?.replace('-', '')}`
-        );
-      if (input.label) args.push(`-metadata:s:a:${input.id}`, `title="${input.label}"`);
+        args.push(metadata, `language=${input.language?.slice(0, 3)?.replace('-', '')}`);
+      if (input.label) args.push(metadata, `title="${input.label}"`);
     }
   }
 
@@ -57,13 +53,14 @@ const mux = async ({ inputs, output, trimBegin, trimEnd, cleanup }: MuxOptions) 
   args.push('-c:v', 'copy');
   args.push('-c:a', 'copy');
   args.push('-c:s', 'srt');
+  args.push('-v', 'verbose');
   args.push(output);
 
   const ffmpeg = spawn(exePath, args);
 
   let error = '';
   ffmpeg.stderr.setEncoding('utf8');
-  ffmpeg.stderr.on('data', (d) => (error += d)).on('end', () => error && logger.error(error));
+  ffmpeg.stderr.on('data', (d) => (error += d)).on('end', () => error && logger.debug(error));
   let data = '';
   ffmpeg.stdout.setEncoding('utf8');
   ffmpeg.stderr.on('data', (d) => (data += d)).on('end', () => data && logger.debug(data));
