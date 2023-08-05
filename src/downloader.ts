@@ -147,7 +147,7 @@ class Downloader {
     const getStreamIndex = (tracks: any, track: any) =>
       tracks.filter(({ type }: any) => type === track.type).indexOf(track);
     for (const track of tracks)
-      if (track.id === undefined) track.id = getStreamIndex(tracks, track);
+      if ((track as any).id === undefined) (track as any).id = getStreamIndex(tracks, track);
     return tracks;
   }
 
