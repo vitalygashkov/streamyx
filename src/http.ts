@@ -69,6 +69,7 @@ class Http {
   }
 
   async fetch(resource: string | URL | Request, options?: RequestInit): Promise<Response> {
+    if (!resource) throw new Error('Fetch resource is empty');
     const session = this.getHttp2Session(resource);
     if (this.browser) {
       return this.fetchViaBrowser(resource, options);
@@ -120,6 +121,7 @@ class Http {
 
   private getHttp2Session(resource: string | URL | Request) {
     const url = parseUrlFromResource(resource);
+    if (!url) return null;
     const session = this.#sessions.get(url.host);
     if (session) {
       return session;
