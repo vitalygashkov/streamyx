@@ -10,9 +10,10 @@ const http = new Http();
 
 const downloadSegment = async (url: string, headers: Record<string, string>, index: number) => {
   try {
-    const response = await http.fetch(url, { headers });
+    const response = await http.fetch(url.replaceAll('&amp;', '&'), { headers });
     if (response.status !== 200) {
       logger.error(`Segment #${index + 1} download failed. Status code: ${response.status}`);
+      logger.debug(await response.text());
     }
     const data = Buffer.from(await response.arrayBuffer());
     return { data, index };
