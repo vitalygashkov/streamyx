@@ -3,11 +3,13 @@ import puppeteer from 'puppeteer-extra';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import { logger } from './logger';
 import { prompt } from './utils';
+import { loadSettings, saveSettings } from './settings';
 
 puppeteer.use(StealthPlugin());
 
 export const launchBrowser = async (options: LaunchOptions = {}) => {
-  let executablePath: string | null = null;
+  const { chromePath } = await loadSettings();
+  let executablePath: string | null = chromePath;
   let browser: Browser | null = null;
   let page: Page | null = null;
   const mainOptions = {
@@ -28,6 +30,7 @@ export const launchBrowser = async (options: LaunchOptions = {}) => {
       executablePath = await prompt('Enter valid Chrome executable path');
     }
   }
+  if (executablePath !== chromePath) saveSettings({ chromePath: executablePath });
   const aboutBlankPage = (await browser.pages())[0];
   if (aboutBlankPage) await aboutBlankPage.close();
   return { browser, page, executablePath };

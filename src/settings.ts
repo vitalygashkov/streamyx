@@ -45,6 +45,7 @@ export interface Settings {
   storeSubtitlesAs: SubtitleStoreType;
   movieFilenameTemplate: string;
   seriesFilenameTemplate: string;
+  chromePath: string | null;
 }
 
 const defaultSettings: Settings = {
@@ -64,10 +65,11 @@ const defaultSettings: Settings = {
   movieFilenameTemplate: '{title}.{audioType}.{quality}.{provider}.{format}.{codec}',
   seriesFilenameTemplate:
     '{show}.S{s}E{e}.{title}.{audioType}.{quality}.{provider}.{format}.{codec}',
+  chromePath: null,
 };
 
 export const getSettingsPath = async () => {
-  const configDir = join(process.cwd(), '.config');
+  const configDir = join(process.cwd(), 'config');
   await fs.createDir(configDir);
   const settingsPath = join(configDir, 'settings.json');
   if (!fs.exists(settingsPath)) await fs.writeJson(settingsPath, defaultSettings);
