@@ -10,7 +10,12 @@ export const launchBrowser = async (options: LaunchOptions = {}) => {
   let executablePath: string | null = null;
   let browser: Browser | null = null;
   let page: Page | null = null;
-  const mainOptions = { headless: true, args: ['--no-sandbox'], ...options };
+  const mainOptions = {
+    headless: true,
+    args: ['--no-sandbox'],
+    userDataDir: './config/chrome',
+    ...options,
+  };
   while (!browser || !page) {
     try {
       const launchOptions = executablePath
