@@ -48,8 +48,7 @@ class Downloader {
       if (pssh) {
         contentKeys = await getDecryptionKeys(pssh, drmConfig);
         if (!contentKeys.length) {
-          logger.error(`Decryption keys could not be obtained`);
-          process.exit(1);
+          logger.debug(`Decryption keys could not be obtained`);
           logger.debug(`Trying to decrypt through a CDM adapter (slower process)`);
           decryptersPool = await getDecryptersPool(pssh, drmConfig, this._params.connections);
         }
@@ -89,7 +88,7 @@ class Downloader {
             this.getTrackFilename(
               isSubtitle ? `${track.type}.${track.language}` : track.type,
               track.id,
-              isSubtitle ? '' : contentKeys.length ? 'dec' : 'enc',
+              isSubtitle ? '' : contentKeys.length || decryptersPool.length ? 'dec' : 'enc',
               track.format
             )
           ),
