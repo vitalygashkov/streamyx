@@ -49,6 +49,7 @@ const loadProviders = async () => {
     const domain = parseMainDomain(validUrl);
     if (domain) await loadProvider(domain, validUrl, args);
   }
+  process.exit();
 };
 
 loadProviders();
