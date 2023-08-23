@@ -51,7 +51,7 @@ class Http {
   #session?: ClientHttp2Session;
   #lastOrigin?: string;
   browser: Browser | null;
-  #browserPage: any;
+  browserPage: any;
 
   constructor() {
     this.headers = { 'User-Agent': USER_AGENTS.tizen };
@@ -83,12 +83,12 @@ class Http {
   async launchBrowser() {
     const { browser, page } = await launchBrowser();
     this.browser = browser;
-    this.#browserPage = page;
+    this.browserPage = page;
   }
 
   async fetchViaBrowser(resource: string | URL | Request, options?: RequestInit) {
-    await this.#browserPage.goto(resource);
-    const { body, init } = await this.#browserPage.evaluate(
+    await this.browserPage.goto(resource);
+    const { body, init } = await this.browserPage.evaluate(
       (resource: any, options: any) => {
         const fetchData = async () => {
           const response = await globalThis.fetch(
