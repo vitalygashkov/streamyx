@@ -12,7 +12,14 @@ const findPath = async (exeName: string) => {
 };
 
 interface MuxOptions {
-  inputs: { id: number; language?: string; label?: string; type: string; path: string }[];
+  inputs: {
+    id: number;
+    language?: string;
+    label?: string;
+    type: string;
+    path: string;
+    forced?: boolean;
+  }[];
   output: string;
   trimBegin?: string;
   trimEnd?: string;
@@ -40,6 +47,7 @@ const mux = async ({ inputs, output, trimBegin, trimEnd, cleanup }: MuxOptions) 
       if (input.language)
         args.push(metadata, `language=${input.language?.slice(0, 3)?.replace('-', '')}`);
       if (input.label) args.push(metadata, `title="${input.label}"`);
+      if (input.forced) args.push(`-disposition:s:s:${input.id}`, 'forced');
     }
     if (input.type === 'audio') {
       const metadata = `-metadata:s:a:${input.id}`;
