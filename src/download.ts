@@ -29,7 +29,7 @@ const downloadSegments = async (urls: string[], options: any) => {
     filepath = DEFAULT_FILEPATH,
     headers,
     connections = DEFAULT_CONNECTIONS,
-    decryptersPool,
+    decryptersPool = [],
     codec,
     contentType,
     logPrefix,
@@ -57,10 +57,10 @@ const downloadSegments = async (urls: string[], options: any) => {
       const responses = await Promise.all(partSegments.values());
       for (let i = 0; i < responses.length; i++) {
         const response = responses[i];
-        const { decrypt } = decryptersPool[i];
+        const decrypter = decryptersPool[i];
         if (response.data) {
-          segments[response.index - startOffset] = decrypt
-            ? decrypt(response.data, {
+          segments[response.index - startOffset] = decrypter?.decrypt
+            ? decrypter.decrypt(response.data, {
                 contentType,
                 codec,
                 init: response.index === 0,
