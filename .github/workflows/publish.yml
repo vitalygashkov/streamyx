@@ -23,8 +23,8 @@ jobs:
       - name: Install nwidevine dependencies
         run: cd packages/nwidevine && npm ci && npm run build
 
-      - name: Install keystone dependencies
-        run: cd packages/keystone && npm ci && npm run build
+      - name: Install widevinejs dependencies
+        run: cd packages/widevinejs && npm ci && npm run build
 
       - name: Install app dependencies
         run: npm ci
@@ -63,8 +63,11 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install submodule dependencies
-        run: cd packages/keystone && npm ci
+      - name: Install nwidevine dependencies
+        run: cd packages/nwidevine && npm ci && npm run build
+
+      - name: Install widevinejs dependencies
+        run: cd packages/widevinejs && npm ci && npm run build
 
       - name: Install app dependencies
         run: npm ci
@@ -103,8 +106,11 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install submodule dependencies
-        run: cd packages/keystone && npm ci
+      - name: Install nwidevine dependencies
+        run: cd packages/nwidevine && npm ci && npm run build
+
+      - name: Install widevinejs dependencies
+        run: cd packages/widevinejs && npm ci && npm run build
 
       - name: Install app dependencies
         run: npm ci

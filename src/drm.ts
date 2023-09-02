@@ -1,4 +1,4 @@
-import { getContentKeys, getSegmentDecrypter, setLogger } from '../packages/keystone/keystone';
+import { getContentKeys, getSegmentDecrypter, setLogger } from '../packages/widevinejs/widevinejs';
 import { logger } from './logger';
 import fs from './fs';
 
@@ -47,7 +47,7 @@ const getDecryptionKeys = async (pssh: string, drmConfig: any) => {
 
 const getDecryptersPool = async (pssh: string, drmConfig: any, count = 1, key?: Buffer) => {
   setLogger(logger);
-  const addonDir = fs.join(fs.appDir, 'packages', 'keystone', 'build', 'Release');
+  const addonDir = fs.join(fs.appDir, 'packages', 'nwidevine', 'build', 'Release');
   const params = {
     ...drmConfig,
     key,
