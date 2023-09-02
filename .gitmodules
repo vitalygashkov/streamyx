@@ -1,7 +1,10 @@
 
-[submodule "packages/keystone"]
-	path = packages/keystone
-	url = https://github.com/vitalygashkov/keystone.git
+[submodule "packages/widevinejs"]
+	path = packages/widevinejs
+	url = https://github.com/vitalygashkov/widevinejs
 [submodule "src/providers"]
 	path = src/providers
 	url = https://github.com/vitalygashkov/streamyx-providers.git
+[submodule "packages/nwidevine"]
+	path = packages/nwidevine
+	url = https://github.com/vitalygashkov/nwidevine
