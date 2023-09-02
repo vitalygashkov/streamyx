@@ -104,9 +104,15 @@ const config: ParseArgsConfigWithDescriptions = {
 
 const getProcessedArgs = () => {
   const args = parseArgs(config);
-  const { values, positionals } = args;
+
+  // TODO: Remove when parseArgs will be stable
+  const values = { ...args.values };
+  for (const option of Object.keys(config.options)) {
+    values[option] = args.values[option] ?? config.options[option].default;
+  }
+
   return {
-    urls: positionals,
+    urls: args.positionals,
     videoHeight: parseInt(String(values['video-quality'] || '').replaceAll('p', '')),
     audioQuality: values['audio-quality'],
     episodes: parseNumberRange(String(values['episodes'] || '')),

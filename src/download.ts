@@ -10,9 +10,10 @@ const http = new Http();
 
 const downloadSegment = async (url: string, headers: Record<string, string>, index: number) => {
   try {
-    const response = await http.fetch(url, { headers });
+    const response = await http.fetch(url.replaceAll('&amp;', '&'), { headers });
     if (response.status !== 200) {
       logger.error(`Segment #${index + 1} download failed. Status code: ${response.status}`);
+      logger.debug(await response.text());
     }
     const data = Buffer.from(await response.arrayBuffer());
     return { data, index };
@@ -28,7 +29,7 @@ const downloadSegments = async (urls: string[], options: any) => {
     filepath = DEFAULT_FILEPATH,
     headers,
     connections = DEFAULT_CONNECTIONS,
-    decryptersPool,
+    decryptersPool = [],
     codec,
     contentType,
     logPrefix,
@@ -56,10 +57,10 @@ const downloadSegments = async (urls: string[], options: any) => {
       const responses = await Promise.all(partSegments.values());
       for (let i = 0; i < responses.length; i++) {
         const response = responses[i];
-        const decryptSegment = decryptersPool?.[i];
+        const decrypter = decryptersPool[i];
         if (response.data) {
-          segments[response.index - startOffset] = decryptSegment
-            ? decryptSegment(response.data, {
+          segments[response.index - startOffset] = decrypter?.decrypt
+            ? decrypter.decrypt(response.data, {
                 contentType,
                 codec,
                 init: response.index === 0,

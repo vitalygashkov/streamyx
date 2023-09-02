@@ -24,12 +24,12 @@ const decrypt = async (
     logger.error(`Decryption failed. Required package is missing: ${exeName}`);
     return;
   }
-  const args = ['--key', `${kid}:${key}`, input, output];
+  const args = ['--show-progress', '--key', `${kid}:${key}`, input, output];
   const mp4decrypt = spawn(exePath, args);
   mp4decrypt.stdout.setEncoding('utf8');
   mp4decrypt.stdout.on('data', (data) => logger.debug(data));
   mp4decrypt.stderr.setEncoding('utf8');
-  mp4decrypt.stderr.on('error', (data) => logger.error(String(data)));
+  mp4decrypt.stderr.on('error', (data) => logger.debug(String(data)));
   await new Promise<void>((resolve) =>
     mp4decrypt.on('close', () => {
       mp4decrypt.kill('SIGINT');

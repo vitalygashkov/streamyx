@@ -48,8 +48,7 @@ class Downloader {
       if (pssh) {
         contentKeys = await getDecryptionKeys(pssh, drmConfig);
         if (!contentKeys.length) {
-          logger.error(`Decryption keys could not be obtained`);
-          process.exit(1);
+          logger.debug(`Decryption keys could not be obtained`);
           logger.debug(`Trying to decrypt through a CDM adapter (slower process)`);
           decryptersPool = await getDecryptersPool(pssh, drmConfig, this._params.connections);
         }
@@ -81,16 +80,21 @@ class Downloader {
       const inputs: any[] = [];
       for (let i = 0; i < tracks.length; i++) {
         const track = tracks[i] as any;
-        const id = track.id ?? (i ? (tracks[i - 1] as any).id : i);
         const isSubtitle = track.type === 'text';
         inputs.push({
           ...track,
-          id,
+          id: track.id,
           path: this.getFilepath(
             this.getTrackFilename(
               isSubtitle ? `${track.type}.${track.language}` : track.type,
-              id,
-              isSubtitle ? '' : contentKeys.length ? 'dec' : 'enc',
+              track.id,
+              isSubtitle
+                ? track.forced
+                  ? 'forced'
+                  : ''
+                : contentKeys.length || decryptersPool.length
+                ? 'dec'
+                : 'enc',
               track.format
             )
           ),
@@ -134,17 +138,23 @@ class Downloader {
           label: subtitle.label,
           language: subtitle.language,
           format: subtitle.format,
+          forced: subtitle.forced,
           segments: [{ url: subtitle.url }],
         }))
       );
     }
     this._params.videoHeight = (video as any).qualityLabel.replace('p', '');
-    return [video, ...audios, ...subtitles].filter((track: any) => {
+    const tracks = [video, ...audios, ...subtitles].filter((track: any) => {
       if (track.type === 'video' && this._params.skipVideo) return false;
       if (track.type === 'audio' && this._params.skipAudio) return false;
       if (track.type === 'text' && this._params.skipSubtitles) return false;
       return true;
     });
+    const getStreamIndex = (tracks: any, track: any) =>
+      tracks.filter(({ type }: any) => type === track.type).indexOf(track);
+    for (const track of tracks)
+      if ((track as any).id === undefined) (track as any).id = getStreamIndex(tracks, track);
+    return tracks;
   }
 
   setWorkDir() {
@@ -168,10 +178,11 @@ class Downloader {
       const filename = this.getTrackFilename(
         isSubtitle ? `${track.type}.${track.language}` : track.type,
         track.id,
-        isSubtitle ? '' : decryptersPool.length ? 'dec' : 'enc',
+        isSubtitle ? (track.forced ? 'forced' : '') : decryptersPool.length ? 'dec' : 'enc',
         track.format
       );
       const filepath = this.getFilepath(filename);
+      if (fs.exists(filepath)) continue;
       const urls = track.segments.map((s: any) => s.url);
       const connections = this._params.connections;
 
@@ -191,6 +202,7 @@ class Downloader {
       if (track.type === 'text') {
         if (track.language) trackInfo += ` ∙ ${track.language.toUpperCase()}`;
         if (track.label) trackInfo += ` (${track.label})`;
+        if (track.forced) trackInfo += ` FORCED`;
       }
       if (track.type === 'video' || track.type === 'audio')
         trackInfo += ` ∙ ${track.size || '?'} MiB`;
@@ -226,28 +238,9 @@ class Downloader {
     logger.info(msg);
   }
 
-  async #downloadSubtitles() {
-    const allowSubtitles = !this._params.skipSubtitles;
-    const hasSubtitles = this._config.subtitles?.length;
-    if (!allowSubtitles || !hasSubtitles) return;
-    const { subtitles } = this._config;
-    for (const subtitle of subtitles) {
-      const { url, language, format } = subtitle;
-      try {
-        const response = await this.http.fetch(url);
-        const content = await response.text();
-        const filename = this.getTrackFilename('', '', language, format);
-        await fs.writeText(this.getFilepath(filename), content);
-      } catch (e: any) {
-        logger.error(`Failed to download subtitles`);
-        logger.debug(e.message);
-      }
-    }
-  }
-
   get filename() {
     const { movie, show, season, episode, provider, audioType } = this._config;
-    const { movieTemplate, episodeTemplate, videoHeight } = this._params;
+    const { movieTemplate = '', episodeTemplate = '', videoHeight } = this._params;
     let filename = '';
     if (movie)
       filename = movieTemplate
@@ -255,7 +248,7 @@ class Downloader {
         .replace('{audioType}.', audioType ? audioType.toUpperCase() + '.' : '');
     else
       filename = episodeTemplate
-        .replace('{show}', show.title.replaceAll(' ', '.'))
+        .replace('{show}', show.title?.replaceAll(' ', '.'))
         .replace('S{s}', season?.number ? 'S' + season.number.toString().padStart(2, '0') : '')
         .replace('{s}', season?.number ? season.number.toString().padStart(2, '0') : '')
         .replace('{e}', episode?.number ? episode.number.toString().padStart(2, '0') : '')

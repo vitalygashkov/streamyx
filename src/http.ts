@@ -51,7 +51,7 @@ class Http {
   #session?: ClientHttp2Session;
   #lastOrigin?: string;
   browser: Browser | null;
-  #browserPage: any;
+  browserPage: any;
 
   constructor() {
     this.headers = { 'User-Agent': USER_AGENTS.tizen };
@@ -69,6 +69,7 @@ class Http {
   }
 
   async fetch(resource: string | URL | Request, options?: RequestInit): Promise<Response> {
+    if (!resource) throw new Error('Fetch resource is empty');
     const session = this.getHttp2Session(resource);
     if (this.browser) {
       return this.fetchViaBrowser(resource, options);
@@ -82,12 +83,12 @@ class Http {
   async launchBrowser() {
     const { browser, page } = await launchBrowser();
     this.browser = browser;
-    this.#browserPage = page;
+    this.browserPage = page;
   }
 
   async fetchViaBrowser(resource: string | URL | Request, options?: RequestInit) {
-    await this.#browserPage.goto(resource);
-    const { body, init } = await this.#browserPage.evaluate(
+    await this.browserPage.goto(resource);
+    const { body, init } = await this.browserPage.evaluate(
       (resource: any, options: any) => {
         const fetchData = async () => {
           const response = await globalThis.fetch(
@@ -120,6 +121,7 @@ class Http {
 
   private getHttp2Session(resource: string | URL | Request) {
     const url = parseUrlFromResource(resource);
+    if (!url) return null;
     const session = this.#sessions.get(url.host);
     if (session) {
       return session;
