@@ -1,4 +1,4 @@
-import { getContentKeys, getSegmentDecrypter, setLogger } from '../packages/widevinejs/widevinejs';
+import { getContentKeys, getSegmentDecrypter, setLogger } from 'widevinejs';
 import { logger } from './logger';
 import fs from './fs';
 
@@ -47,7 +47,10 @@ const getDecryptionKeys = async (pssh: string, drmConfig: any) => {
 
 const getDecryptersPool = async (pssh: string, drmConfig: any, count = 1, key?: Buffer) => {
   setLogger(logger);
-  const addonDir = fs.join(fs.appDir, 'packages', 'nwidevine', 'build', 'Release');
+  const isCompiled = __dirname.includes('dist');
+  // If executable, then go by one more step, from `dist` folder
+  const up = isCompiled ? '../..' : '..';
+  const addonDir = fs.join(__dirname, `${up}/node_modules/nwidevine/build/Release`);
   const params = {
     ...drmConfig,
     key,
@@ -57,7 +60,8 @@ const getDecryptersPool = async (pssh: string, drmConfig: any, count = 1, key?: 
     addonDir,
   };
   const decryptersPool = [];
-  for (let i = 0; i < count; i++) decryptersPool.push(getSegmentDecrypter(pssh, params));
+  for (let i = 0; i < count; i++)
+    decryptersPool.push(getSegmentDecrypter(pssh, params).catch((e) => logger.error(e.message)));
   return Promise.all(decryptersPool);
 };
 
