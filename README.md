@@ -75,15 +75,15 @@ Output: `/downloads/Knives.Out.720p.WINK.WEB-DL.x264/Knives.Out.720p.WINK.WEB-DL
 
 ## Streaming services
 
-| Title                                    | Status       | Details                                        |
-| ---------------------------------------- | ------------ | ---------------------------------------------- |
-| [Кинопоиск](https://hd.kinopoisk.ru/)    | Supported    |                                                |
-| [Иви](https://www.ivi.ru/)               | Supported    | 3D movie downloads are currently unavailable   |
-| [Wink](https://wink.ru/)                 | Supported    | Live video downloads are currently unavailable |
-| [Okko](https://okko.tv/)                 | Experimental |                                                |
-| [KION](https://kion.ru/)                 | Planned      |                                                |
-| [PREMIER](https://premier.one/)          | Planned      |                                                |
-| [START](https://start.ru/)               | Planned      |                                                |
-| [Amediateka](https://www.amediateka.ru/) | Planned      |                                                |
-| [Crunchyroll](https://crunchyroll.com/)  | Experimental |                                                |
-| [НТВ](https://www.ntv.ru/)               | In progress  | Only download link extracting                  |
+| Title                                    | Status       | Details                               |
+| ---------------------------------------- | ------------ | ------------------------------------- |
+| [Кинопоиск](https://hd.kinopoisk.ru/)    | Supported    |                                       |
+| [Иви](https://www.ivi.ru/)               | Supported    | 3D movies are currently unavailable   |
+| [Wink](https://wink.ru/)                 | Supported    | Live videos are currently unavailable |
+| [Okko](https://okko.tv/)                 | Supported    |                                       |
+| [KION](https://kion.ru/)                 | Planned      |                                       |
+| [PREMIER](https://premier.one/)          | Planned      |                                       |
+| [START](https://start.ru/)               | Planned      |                                       |
+| [Amediateka](https://www.amediateka.ru/) | Planned      |                                       |
+| [Crunchyroll](https://crunchyroll.com/)  | Experimental |                                       |
+| [НТВ](https://www.ntv.ru/)               | In progress  | Only download link extracting         |
