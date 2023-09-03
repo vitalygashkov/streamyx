@@ -47,9 +47,9 @@ const getDecryptionKeys = async (pssh: string, drmConfig: any) => {
 
 const getDecryptersPool = async (pssh: string, drmConfig: any, count = 1, key?: Buffer) => {
   setLogger(logger);
-  const isExecutable = __dirname.includes('snapshot');
+  const isCompiled = __dirname.includes('dist');
   // If executable, then go by one more step, from `dist` folder
-  const up = isExecutable ? '../..' : '..';
+  const up = isCompiled ? '../..' : '..';
   const addonDir = fs.join(__dirname, `${up}/node_modules/nwidevine/build/Release`);
   const params = {
     ...drmConfig,
