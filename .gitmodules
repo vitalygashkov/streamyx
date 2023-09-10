@@ -8,3 +8,6 @@
 [submodule "packages/nwidevine"]
 	path = packages/nwidevine
 	url = https://github.com/vitalygashkov/nwidevine
+[submodule "packages/devi"]
+	path = packages/devi
+	url = https://github.com/vitalygashkov/devi.git
