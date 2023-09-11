@@ -60,7 +60,7 @@ const downloadSegments = async (urls: string[], options: any) => {
         const decrypter = decryptersPool[i];
         if (response.data) {
           segments[response.index - startOffset] = decrypter?.decrypt
-            ? decrypter.decrypt(response.data, {
+            ? await decrypter.decrypt(response.data, {
                 contentType,
                 codec,
                 init: response.index === 0,
