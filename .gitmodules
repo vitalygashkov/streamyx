@@ -1,7 +1,4 @@
 
-[submodule "packages/widevinejs"]
-	path = packages/widevinejs
-	url = https://github.com/vitalygashkov/widevinejs
 [submodule "src/providers"]
 	path = src/providers
 	url = https://github.com/vitalygashkov/streamyx-providers.git
