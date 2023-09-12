@@ -20,12 +20,6 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install nwidevine dependencies
-        run: cd packages/nwidevine && npm ci && npm run build
-
-      - name: Install widevinejs dependencies
-        run: cd packages/widevinejs && npm ci && npm run build
-
       - name: Install app dependencies
         run: npm ci
 
