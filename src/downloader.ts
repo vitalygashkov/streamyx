@@ -1,4 +1,4 @@
-import { AudioTrack, CONTENT_TYPE, Manifest, parseManifest, VideoTrack } from 'dasha';
+import { CONTENT_TYPE, Manifest, parseManifest, SubtitleTrack } from 'dasha';
 import { download } from './download';
 import { logger } from './logger';
 import { Http } from './http';
@@ -132,16 +132,21 @@ class Downloader {
     }));
     const subtitles = manifest.getSubtitleTracks(this._params.subtitleLanguages);
     if (this._config.subtitles) {
-      subtitles.push(
-        ...this._config.subtitles.map((subtitle: any) => ({
+      for (const subtitle of this._config.subtitles) {
+        const exists = subtitles.some(
+          (sub: SubtitleTrack) =>
+            new URL(sub.segments[0]?.url).pathname === new URL(subtitle.url).pathname
+        );
+        if (exists) continue;
+        subtitles.push({
           type: 'text',
-          label: subtitle.label,
+          label: subtitle.label || subtitle.title,
           language: subtitle.language,
           format: subtitle.format,
           forced: subtitle.forced,
           segments: [{ url: subtitle.url }],
-        }))
-      );
+        } as any);
+      }
     }
     this._params.videoHeight = (video as any).qualityLabel.replace('p', '');
     const tracks = [video, ...audios, ...subtitles].filter((track: any) => {
