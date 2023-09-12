@@ -1,10 +1,13 @@
 
-[submodule "packages/widevinejs"]
-	path = packages/widevinejs
-	url = https://github.com/vitalygashkov/widevinejs
 [submodule "src/providers"]
 	path = src/providers
 	url = https://github.com/vitalygashkov/streamyx-providers.git
-[submodule "packages/nwidevine"]
-	path = packages/nwidevine
-	url = https://github.com/vitalygashkov/nwidevine
+[submodule "packages/wive"]
+	path = packages/wive
+	url = https://github.com/vitalygashkov/wive
+[submodule "packages/wivenative"]
+	path = packages/wivenative
+	url = https://github.com/vitalygashkov/wivenative
+[submodule "packages/wiveproto"]
+	path = packages/wiveproto
+	url = https://github.com/vitalygashkov/wiveproto

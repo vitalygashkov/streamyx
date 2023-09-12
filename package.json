@@ -1,6 +1,6 @@
 {
   "name": "streamyx",
-  "version": "3.6.28",
+  "version": "3.6.29",
   "author": "Vitaly Gashkov <vitalygashkov@vk.com>",
   "description": "Command-line video downloader",
   "main": "dist/streamyx.js",
@@ -26,7 +26,7 @@
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
     "undici": "^5.22.1",
-    "widevinejs": "file:packages/widevinejs"
+    "wive": "file:packages/wive"
   },
   "devDependencies": {
     "@types/node": "^18.16.1",
