@@ -102,7 +102,7 @@ const config: ParseArgsConfigWithDescriptions = {
   },
 };
 
-const getProcessedArgs = () => {
+const getProcessedArgs = (): RunArgs => {
   const args = parseArgs(config);
 
   // TODO: Remove when parseArgs will be stable
@@ -112,30 +112,30 @@ const getProcessedArgs = () => {
   }
 
   return {
-    urls: args.positionals,
+    urls: args.positionals as string[],
     videoHeight: parseInt(String(values['video-quality'] || '').replaceAll('p', '')),
-    audioQuality: values['audio-quality'],
+    audioQuality: values['audio-quality'] ? String(values['audio-quality']) : undefined,
     episodes: parseNumberRange(String(values['episodes'] || '')),
     seasons: parseNumberRange(String(values['seasons'] || '')),
-    movieTemplate: values['movie-template'],
-    episodeTemplate: values['episode-template'],
+    movieTemplate: String(values['movie-template']),
+    episodeTemplate: String(values['episode-template']),
     connections: parseInt(String(values['connections'])),
-    hdr: values['hdr'],
-    '3d': values['3d'],
-    hardsub: values['hardsub'],
+    hdr: Boolean(values['hdr']),
+    '3d': Boolean(values['3d']),
+    hardsub: Boolean(values['hardsub']),
     subtitleLanguages: parseArrayFromString(String(values['subs-lang'] || '')),
     audioLanguages: parseArrayFromString(String(values['audio-lang'] || '')),
-    skipSubtitles: values['skip-subs'],
-    skipAudio: values['skip-audio'],
-    skipVideo: values['skip-video'],
-    skipMux: values['skip-mux'],
-    trimBegin: values['trim-begin'],
-    trimEnd: values['trim-end'],
-    pssh: String(values['pssh'] || ''),
-    headers: parseHeadersFromString(String(values['headers'] || '')),
-    debug: values['debug'],
-    version: values['version'],
-    help: values['help'],
+    skipSubtitles: Boolean(values['skip-subs']),
+    skipAudio: Boolean(values['skip-audio']),
+    skipVideo: Boolean(values['skip-video']),
+    skipMux: Boolean(values['skip-mux']),
+    trimBegin: values['trim-begin'] ? String(values['trim-begin']) : undefined,
+    trimEnd: values['trim-end'] ? String(values['trim-end']) : undefined,
+    pssh: values['pssh'] ? String(values['pssh']) : undefined,
+    headers: values['headers'] ? parseHeadersFromString(String(values['headers'])) : undefined,
+    debug: Boolean(values['debug']),
+    version: Boolean(values['version']),
+    help: Boolean(values['help']),
   };
 };
 
@@ -168,6 +168,33 @@ const printOptions = (options: Record<string, Option> = {}) => {
     const flags = [short ? '-' + short : '', '--' + name].filter(Boolean).join(', ');
     console.log(`  ${flags.padEnd(20)} ${description}`);
   }
+};
+
+export type RunArgs = {
+  urls: string[];
+  videoHeight?: number;
+  audioQuality?: string;
+  episodes: number[];
+  seasons: number[];
+  movieTemplate: string;
+  episodeTemplate: string;
+  connections: number;
+  hdr: boolean;
+  '3d': boolean;
+  hardsub: boolean;
+  subtitleLanguages: string[];
+  audioLanguages: string[];
+  skipSubtitles: boolean;
+  skipAudio: boolean;
+  skipVideo: boolean;
+  skipMux: boolean;
+  trimBegin?: string;
+  trimEnd?: string;
+  pssh?: string;
+  headers?: Record<string, string>;
+  debug: boolean;
+  version: boolean;
+  help: boolean;
 };
 
 const printHelp = () => {

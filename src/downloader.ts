@@ -6,6 +6,7 @@ import fs from './fs';
 import { getDecryptersPool, getDecryptionKeys } from './drm';
 import { decrypt } from './mp4decrypt';
 import { mux } from './ffmpeg';
+import { RunArgs } from './args';
 
 interface DownloadOptions {
   numberOfConnections: number;
@@ -26,7 +27,7 @@ class Downloader {
   _config: any;
   _workDir = fs.join(fs.appDir, 'downloads');
 
-  constructor(params: any) {
+  constructor(params: RunArgs) {
     this._params = params;
     this.http = new Http();
   }

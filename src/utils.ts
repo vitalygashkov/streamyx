@@ -22,7 +22,7 @@ const sleep = async (seconds: number) =>
 const bold = (text: string) => `\x1b[1m${text}\x1b[0m`;
 
 const parseNumberRange = (rangeStr: string) => {
-  if (!rangeStr?.replace(/\D/g, '').trim()) return NaN;
+  if (!rangeStr?.replace(/\D/g, '').trim()) return [];
   const numbers: number[] = [];
   rangeStr
     .replaceAll(' ', '')
