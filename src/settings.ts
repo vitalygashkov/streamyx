@@ -63,7 +63,7 @@ const defaultSettings: Settings = {
   chromePath: null,
 };
 
-export const getSettingsPath = async () => {
+const getSettingsPath = async () => {
   const configDir = join(process.cwd(), 'config');
   await fs.createDir(configDir);
   const settingsPath = join(configDir, 'settings.json');
@@ -71,9 +71,14 @@ export const getSettingsPath = async () => {
   return settingsPath;
 };
 
+let settings = defaultSettings;
+
+export const getSettings = (): Readonly<Settings> => settings;
+
 export const loadSettings = async (): Promise<Settings> => {
   const settingsPath = await getSettingsPath();
-  return fs.readJson(settingsPath);
+  settings = await fs.readJson<Settings>(settingsPath).catch(() => defaultSettings);
+  return settings;
 };
 
 export const saveSettings = async (settings: Partial<Settings>) => {

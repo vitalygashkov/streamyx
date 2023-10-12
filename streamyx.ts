@@ -1,6 +1,6 @@
 process.title = 'streamyx';
 
-import { RunArgs, getProcessedArgs, printHelp, printVersion } from './src/args';
+import { RunArgs, loadArgs } from './src/args';
 import { logger } from './src/logger';
 import { validateUrl } from './src/utils';
 import { printDecryptionKeys } from './src/drm';
@@ -29,13 +29,9 @@ const download = async (url: string, provider: Provider, args: RunArgs) => {
 };
 
 const initialize = async () => {
-  const settings = await loadSettings();
-
-  const args = getProcessedArgs();
-  if (args.version) printVersion();
-  if (args.help) printHelp();
+  await loadSettings();
+  const args = loadArgs();
   logger.setLogLevel(args.debug ? 'debug' : 'info');
-
   const urls = args.urls.length ? args.urls : [''];
   for (const rawUrl of urls) {
     if (args.pssh) {

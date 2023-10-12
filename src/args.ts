@@ -205,4 +205,11 @@ const printHelp = () => {
   printOptions(config.options);
 };
 
-export { getProcessedArgs, printVersion, printHelp };
+const loadArgs = () => {
+  const args = getProcessedArgs();
+  if (args.version) printVersion();
+  if (args.help) printHelp();
+  return args;
+};
+
+export { getProcessedArgs, printVersion, printHelp, loadArgs };
