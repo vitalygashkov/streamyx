@@ -7,7 +7,7 @@ import { IncomingHttpHeaders } from 'node:http';
 import { URL } from 'node:url';
 import { request, fetch, Request, RequestInit, Response } from 'undici';
 import BodyReadable from 'undici/types/readable';
-import { Browser } from 'puppeteer-core';
+import { Browser, Page } from 'puppeteer-core';
 import { logger } from './logger';
 import { sleep } from './utils';
 import { launchBrowser } from './browser';
@@ -51,7 +51,7 @@ class Http {
   #session?: ClientHttp2Session;
   #lastOrigin?: string;
   browser: Browser | null;
-  browserPage: any;
+  browserPage: Page | null;
 
   constructor() {
     this.headers = { 'User-Agent': USER_AGENTS.tizen };
@@ -62,6 +62,7 @@ class Http {
     this.#retryThreshold = 3;
     this.#retryDelayMs = 1500;
     this.browser = null;
+    this.browserPage = null;
   }
 
   get hasSessions() {
@@ -87,9 +88,10 @@ class Http {
   }
 
   async fetchViaBrowser(resource: string | URL | Request, options?: RequestInit) {
-    await this.browserPage.goto(resource);
+    if (!this.browserPage) throw new Error('Launch browser before using fetch via browser');
+    await this.browserPage.goto(resource.toString());
     const { body, init } = await this.browserPage.evaluate(
-      (resource: any, options: any) => {
+      (resource, options) => {
         const fetchData = async () => {
           const response = await globalThis.fetch(
             resource as globalThis.RequestInfo,
