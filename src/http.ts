@@ -5,7 +5,7 @@ import http2, {
 } from 'node:http2';
 import { IncomingHttpHeaders } from 'node:http';
 import { URL } from 'node:url';
-import { request, fetch, Request, RequestInit, Response } from 'undici';
+import { request, fetch, Request, RequestInit, Response, Headers, HeadersInit } from 'undici';
 import BodyReadable from 'undici/types/readable';
 import { Browser, Page } from 'puppeteer-core';
 import { logger } from './logger';
@@ -100,10 +100,10 @@ class Http {
           return {
             body: await response.text(),
             init: {
-              headers: response.headers,
+              headers: response.headers as unknown as Headers,
               status: response.status,
               statusText: response.statusText,
-            },
+            } as RequestInit,
           };
         };
         return fetchData();

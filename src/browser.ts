@@ -14,7 +14,7 @@ export const launchBrowser = async (options: BrowserLaunchArgumentOptions = {}) 
   let page: Page | null = null;
   const mainOptions: BrowserLaunchArgumentOptions = {
     headless: true,
-    args: ['--no-sandbox'],
+    args: ['--no-sandbox', '--start-maximized', '--lang=ru'],
     userDataDir: './config/chrome',
     ...options,
   };
@@ -33,6 +33,21 @@ export const launchBrowser = async (options: BrowserLaunchArgumentOptions = {}) 
   if (executablePath !== chromePath) saveSettings({ chromePath: executablePath });
   const aboutBlankPage = (await browser.pages())[0];
   if (aboutBlankPage) await aboutBlankPage.close();
+
+  await page.evaluateOnNewDocument(() => {
+    Object.defineProperty(navigator, 'language', {
+      get: function () {
+        return 'ru';
+      },
+    });
+    Object.defineProperty(navigator, 'languages', {
+      get: function () {
+        return ['ru'];
+      },
+    });
+  });
+  await page.setExtraHTTPHeaders({ 'Accept-Language': 'ru' });
+
   return { browser, page };
 };
 
