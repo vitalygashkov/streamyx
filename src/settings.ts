@@ -1,38 +1,33 @@
 import { join } from 'path';
 import fs from './fs';
 
-export enum SettingsVideoQuality {
-  Lowest = 'lowest',
-  HD1080p = '1080p',
-  HD720p = '720p',
-  SD576p = '576p',
-  SD480p = '480p',
-  SD360p = '360p',
-  SD240p = '240p',
-  SD144p = '144p',
-  SD80p = '80p',
-  Highest = 'highest',
-}
+export type VideoQuality = (typeof VIDEO_QUALITY)[keyof typeof VIDEO_QUALITY];
+export const VIDEO_QUALITY = {
+  lowest: 'lowest',
+  hd1080p: '1080p',
+  hd720p: '720p',
+  sd576p: '576p',
+  sd480p: '480p',
+  sd360p: '360p',
+  sd240p: '240p',
+  sd144p: '144p',
+  sd80p: '80p',
+  highest: 'highest',
+} as const;
 
-export enum SettingsVideoDynamicRange {
-  High = 'HDR',
-  Standart = 'SDR',
-}
+export type VideoDynamicRange = (typeof VIDEO_DYNAMIC_RANGE)[keyof typeof VIDEO_DYNAMIC_RANGE];
+export const VIDEO_DYNAMIC_RANGE = { high: 'HDR', standart: 'SDR' } as const;
 
-export enum SettingsAudioQuality {
-  Lowest = 'lowest',
-  Highest = 'highest',
-}
+export type AudioQuality = (typeof AUDIO_QUALITY)[keyof typeof AUDIO_QUALITY];
+export const AUDIO_QUALITY = { lowest: 'lowest', highest: 'highest' } as const;
 
-export enum SubtitleStoreType {
-  Embedded = 'embedded',
-  External = 'external',
-}
+export type SubtitleStoreType = (typeof SUBTITLE_STORE_TYPE)[keyof typeof SUBTITLE_STORE_TYPE];
+export const SUBTITLE_STORE_TYPE = { embedded: 'embedded', external: 'external' } as const;
 
 export interface Settings {
   askForOptionsBeforeDownload: boolean;
   defaultDownloadPath: string;
-  preferredVideoQuality: SettingsVideoQuality;
+  preferredVideoQuality: VideoQuality;
   preferredAudioQuality: string;
   preferredAudioLanguages: string[];
   preferredSubtitleLanguages: string[];
@@ -51,8 +46,8 @@ export interface Settings {
 const defaultSettings: Settings = {
   askForOptionsBeforeDownload: true,
   defaultDownloadPath: join(fs.homeDir, 'Downloads'),
-  preferredVideoQuality: SettingsVideoQuality.Highest,
-  preferredAudioQuality: SettingsAudioQuality.Highest,
+  preferredVideoQuality: VIDEO_QUALITY.highest,
+  preferredAudioQuality: AUDIO_QUALITY.highest,
   preferredAudioLanguages: [],
   preferredSubtitleLanguages: [],
   preferHdr: true,
@@ -61,14 +56,14 @@ const defaultSettings: Settings = {
   downloadProxy: null,
   metadataProxy: null,
   numberOfConnections: 16,
-  storeSubtitlesAs: SubtitleStoreType.Embedded,
+  storeSubtitlesAs: SUBTITLE_STORE_TYPE.embedded,
   movieFilenameTemplate: '{title}.{audioType}.{quality}.{provider}.{format}.{codec}',
   seriesFilenameTemplate:
     '{show}.S{s}E{e}.{title}.{audioType}.{quality}.{provider}.{format}.{codec}',
   chromePath: null,
 };
 
-export const getSettingsPath = async () => {
+const getSettingsPath = async () => {
   const configDir = join(process.cwd(), 'config');
   await fs.createDir(configDir);
   const settingsPath = join(configDir, 'settings.json');
@@ -76,9 +71,14 @@ export const getSettingsPath = async () => {
   return settingsPath;
 };
 
+let settings = defaultSettings;
+
+export const getSettings = (): Readonly<Settings> => settings;
+
 export const loadSettings = async (): Promise<Settings> => {
   const settingsPath = await getSettingsPath();
-  return fs.readJson(settingsPath);
+  settings = await fs.readJson<Settings>(settingsPath).catch(() => defaultSettings);
+  return settings;
 };
 
 export const saveSettings = async (settings: Partial<Settings>) => {

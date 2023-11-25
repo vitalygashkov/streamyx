@@ -1,4 +1,4 @@
-import { spawn } from 'node:child_process';
+import { ChildProcessWithoutNullStreams, spawn } from 'node:child_process';
 import { platform } from 'node:process';
 import { logger } from './logger';
 import fs from './fs';
@@ -11,7 +11,39 @@ const findPath = async (exeName: string) => {
   return fs.exists(path) ? path : null;
 };
 
-interface MuxOptions {
+const withOutput = (process: ChildProcessWithoutNullStreams) => {
+  process.stdout.setEncoding('utf8');
+  process.stdout.on('data', (data) => logger.debug(data));
+  process.stderr.setEncoding('utf8');
+  process.stderr.on('error', (data) => logger.debug(String(data)));
+};
+
+export const mp4decrypt = async (
+  key: string,
+  kid: string,
+  input: string,
+  output: string,
+  cleanup?: boolean
+) => {
+  const exeName = 'mp4decrypt';
+  const exePath = await findPath(exeName);
+  if (!exePath) {
+    logger.error(`Decryption failed. Required package is missing: ${exeName}`);
+    return;
+  }
+  const args = ['--show-progress', '--key', `${kid}:${key}`, input, output];
+  const process = spawn(exePath, args);
+  withOutput(process);
+  await new Promise<void>((resolve) =>
+    process.on('close', () => {
+      process.kill('SIGINT');
+      resolve();
+    })
+  );
+  if (cleanup) await fs.delete(input);
+};
+
+export interface MuxOptions {
   inputs: {
     id: number;
     language?: string;
@@ -26,7 +58,7 @@ interface MuxOptions {
   cleanup?: boolean;
 }
 
-const mux = async ({ inputs, output, trimBegin, trimEnd, cleanup }: MuxOptions) => {
+export const ffmpeg = async ({ inputs, output, trimBegin, trimEnd, cleanup }: MuxOptions) => {
   const exeName = 'ffmpeg';
   const exePath = await findPath(exeName);
   if (!exePath) {
@@ -64,18 +96,9 @@ const mux = async ({ inputs, output, trimBegin, trimEnd, cleanup }: MuxOptions) 
   args.push('-v', 'verbose');
   args.push(output);
 
-  const ffmpeg = spawn(exePath, args);
-
-  let error = '';
-  ffmpeg.stderr.setEncoding('utf8');
-  ffmpeg.stderr.on('data', (d) => (error += d)).on('end', () => error && logger.debug(error));
-  let data = '';
-  ffmpeg.stdout.setEncoding('utf8');
-  ffmpeg.stderr.on('data', (d) => (data += d)).on('end', () => data && logger.debug(data));
-
-  await new Promise((resolve) => ffmpeg.on('close', resolve));
-  ffmpeg.kill('SIGINT');
+  const process = spawn(exePath, args);
+  withOutput(process);
+  await new Promise((resolve) => process.on('close', resolve));
+  process.kill('SIGINT');
   if (cleanup) for (const input of inputs) await fs.delete(input.path);
 };
-
-export { mux };

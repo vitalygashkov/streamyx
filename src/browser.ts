@@ -1,20 +1,20 @@
-import { Browser, LaunchOptions, Page, Protocol } from 'puppeteer-core';
+import { Browser, BrowserLaunchArgumentOptions, Page, Protocol } from 'puppeteer-core';
 import puppeteer from 'puppeteer-extra';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import { logger } from './logger';
 import { prompt } from './utils';
-import { loadSettings, saveSettings } from './settings';
+import { getSettings, saveSettings } from './settings';
 
 puppeteer.use(StealthPlugin());
 
-export const launchBrowser = async (options: LaunchOptions = {}) => {
-  const { chromePath } = await loadSettings();
+export const launchBrowser = async (options: BrowserLaunchArgumentOptions = {}) => {
+  const { chromePath } = getSettings();
   let executablePath: string | null = chromePath;
   let browser: Browser | null = null;
   let page: Page | null = null;
-  const mainOptions = {
+  const mainOptions: BrowserLaunchArgumentOptions = {
     headless: true,
-    args: ['--no-sandbox'],
+    args: ['--no-sandbox', '--start-maximized', '--lang=ru'],
     userDataDir: './config/chrome',
     ...options,
   };
@@ -33,7 +33,22 @@ export const launchBrowser = async (options: LaunchOptions = {}) => {
   if (executablePath !== chromePath) saveSettings({ chromePath: executablePath });
   const aboutBlankPage = (await browser.pages())[0];
   if (aboutBlankPage) await aboutBlankPage.close();
-  return { browser, page, executablePath };
+
+  await page.evaluateOnNewDocument(() => {
+    Object.defineProperty(navigator, 'language', {
+      get: function () {
+        return 'ru';
+      },
+    });
+    Object.defineProperty(navigator, 'languages', {
+      get: function () {
+        return ['ru'];
+      },
+    });
+  });
+  await page.setExtraHTTPHeaders({ 'Accept-Language': 'ru' });
+
+  return { browser, page };
 };
 
 export const browserCookiesToList = (cookies: Protocol.Network.Cookie[]) => {

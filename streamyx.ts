@@ -1,55 +1,49 @@
 process.title = 'streamyx';
 
-import { getProcessedArgs, printHelp, printVersion } from './src/args';
+import { RunArgs, loadArgs } from './src/args';
 import { logger } from './src/logger';
-import { migrateFiles, parseMainDomain, validateUrl } from './src/utils';
+import { validateUrl } from './src/utils';
 import { printDecryptionKeys } from './src/drm';
-import { createProvider } from './src/providers';
+import { getProviderByUrl } from './src/providers';
 import { Downloader } from './src/downloader';
+import { loadSettings } from './src/settings';
+import { Provider } from './src/providers/provider';
 
-const streamyx: any = {
-  logger,
-  downloader: null,
-  providers: new Map(),
+const initializeProvider = async (url: string, args: RunArgs) => {
+  const provider = getProviderByUrl(url, args);
+  if (!provider) {
+    logger.error(`Suitable provider not found`);
+    process.exit(1);
+  }
+  await provider.init();
+  return provider;
 };
 
-const startDownload = async (config: any) => {
-  if (!streamyx.downloader) return;
-  if (typeof config.drmConfig === 'function') config.drmConfig = await config.drmConfig();
-  await streamyx.downloader.start(config);
-};
-
-const loadProvider = async (name: string, url: string, args: any) => {
-  const provider = streamyx.providers.get(name) ?? createProvider(name, args);
-  if (provider) {
-    await provider.init();
-    const hasProvider = streamyx.providers.has(provider.name);
-    if (!hasProvider) streamyx.providers.set(provider.name, provider);
-    const configs = await provider.getConfigList(url);
-    for (const config of configs) await startDownload(config);
-  } else {
-    streamyx.logger.error(`Provider <${name}> not found`);
+const download = async (url: string, provider: Provider, args: RunArgs) => {
+  const downloader = new Downloader(args);
+  const configs = await provider.getConfigList(url);
+  for (const config of configs) {
+    if (typeof config.drmConfig === 'function') config.drmConfig = await config.drmConfig();
+    await downloader.start(config);
   }
 };
 
-const loadProviders = async () => {
-  await migrateFiles().catch(() => null);
-  const args = getProcessedArgs();
-  if (args.version) printVersion();
-  if (args.help) printHelp();
-  streamyx.logger.setLogLevel(args.debug ? 'debug' : 'info');
-  streamyx.downloader = new Downloader(args);
-  const urls: string[] = args.urls?.length ? args.urls : [''];
-  for (const url of urls) {
+const initialize = async () => {
+  await loadSettings();
+  const args = loadArgs();
+  logger.setLogLevel(args.debug ? 'debug' : 'info');
+  const urls = args.urls.length ? args.urls : [''];
+  for (const rawUrl of urls) {
     if (args.pssh) {
-      await printDecryptionKeys(url, args.pssh, args.headers);
+      await printDecryptionKeys(rawUrl, args.pssh, args.headers);
       break;
     }
-    const validUrl = await validateUrl(url);
-    const domain = parseMainDomain(validUrl);
-    if (domain) await loadProvider(domain, validUrl, args);
+
+    const url = await validateUrl(rawUrl);
+    const provider = await initializeProvider(url, args);
+    await download(url, provider, args);
   }
   process.exit();
 };
 
-loadProviders();
+initialize();

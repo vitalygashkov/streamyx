@@ -4,8 +4,8 @@ import { logger } from './logger';
 import { Http } from './http';
 import fs from './fs';
 import { getDecryptersPool, getDecryptionKeys } from './drm';
-import { decrypt } from './mp4decrypt';
-import { mux } from './ffmpeg';
+import { ffmpeg, mp4decrypt } from './process';
+import { RunArgs } from './args';
 
 interface DownloadOptions {
   numberOfConnections: number;
@@ -26,7 +26,7 @@ class Downloader {
   _config: any;
   _workDir = fs.join(fs.appDir, 'downloads');
 
-  constructor(params: any) {
+  constructor(params: RunArgs) {
     this._params = params;
     this.http = new Http();
   }
@@ -47,7 +47,7 @@ class Downloader {
     if (drmConfig) {
       if (pssh) {
         contentKeys = await getDecryptionKeys(pssh, drmConfig);
-        if (!contentKeys.length) {
+        if (!contentKeys?.length) {
           logger.debug(`Decryption keys could not be obtained`);
           logger.debug(`Trying to decrypt through a CDM adapter (slower process)`);
           decryptersPool = await getDecryptersPool(pssh, drmConfig, this._params.connections);
@@ -69,7 +69,7 @@ class Downloader {
         const kid = contentKeys[0].kid;
         const input = this.getFilepath(this.getTrackFilename(track.type, track.id, 'enc'));
         const output = this.getFilepath(this.getTrackFilename(track.type, track.id, 'dec'));
-        decryptQueue.push(decrypt(key, kid, input, output, true));
+        decryptQueue.push(mp4decrypt(key, kid, input, output, true));
       }
       await Promise.all(decryptQueue);
       logger.info(`Decrypted successfully`);
@@ -102,7 +102,7 @@ class Downloader {
       }
       const output = this.getFilepath(this.getTrackFilename('', '', '', 'mkv'));
       const { trimBegin, trimEnd } = this._params;
-      await mux({ inputs, output, trimBegin, trimEnd, cleanup: true });
+      await ffmpeg({ inputs, output, trimBegin, trimEnd, cleanup: true });
       logger.info(`Muxed successfully`);
     }
 
