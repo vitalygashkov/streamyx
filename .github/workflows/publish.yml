@@ -4,10 +4,6 @@ on:
     branches:
       - main
 
-env:
-  # https://github.com/nodejs/node-gyp/issues/2869
-  PYTHON_VERSION: '3.11'
-
 jobs:
   build-win:
     name: Build for Windows
@@ -60,6 +56,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
+
+      # https://github.com/nodejs/node-gyp/issues/2869
+      - name: Fix distutils issue for node-gyp
+        run: python3 -m pip install setuptools
 
       - name: Install app dependencies
         run: npm ci
