@@ -59,7 +59,7 @@ jobs:
 
       # https://github.com/nodejs/node-gyp/issues/2869
       - name: Fix distutils issue for node-gyp
-        run: python3 -m pip install packaging
+        run: python3 -m pip install setuptools
 
       - name: Install app dependencies
         run: npm ci
