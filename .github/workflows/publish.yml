@@ -57,6 +57,10 @@ jobs:
         with:
           node-version: 18
 
+      # https://github.com/nodejs/node-gyp/issues/2869
+      - name: Fix distutils issue for node-gyp
+        run: python3 -m pip install packaging
+
       - name: Install app dependencies
         run: npm ci
 
