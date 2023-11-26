@@ -2,17 +2,54 @@ import { createInterface } from 'node:readline/promises';
 import { stdin, stdout } from 'node:process';
 import { delimiter, join } from 'node:path';
 import { stat } from 'node:fs/promises';
+import EventEmitter from 'node:events';
 
-const prompt = async <T = string>(message: string, type = 'input') => {
-  const readline = createInterface({ input: stdin, output: stdout });
-  const question = { message, type };
-  const isBooleanQuestion = question.type === 'confirm';
-  const formattedMessage = question.message + (isBooleanQuestion ? ' (y/n)' : '') + ': ';
-  const answer = await readline.question(formattedMessage);
-  const result = isBooleanQuestion ? answer === 'y' : answer.trim();
-  readline.close();
-  return result as T;
-};
+type PromptType = 'input' | 'confirm';
+type PromptAnswer<T> = T extends 'input' ? string : T extends 'confirm' ? boolean : never;
+
+class Prompt extends EventEmitter {
+  constructor() {
+    super();
+  }
+
+  async waitForInput<T extends PromptType = 'input'>(
+    message: string,
+    type?: T
+  ): Promise<PromptAnswer<T>> {
+    const hasPromptListener = !!this.listeners('prompt').length;
+    const answer = hasPromptListener
+      ? await this.waitForListenerResponse(message, type)
+      : await this.waitForCliResponse(message, type);
+    if (type === 'confirm') {
+      if (typeof answer === 'string')
+        return (answer?.toLowerCase() === 'y') as PromptAnswer<boolean>;
+      else return !!answer as PromptAnswer<boolean>;
+    } else {
+      return String(answer).trim() as PromptAnswer<string>;
+    }
+  }
+
+  private async waitForCliResponse(message: string, type: PromptType = 'input') {
+    const readline = createInterface({ input: stdin, output: stdout });
+    const question = { message, type };
+    const isBooleanQuestion = question.type === 'confirm';
+    const formattedMessage = question.message + (isBooleanQuestion ? ' (y/n)' : '') + ': ';
+    const answer = await readline.question(formattedMessage);
+    readline.close();
+    return answer;
+  }
+
+  private async waitForListenerResponse(message: string, type: PromptType = 'input') {
+    return new Promise((resolve) => {
+      this.emit('prompt', message, type);
+      this.addListener('prompt:response', (response) => {
+        resolve(response);
+      });
+    });
+  }
+}
+
+export const prompt = new Prompt();
 
 const sleep = async (seconds: number) =>
   new Promise((resolve) => setTimeout(resolve, seconds * 1000));
@@ -94,10 +131,10 @@ const validateUrl = async (url: string) => {
         const urlObject = new URL(currentUrl);
         isValid = !!urlObject;
       } else {
-        currentUrl = await prompt('URL');
+        currentUrl = await prompt.waitForInput('URL');
       }
     } catch (e) {
-      currentUrl = await prompt('URL');
+      currentUrl = await prompt.waitForInput('URL');
     }
   } while (!isValid);
   return currentUrl;
@@ -106,7 +143,6 @@ const validateUrl = async (url: string) => {
 const parseMainDomain = (url: string) => new URL(url).host.split('.').at(-2) || null;
 
 export {
-  prompt,
   sleep,
   bold,
   parseNumberRange,

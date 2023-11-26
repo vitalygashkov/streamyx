@@ -27,7 +27,7 @@ export const launchBrowser = async (options: BrowserLaunchArgumentOptions = {}) 
       page = (await browser?.newPage()) ?? null;
     } catch (e) {
       logger.error((e as Error).message);
-      executablePath = await prompt('Enter valid Chrome executable path');
+      executablePath = await prompt.waitForInput('Enter valid Chrome executable path');
     }
   }
   if (executablePath !== chromePath) saveSettings({ chromePath: executablePath });
