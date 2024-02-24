@@ -125,11 +125,26 @@ class Downloader {
   getTracks(manifest: Manifest) {
     const height = this._params.videoHeight;
     const video = manifest.getVideoTrack(height);
-    const audios = manifest.getAudioTracks(this._params.audioLanguages).map((audio) => ({
+
+    const audios = manifest.getAudioTracks([]).map((audio: any) => ({
       ...audio,
-      language: (audio as any).language || this._config.audioLanguage,
+      language: audio.language || this._config.audioLanguage,
     }));
-    const subtitles = manifest.getSubtitleTracks(this._params.subtitleLanguages);
+    const filterAudioByLang = (audio: any) =>
+      !this._params.audioLanguages?.length ||
+      this._params.audioLanguages.some(
+        (lang: string) => audio.language.startsWith(lang) || audio.label === lang
+      );
+    const filteredAudio = audios.filter(filterAudioByLang);
+
+    const subtitles = manifest.getSubtitleTracks([]);
+    const filterSubByLang = (sub: any) =>
+      !this._params.subtitleLanguages?.length ||
+      this._params.subtitleLanguages.some(
+        (lang: string) => sub.language.startsWith(lang) || sub.label === lang
+      );
+    const filteredSubs = subtitles.filter(filterSubByLang);
+
     if (this._config.subtitles) {
       for (const subtitle of this._config.subtitles) {
         const exists = subtitles.some(
@@ -148,7 +163,7 @@ class Downloader {
       }
     }
     this._params.videoHeight = (video as any).qualityLabel.replace('p', '');
-    const tracks = [video, ...audios, ...subtitles].filter((track: any) => {
+    const tracks = [video, ...filteredAudio, ...filteredSubs].filter((track: any) => {
       if (track.type === 'video' && this._params.skipVideo) return false;
       if (track.type === 'audio' && this._params.skipAudio) return false;
       if (track.type === 'text' && this._params.skipSubtitles) return false;
@@ -211,6 +226,9 @@ class Downloader {
       if (track.type === 'video' || track.type === 'audio')
         trackInfo += ` ∙ ${track.size || '?'} MiB`;
       logger.info(trackInfo);
+      if (track.type === 'text') {
+        logger.debug(`URL: ${track.segments[0]?.url}`);
+      }
       const logPrefix = logger.getPrefix('info');
 
       try {

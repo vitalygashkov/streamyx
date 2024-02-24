@@ -75,7 +75,7 @@ const parseNumberRange = (rangeStr: string) => {
 
 const parseArrayFromString = (value: string) => {
   if (!value) return [];
-  return value.replaceAll(' ', '').trim().split(',');
+  return value.trim().split(',');
 };
 
 const parseHeadersFromString = (str: string) => {
