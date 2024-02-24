@@ -40,6 +40,7 @@ const getDecryptionKeys = async (pssh: string, drmConfig: any) => {
     });
     return contentKeys;
   } catch (e) {
+    logger.error('Decryption keys could not be obtained');
     logger.debug(String(e));
     return [];
   }
