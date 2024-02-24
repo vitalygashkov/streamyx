@@ -131,14 +131,16 @@ class Downloader {
       language: audio.language || this._config.audioLanguage,
     }));
     const filterAudioByLang = (audio: any) =>
+      !this._params.audioLanguages?.length ||
       this._params.audioLanguages.some(
         (lang: string) => audio.language.startsWith(lang) || audio.label === lang
       );
     const filteredAudio = audios.filter(filterAudioByLang);
 
-    const subtitles = manifest.getSubtitleTracks(this._params.subtitleLanguages);
+    const subtitles = manifest.getSubtitleTracks([]);
     const filterSubByLang = (sub: any) =>
-      this._params.audioLanguages.some(
+      !this._params.subtitleLanguages?.length ||
+      this._params.subtitleLanguages.some(
         (lang: string) => sub.language.startsWith(lang) || sub.label === lang
       );
     const filteredSubs = subtitles.filter(filterSubByLang);
@@ -224,6 +226,9 @@ class Downloader {
       if (track.type === 'video' || track.type === 'audio')
         trackInfo += ` ∙ ${track.size || '?'} MiB`;
       logger.info(trackInfo);
+      if (track.type === 'text') {
+        logger.debug(`URL: ${track.segments[0]?.url}`);
+      }
       const logPrefix = logger.getPrefix('info');
 
       try {
