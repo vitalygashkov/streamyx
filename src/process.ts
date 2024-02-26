@@ -58,7 +58,7 @@ export interface MuxOptions {
   cleanup?: boolean;
 }
 
-export const ffmpeg = async ({ inputs, output, trimBegin, trimEnd, cleanup }: MuxOptions) => {
+export const ffmpeg = async ({ inputs, output, trimBegin, cleanup }: MuxOptions) => {
   const exeName = 'ffmpeg';
   const exePath = await findPath(exeName);
   if (!exePath) {

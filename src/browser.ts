@@ -1,4 +1,4 @@
-import { Browser, BrowserLaunchArgumentOptions, Page, Protocol } from 'puppeteer-core';
+import { Browser, BrowserLaunchArgumentOptions, Page, Cookie } from 'puppeteer-core';
 import puppeteer from 'puppeteer-extra';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import { logger } from './logger';
@@ -51,7 +51,7 @@ export const launchBrowser = async (options: BrowserLaunchArgumentOptions = {}) 
   return { browser, page };
 };
 
-export const browserCookiesToList = (cookies: Protocol.Network.Cookie[]) => {
+export const browserCookiesToList = (cookies: Cookie[]) => {
   return cookies.map((cookie) => {
     let row = `${cookie.name}=${cookie.value}`;
     if (cookie.domain) row += `; Domain=${cookie.domain}`;

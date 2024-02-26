@@ -60,7 +60,7 @@ const getDecryptersPool = async (pssh: string, drmConfig: any, count = 1, key?: 
     cdmDir: FILES_DIR,
     addonDir,
   };
-  const decryptersPool = [];
+  const decryptersPool: any = [];
   for (let i = 0; i < count; i++)
     decryptersPool.push(getSegmentDecrypter(pssh, params).catch((e) => logger.error(e.message)));
   return Promise.all(decryptersPool);
