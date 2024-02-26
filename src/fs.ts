@@ -236,7 +236,7 @@ const fs = {
   async writeBinary(path: string, data: Buffer) {
     const dir = this.parse(path).dir;
     try {
-      if (!this.exists(dir)) await this.createDir(dir);
+      if (!!dir && !this.exists(dir)) await this.createDir(dir);
       await writeFile(path, data, 'binary');
     } catch (e) {
       throw Error(`Failed to save data to file: ${path}`);
@@ -245,7 +245,7 @@ const fs = {
   async writeText(path: string, data: string) {
     const dir = this.parse(path).dir;
     try {
-      if (!this.exists(dir)) await this.createDir(dir);
+      if (!!dir && !this.exists(dir)) await this.createDir(dir);
       await writeFile(path, data, 'utf8');
     } catch (e) {
       throw Error(`Failed to save data to file: ${path}`);
@@ -254,7 +254,7 @@ const fs = {
   async writeJson(path: string, data: object) {
     const dir = this.parse(path).dir;
     try {
-      if (!this.exists(dir)) await this.createDir(dir);
+      if (!!dir && !this.exists(dir)) await this.createDir(dir);
       await writeFile(path, JSON.stringify(data, null, 2), 'utf8');
     } catch (e) {
       throw Error(`Failed to save data to file: ${path}`);
@@ -263,7 +263,7 @@ const fs = {
   async appendBinary(path: string, data: Buffer) {
     const dir = this.parse(path).dir;
     try {
-      if (!this.exists(dir)) await this.createDir(dir);
+      if (!!dir && !this.exists(dir)) await this.createDir(dir);
       if (!this.exists(path)) await this.writeBinary(path, data);
       else await appendFile(path, data, 'binary');
     } catch (e) {
@@ -273,7 +273,7 @@ const fs = {
   async appendText(path: string, data: string) {
     const dir = this.parse(path).dir;
     try {
-      if (!this.exists(dir)) await this.createDir(dir);
+      if (!!dir && !this.exists(dir)) await this.createDir(dir);
       if (!this.exists(path)) await this.writeText(path, data);
       else await appendFile(path, data, 'utf8');
     } catch (e) {
