@@ -87,3 +87,9 @@ Output: `/downloads/Knives.Out.720p.WINK.WEB-DL.x264/Knives.Out.720p.WINK.WEB-DL
 | [Amediateka](https://www.amediateka.ru/) | Planned      |                                       |
 | [Crunchyroll](https://crunchyroll.com/)  | Experimental |                                       |
 | [НТВ](https://www.ntv.ru/)               | In progress  | Only download link extracting         |
+
+## Development
+
+Compile sources and run:
+
+`npm start -- -q 720p "https://wink.ru/movies/dostat-nozhi-year-2019-93328166"`

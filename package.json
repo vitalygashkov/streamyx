@@ -3,12 +3,12 @@
   "version": "3.6.39",
   "author": "Vitaly Gashkov <vitalygashkov@vk.com>",
   "description": "Cross-platform video downloader",
-  "main": "dist/streamyx.js",
+  "main": "dist/src/main.js",
   "bin": {
-    "streamyx": "dist/streamyx.js"
+    "streamyx": "dist/src/main.js"
   },
   "scripts": {
-    "start": "tsc && node dist/streamyx",
+    "start": "tsc && node dist/src/main",
     "build": "tsc && pkg . --public -t node18-win-x64,node18-macos-x64,node18-macos-arm64,node18-linux-x64 --out-path ./build/",
     "build:win": "tsc && pkg . --public -t node18-win-x64 -o ./build/streamyx-win-x64.exe",
     "build:macos": "tsc && pkg . --public -t node18-macos-x64 -o ./build/streamyx-macos-x64",

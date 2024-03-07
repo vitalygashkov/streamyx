@@ -1,13 +1,13 @@
 process.title = 'streamyx';
 
-import { RunArgs, loadArgs } from './src/args';
-import { logger } from './src/logger';
-import { validateUrl, useCliPrompt } from './src/utils';
-import { printDecryptionKeys } from './src/drm';
-import { downloader } from './src/downloader';
-import { loadSettings } from './src/settings';
-import { getProviderByUrl } from './src/providers';
-import { Provider } from './src/providers/provider';
+import { RunArgs, loadArgs } from './args';
+import { logger } from './logger';
+import { validateUrl, useCliPrompt } from './utils';
+import { printDecryptionKeys } from './drm';
+import { downloader } from './downloader';
+import { loadSettings } from './settings';
+import { getProviderByUrl } from './providers';
+import { Provider } from './providers/provider';
 
 const initializeProvider = async (url: string, args: RunArgs) => {
   const provider = getProviderByUrl(url, args);
