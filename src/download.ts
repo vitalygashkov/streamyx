@@ -1,7 +1,7 @@
 import fs from './fs';
 import { Http } from './http';
 import { logger } from './logger';
-import { Progress } from './progress';
+import { progress } from './progress';
 
 const DEFAULT_CONNECTIONS = 24;
 const DEFAULT_FILEPATH = fs.join(fs.appDir, 'mediafile');
@@ -33,10 +33,13 @@ const downloadSegments = async (urls: string[], options: any) => {
     codec,
     contentType,
     logPrefix,
+    manifestUrl,
+    filename,
+    track,
   } = options;
 
-  const progress = new Progress({ prefix: logPrefix });
-  progress.setSize(urls.length);
+  progress.reset({ id: filepath, prefix: logPrefix, manifestUrl, filename, track });
+  progress.setSize(track.size);
   const writeStream = await fs.createWriteStream(filepath);
   const partsCount = Math.ceil(urls.length / connections);
   for (let partIndex = 0; partIndex < partsCount; partIndex++) {
@@ -52,7 +55,7 @@ const downloadSegments = async (urls: string[], options: any) => {
       partSegments.set(segmentIndex, downloadSegment(url, headers, segmentIndex));
     }
 
-    const segments = [];
+    const segments: Buffer[] = [];
     try {
       const responses = await Promise.all(partSegments.values());
       for (let i = 0; i < responses.length; i++) {
@@ -76,15 +79,15 @@ const downloadSegments = async (urls: string[], options: any) => {
     try {
       const data = Buffer.concat(segments);
       await new Promise((resolve) => writeStream.write(data, resolve));
-      const progressValue =
-        endOffset > urls.length ? urls.length - startOffset : endOffset - startOffset;
-      progress.increase(progressValue);
+      const dataSizeMB = data.byteLength / Math.pow(1024, 2);
+      progress.increase(dataSizeMB);
     } catch (e: any) {
       logger.error(`Write part ${partIndex + 1} failed`);
       logger.debug(e.toString());
     }
     partSegments.clear();
   }
+  progress.update(track.size);
   writeStream.end();
 };
 

@@ -5,7 +5,7 @@ import http2, {
 } from 'node:http2';
 import { IncomingHttpHeaders } from 'node:http';
 import { URL } from 'node:url';
-import { request, fetch, Request, RequestInit, Response, Headers, HeadersInit } from 'undici';
+import { request, fetch, Request, RequestInit, Response, Headers } from 'undici';
 import BodyReadable from 'undici/types/readable';
 import { Browser, Page } from 'puppeteer-core';
 import { logger } from './logger';
@@ -37,8 +37,8 @@ const parseUrlFromResource = (resource: string | URL | Request) =>
   resource instanceof Request
     ? new URL(resource.url)
     : typeof resource === 'string'
-    ? new URL(resource)
-    : resource;
+      ? new URL(resource)
+      : resource;
 
 class Http {
   headers: Record<string, string>;
@@ -49,7 +49,6 @@ class Http {
   #retryThreshold: number;
   #retryDelayMs: number;
   #session?: ClientHttp2Session;
-  #lastOrigin?: string;
   browser: Browser | null;
   browserPage: Page | null;
 

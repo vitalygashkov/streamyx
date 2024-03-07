@@ -1,3 +1,4 @@
+import { EventEmitter } from 'node:events';
 import { CONTENT_TYPE, Manifest, parseManifest, SubtitleTrack } from 'dasha';
 import { download } from './download';
 import { logger } from './logger';
@@ -5,34 +6,37 @@ import { Http } from './http';
 import fs from './fs';
 import { getDecryptersPool, getDecryptionKeys } from './drm';
 import { ffmpeg, mp4decrypt } from './process';
-import { RunArgs } from './args';
+import { argsConfig, RunArgs } from './args';
 
-interface DownloadOptions {
-  numberOfConnections: number;
-  preferHdr: boolean;
-  prefer3d: boolean;
-  preferHardsub: boolean;
-  skipVideo: boolean;
-  skipAudio: boolean;
-  skipSubtitles: boolean;
-  skipMuxing: boolean;
-  trimBegin: string;
-  trimEnd: string;
-}
+// interface DownloadOptions {
+//   numberOfConnections: number;
+//   preferHdr: boolean;
+//   prefer3d: boolean;
+//   preferHardsub: boolean;
+//   skipVideo: boolean;
+//   skipAudio: boolean;
+//   skipSubtitles: boolean;
+//   skipMuxing: boolean;
+//   trimBegin: string;
+//   trimEnd: string;
+// }
 
-class Downloader {
+class Downloader extends EventEmitter {
   private http: Http;
   _params: any;
   _config: any;
   _workDir = fs.join(fs.appDir, 'downloads');
 
-  constructor(params: RunArgs) {
-    this._params = params;
+  constructor() {
+    super();
+    this._params = {};
     this.http = new Http();
   }
 
-  async start(config: any) {
+  async start(params: RunArgs, config: any) {
+    this._params = params;
     this._config = config;
+    this.emit('download', config, this.getFilepath(this.getTrackFilename('', '', '', 'mkv')));
     const manifest = await this.getManifest();
     const tracks = this.getTracks(manifest);
     this.setWorkDir();
@@ -42,12 +46,12 @@ class Downloader {
     const pssh = manifest.getPssh();
     const { drmConfig } = this._config;
 
-    let contentKeys = [];
+    let contentKeys: any = [];
     let decryptersPool: any = [];
     if (drmConfig) {
       if (pssh) {
-        contentKeys = await getDecryptionKeys(pssh, drmConfig);
-        if (!contentKeys?.length) {
+        contentKeys = (await getDecryptionKeys(pssh, drmConfig)) || [];
+        if (!contentKeys.length) {
           logger.debug(`Trying to decrypt through a CDM adapter (slower process)`);
           decryptersPool = await getDecryptersPool(pssh, drmConfig, this._params.connections);
         }
@@ -60,7 +64,7 @@ class Downloader {
 
     if (contentKeys.length) {
       logger.info(`Starting decryption`);
-      const decryptQueue = [];
+      const decryptQueue: any[] = [];
       for (let i = 0; i < tracks.length; i++) {
         const track = tracks[i] as any;
         if (track.type === 'text') continue;
@@ -92,8 +96,8 @@ class Downloader {
                   ? 'forced'
                   : ''
                 : contentKeys.length || decryptersPool.length
-                ? 'dec'
-                : 'enc',
+                  ? 'dec'
+                  : 'enc',
               track.format
             )
           ),
@@ -234,7 +238,10 @@ class Downloader {
       try {
         await download(urls, {
           filepath,
+          filename,
+          track,
           connections,
+          manifestUrl: this._config.manifestUrl,
           headers: this._config.headers,
           http2: this._config.http2,
           logger,
@@ -262,7 +269,11 @@ class Downloader {
 
   get filename() {
     const { movie, show, season, episode, provider, audioType } = this._config;
-    const { movieTemplate = '', episodeTemplate = '', videoHeight } = this._params;
+    const {
+      movieTemplate = argsConfig.options['movie-template'].default,
+      episodeTemplate = argsConfig.options['episode-template'].default,
+      videoHeight,
+    } = this._params;
     let filename = '';
     if (movie)
       filename = movieTemplate
@@ -314,6 +325,12 @@ class Downloader {
         return 'mp4';
     }
   }
+
+  listen(listener: (config: any, filepath: string) => void) {
+    this.addListener('download', (config, filepath) => listener(config, filepath));
+  }
 }
 
-export { Downloader };
+const downloader = new Downloader();
+
+export { Downloader, downloader };

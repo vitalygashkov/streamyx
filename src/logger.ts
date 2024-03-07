@@ -1,5 +1,6 @@
 import { pid } from 'node:process';
-import { inspect } from 'util';
+import { inspect } from 'node:util';
+import { EventEmitter } from 'node:events';
 import fs from './fs';
 
 type LogLevel = 'debug' | 'info' | 'warn' | 'error';
@@ -9,10 +10,11 @@ const LOG_DIR = fs.join(fs.appDir, 'logs');
 const LOG_PATH = fs.join(LOG_DIR, `${CURRENT_DATETIME}_${pid}.log`);
 const LOGS_COUNT_THRESHOLD = 50;
 
-class Logger {
+class Logger extends EventEmitter {
   logLevel: LogLevel = 'info';
 
   constructor() {
+    super();
     fs.createDir(LOG_DIR).then(() =>
       fs.readDir(LOG_DIR).then((files: string[]) => {
         const oldLogs = files.sort().slice(LOGS_COUNT_THRESHOLD);
@@ -52,6 +54,7 @@ class Logger {
       .toUpperCase()
       .padEnd(6, ' ')} ${message}\n`;
     fs.appendText(LOG_PATH, logRecord);
+    this.emit('log', logRecord);
   }
 
   getPrefix(logLevel: LogLevel) {
@@ -95,6 +98,10 @@ class Logger {
       default:
         return false;
     }
+  }
+
+  listen(listener: (message: string) => void) {
+    this.addListener('log', listener);
   }
 }
 

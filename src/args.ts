@@ -1,7 +1,7 @@
 import { platform, arch, version } from 'node:process';
 import { parseArgs, ParseArgsConfig } from 'node:util';
-import packageInfo from '../package.json';
 import { parseArrayFromString, parseHeadersFromString, parseNumberRange } from './utils';
+import packageInfo from '../package.json';
 
 interface Option {
   type: 'string' | 'boolean';
@@ -22,7 +22,7 @@ const positionals = {
   },
 };
 
-const config: ParseArgsConfigWithDescriptions = {
+export const argsConfig: ParseArgsConfigWithDescriptions = {
   allowPositionals: true,
   options: {
     'video-quality': {
@@ -103,12 +103,12 @@ const config: ParseArgsConfigWithDescriptions = {
 };
 
 const getProcessedArgs = (): RunArgs => {
-  const args = parseArgs(config);
+  const args = parseArgs(argsConfig);
 
   // TODO: Remove when parseArgs will be stable
   const values = { ...args.values };
-  for (const option of Object.keys(config.options)) {
-    values[option] = args.values[option] ?? config.options[option].default;
+  for (const option of Object.keys(argsConfig.options)) {
+    values[option] = args.values[option] ?? argsConfig.options[option].default;
   }
 
   return {
@@ -200,9 +200,9 @@ export type RunArgs = {
 const printHelp = () => {
   printDescription();
   printVersion();
-  printUsage(config.options, positionals);
+  printUsage(argsConfig.options, positionals);
   printArguments(positionals);
-  printOptions(config.options);
+  printOptions(argsConfig.options);
 };
 
 const loadArgs = () => {

@@ -1,13 +1,13 @@
 process.title = 'streamyx';
 
-import { RunArgs, loadArgs } from './src/args';
-import { logger } from './src/logger';
-import { validateUrl } from './src/utils';
-import { printDecryptionKeys } from './src/drm';
-import { getProviderByUrl } from './src/providers';
-import { Downloader } from './src/downloader';
-import { loadSettings } from './src/settings';
-import { Provider } from './src/providers/provider';
+import { RunArgs, loadArgs } from './args';
+import { logger } from './logger';
+import { validateUrl, useCliPrompt } from './utils';
+import { printDecryptionKeys } from './drm';
+import { downloader } from './downloader';
+import { loadSettings } from './settings';
+import { getProviderByUrl } from './providers';
+import { Provider } from './providers/provider';
 
 const initializeProvider = async (url: string, args: RunArgs) => {
   const provider = getProviderByUrl(url, args);
@@ -20,17 +20,15 @@ const initializeProvider = async (url: string, args: RunArgs) => {
 };
 
 const download = async (url: string, provider: Provider, args: RunArgs) => {
-  const downloader = new Downloader(args);
   const configs = await provider.getConfigList(url);
   for (const config of configs) {
     if (typeof config.drmConfig === 'function') config.drmConfig = await config.drmConfig();
-    await downloader.start(config);
+    await downloader.start(args, config);
   }
 };
 
-const initialize = async () => {
+export const startWithArgs = async (args: RunArgs) => {
   await loadSettings();
-  const args = loadArgs();
   logger.setLogLevel(args.debug ? 'debug' : 'info');
   const urls = args.urls.length ? args.urls : [''];
   for (const rawUrl of urls) {
@@ -43,7 +41,12 @@ const initialize = async () => {
     const provider = await initializeProvider(url, args);
     await download(url, provider, args);
   }
-  process.exit();
 };
 
-initialize();
+export const checkIfCalledViaCLI = (args: string[]) => !!args && args.length > 2;
+
+const isCLI = checkIfCalledViaCLI(process.argv);
+if (isCLI) {
+  useCliPrompt();
+  startWithArgs(loadArgs());
+}

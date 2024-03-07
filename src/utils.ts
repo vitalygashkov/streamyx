@@ -2,7 +2,7 @@ import { createInterface } from 'node:readline/promises';
 import { stdin, stdout } from 'node:process';
 import { delimiter, join } from 'node:path';
 import { stat } from 'node:fs/promises';
-import EventEmitter from 'node:events';
+import { EventEmitter } from 'node:events';
 
 type PromptType = 'input' | 'confirm';
 type PromptAnswer<T> = T extends 'input' ? string : T extends 'confirm' ? boolean : never;
@@ -14,12 +14,10 @@ class Prompt extends EventEmitter {
 
   async waitForInput<T extends PromptType = 'input'>(
     message: string,
-    type?: T
+    type?: T,
+    timeout?: number
   ): Promise<PromptAnswer<T>> {
-    const hasPromptListener = !!this.listeners('prompt').length;
-    const answer = hasPromptListener
-      ? await this.waitForListenerResponse(message, type)
-      : await this.waitForCliResponse(message, type);
+    const answer = await this.waitForListenerResponse(message, type, timeout);
     if (type === 'confirm') {
       if (typeof answer === 'string')
         return (answer?.toLowerCase() === 'y') as PromptAnswer<boolean>;
@@ -29,27 +27,42 @@ class Prompt extends EventEmitter {
     }
   }
 
-  private async waitForCliResponse(message: string, type: PromptType = 'input') {
-    const readline = createInterface({ input: stdin, output: stdout });
-    const question = { message, type };
-    const isBooleanQuestion = question.type === 'confirm';
-    const formattedMessage = question.message + (isBooleanQuestion ? ' (y/n)' : '') + ': ';
-    const answer = await readline.question(formattedMessage);
-    readline.close();
-    return answer;
-  }
-
-  private async waitForListenerResponse(message: string, type: PromptType = 'input') {
+  private async waitForListenerResponse(
+    message: string,
+    type: PromptType = 'input',
+    timeout?: number
+  ) {
     return new Promise((resolve) => {
-      this.emit('prompt', message, type);
+      this.emit('prompt', message, type, timeout);
       this.addListener('prompt:response', (response) => {
         resolve(response);
       });
     });
   }
+
+  listen(listener: (message: string, type: PromptType, timeout?: number) => Promise<string>) {
+    this.addListener('prompt', (message, type, timeout) =>
+      listener(message, type, timeout).then((answer) => this.emit('prompt:response', answer))
+    );
+  }
 }
 
 export const prompt = new Prompt();
+
+export const useCliPrompt = () => {
+  prompt.listen(async (message, type, timeout = 60_000) => {
+    const readline = createInterface({ input: stdin, output: stdout });
+    const question = { message, type };
+    const isBooleanQuestion = question.type === 'confirm';
+    const formattedMessage = question.message + (isBooleanQuestion ? ' (y/n)' : '') + ': ';
+    const answer = await Promise.race([
+      readline.question(formattedMessage),
+      new Promise<string>((resolve) => setTimeout(resolve, timeout, '')),
+    ]);
+    readline.close();
+    return answer;
+  });
+};
 
 const sleep = async (seconds: number) =>
   new Promise((resolve) => setTimeout(resolve, seconds * 1000));
@@ -75,7 +88,10 @@ const parseNumberRange = (rangeStr: string) => {
 
 const parseArrayFromString = (value: string) => {
   if (!value) return [];
-  return value.trim().split(',');
+  return value
+    .trim()
+    .split(',')
+    .map((v) => v.trim());
 };
 
 const parseHeadersFromString = (str: string) => {
@@ -90,7 +106,7 @@ const parseHeadersFromString = (str: string) => {
 
 const getRandomElements = (array: unknown, count = 1) => {
   if (Array.isArray(array) || typeof array === 'string') {
-    const elements = [];
+    const elements: unknown[] = [];
     for (let i = 1; i <= count; i++) elements.push(array[Math.floor(Math.random() * array.length)]);
     return elements;
   } else {

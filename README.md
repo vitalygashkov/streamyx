@@ -59,8 +59,8 @@ Use `-h` option to see all available options.
 ### Download a video
 
 ```console
-$ streamyx -q 720p "https://wink.ru/movies/dostat-nozhi-year-2019-93328166"
-2023-07-11 21:24:07 INFO   Knives Out
+$ streamyx -q 720p https://wink.ru/movies/ofitsery-year-1971
+2023-07-11 21:24:07 INFO   Офицеры
 2023-07-11 21:24:07 INFO   VIDEO ∙ 1280x720 ∙ 2160 Kbps ∙ 2024 MiB
 2023-07-11 21:24:07 INFO   ██████████████████████████████████████████████████ 100%
 2023-07-11 21:26:57 INFO   AUDIO ∙ 48 kHz ∙ 320 Kbps ∙ 300 MiB
@@ -71,7 +71,7 @@ $ streamyx -q 720p "https://wink.ru/movies/dostat-nozhi-year-2019-93328166"
 2023-07-11 21:27:42 INFO   Muxed successfully
 ```
 
-Output: `/downloads/Knives.Out.720p.WINK.WEB-DL.x264/Knives.Out.720p.WINK.WEB-DL.x264.mkv`
+Output: `/downloads/Офицеры.720p.WINK.WEB-DL.x264/Офицеры.720p.WINK.WEB-DL.x264.mkv`
 
 ## Streaming services
 
@@ -87,3 +87,9 @@ Output: `/downloads/Knives.Out.720p.WINK.WEB-DL.x264/Knives.Out.720p.WINK.WEB-DL
 | [Amediateka](https://www.amediateka.ru/) | Planned      |                                       |
 | [Crunchyroll](https://crunchyroll.com/)  | Experimental |                                       |
 | [НТВ](https://www.ntv.ru/)               | In progress  | Only download link extracting         |
+
+## Development
+
+Compile sources and run:
+
+`npm start -- -q 720p "https://wink.ru/movies/dostat-nozhi-year-2019-93328166"`
