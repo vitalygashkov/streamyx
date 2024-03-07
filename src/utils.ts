@@ -14,9 +14,10 @@ class Prompt extends EventEmitter {
 
   async waitForInput<T extends PromptType = 'input'>(
     message: string,
-    type?: T
+    type?: T,
+    timeout?: number
   ): Promise<PromptAnswer<T>> {
-    const answer = await this.waitForListenerResponse(message, type);
+    const answer = await this.waitForListenerResponse(message, type, timeout);
     if (type === 'confirm') {
       if (typeof answer === 'string')
         return (answer?.toLowerCase() === 'y') as PromptAnswer<boolean>;
@@ -26,18 +27,22 @@ class Prompt extends EventEmitter {
     }
   }
 
-  private async waitForListenerResponse(message: string, type: PromptType = 'input') {
+  private async waitForListenerResponse(
+    message: string,
+    type: PromptType = 'input',
+    timeout?: number
+  ) {
     return new Promise((resolve) => {
-      this.emit('prompt', message, type);
+      this.emit('prompt', message, type, timeout);
       this.addListener('prompt:response', (response) => {
         resolve(response);
       });
     });
   }
 
-  listen(listener: (message: string, type: PromptType) => Promise<string>) {
-    this.addListener('prompt', (message, type) =>
-      listener(message, type).then((answer) => this.emit('prompt:response', answer))
+  listen(listener: (message: string, type: PromptType, timeout?: number) => Promise<string>) {
+    this.addListener('prompt', (message, type, timeout) =>
+      listener(message, type, timeout).then((answer) => this.emit('prompt:response', answer))
     );
   }
 }
@@ -45,12 +50,15 @@ class Prompt extends EventEmitter {
 export const prompt = new Prompt();
 
 export const useCliPrompt = () => {
-  prompt.listen(async (message, type) => {
+  prompt.listen(async (message, type, timeout = 60_000) => {
     const readline = createInterface({ input: stdin, output: stdout });
     const question = { message, type };
     const isBooleanQuestion = question.type === 'confirm';
     const formattedMessage = question.message + (isBooleanQuestion ? ' (y/n)' : '') + ': ';
-    const answer = await readline.question(formattedMessage);
+    const answer = await Promise.race([
+      readline.question(formattedMessage),
+      new Promise<string>((resolve) => setTimeout(resolve, timeout, '')),
+    ]);
     readline.close();
     return answer;
   });
