@@ -1,7 +1,4 @@
 
-[submodule "src/providers"]
-	path = src/providers
-	url = https://github.com/vitalygashkov/streamyx-providers.git
 [submodule "packages/wive"]
 	path = packages/wive
 	url = https://github.com/vitalygashkov/wive
