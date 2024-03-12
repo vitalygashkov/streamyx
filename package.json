@@ -1,6 +1,6 @@
 {
   "name": "streamyx",
-  "version": "3.6.39",
+  "version": "3.6.40",
   "author": "Vitaly Gashkov <vitalygashkov@vk.com>",
   "description": "Cross-platform video downloader",
   "main": "dist/src/main.js",
