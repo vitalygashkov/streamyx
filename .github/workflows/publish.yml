@@ -74,7 +74,7 @@ jobs:
           echo PACKAGE_VERSION=$(node -p -e "require('./package.json').version") >> $GITHUB_ENV || exit 1
 
       - name: Build
-        run: npm run build:macos
+        run: npm run build:mac
 
       - name: Compress
         run: zip -9 -j ${{ env.PACKAGE_NAME }}-macos-x64.zip ./build/mac/${{ env.PACKAGE_NAME }}
