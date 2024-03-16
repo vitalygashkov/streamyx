@@ -35,7 +35,7 @@ jobs:
         run: npm run build:win
 
       - name: Compress
-        run: powershell Compress-Archive build\streamyx.exe streamyx-win-x64.zip
+        run: powershell Compress-Archive build\win\streamyx.exe streamyx-win-x64.zip
 
       - name: Upload build
         uses: actions/upload-artifact@v3
