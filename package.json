@@ -47,6 +47,7 @@
   },
   "pkg": {
     "assets": [
+      "package.json",
       "node_modules/vm2/**/*",
       "node_modules/puppeteer-core/**/*.*",
       "node_modules/puppeteer-extra-plugin-stealth/**/*.*"
