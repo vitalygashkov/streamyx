@@ -35,7 +35,7 @@ jobs:
         run: npm run build:win
 
       - name: Compress
-        run: powershell Compress-Archive build\streamyx-win-x64.exe streamyx-win-x64.zip
+        run: powershell Compress-Archive build\streamyx.exe streamyx-win-x64.zip
 
       - name: Upload build
         uses: actions/upload-artifact@v3
@@ -77,7 +77,7 @@ jobs:
         run: npm run build:macos
 
       - name: Compress
-        run: zip -9 -j ${{ env.PACKAGE_NAME }}-macos-x64.zip ./build/${{ env.PACKAGE_NAME }}-macos-x64
+        run: zip -9 -j ${{ env.PACKAGE_NAME }}-macos-x64.zip ./build/mac/${{ env.PACKAGE_NAME }}
 
       - name: Upload build
         uses: actions/upload-artifact@v3
@@ -115,7 +115,7 @@ jobs:
         run: npm run build:linux
 
       - name: Compress
-        run: zip -9 -j ${{ env.PACKAGE_NAME }}-linux-x64.zip ./build/${{ env.PACKAGE_NAME }}-linux-x64
+        run: zip -9 -j ${{ env.PACKAGE_NAME }}-linux-x64.zip ./build/linux/${{ env.PACKAGE_NAME }}
 
       - name: Upload build
         uses: actions/upload-artifact@v3
