@@ -6,10 +6,12 @@
     "outDir": "dist",
     "rootDir": "./",
     "strict": true,
-    "allowJs": true,
+    "allowJs": false,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true
-  }
+    "resolveJsonModule": true,
+    "types": []
+  },
+  "exclude": ["node_modules", "src/electron", "src/index.ts"]
 }
