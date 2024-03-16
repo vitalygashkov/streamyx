@@ -19,6 +19,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
+          cache: 'npm'
 
       - name: Install app dependencies
         run: npm ci
@@ -56,6 +57,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
+          cache: 'npm'
 
       # https://github.com/nodejs/node-gyp/issues/2869
       - name: Fix distutils issue for node-gyp
@@ -97,6 +99,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
+          cache: 'npm'
 
       - name: Install app dependencies
         run: npm ci
@@ -135,6 +138,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
+          cache: 'npm'
 
       - name: Download Windows build
         uses: actions/download-artifact@v3
