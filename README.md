@@ -92,4 +92,4 @@ Output: `/downloads/Офицеры.720p.WINK.WEB-DL.x264/Офицеры.720p.WIN
 
 Compile sources and run:
 
-`npm start -- -q 720p "https://wink.ru/movies/dostat-nozhi-year-2019-93328166"`
+`npx streamyx -q 720p "https://wink.ru/movies/dostat-nozhi-year-2019-93328166"`
