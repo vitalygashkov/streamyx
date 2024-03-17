@@ -1,6 +1,6 @@
 {
   "name": "streamyx",
-  "version": "3.7.3",
+  "version": "3.7.4",
   "author": "Vitaly Gashkov <vitalygashkov@vk.com>",
   "description": "Cross-platform video downloader",
   "main": "dist/src/main.js",
@@ -10,15 +10,16 @@
   "scripts": {
     "postinstall": "tsc",
     "start": "tsc && node dist/src/main",
-    "build": "tsc && pkg . --public -t node18-win-x64,node18-macos-x64,node18-macos-arm64,node18-linux-x64 --out-path ./build/",
-    "build:win": "tsc && pkg . --public -t node18-win-x64 -o ./build/win/streamyx.exe",
-    "build:mac": "tsc && pkg . --public -t node18-macos-x64 -o ./build/mac/streamyx",
-    "build:linux": "tsc && pkg . --public -t node18-linux-x64 -o ./build/linux/streamyx",
+    "build": "tsc && pkg . --public -t node20-win-x64,node20-macos-x64,node20-macos-arm64,node20-linux-x64 --out-path ./build/",
+    "build:win": "tsc && pkg . --public -t node20-win-x64 -o ./build/win/streamyx.exe",
+    "build:mac": "tsc && pkg . --public -t node20-macos-x64 -o ./build/mac/streamyx",
+    "build:linux": "tsc && pkg . --public -t node20-linux-x64 -o ./build/linux/streamyx",
     "clean": "rimraf build/*",
     "lint": "eslint --ext .js,.ts .",
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\""
   },
   "dependencies": {
+    "@yao-pkg/pkg": "^5.11.5",
     "blowfish-node": "^1.1.4",
     "dasha": "^2.3.6",
     "mpd-parser": "^1.0.0",
@@ -36,7 +37,6 @@
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-prettier": "^4.2.1",
-    "pkg": "^5.8.1",
     "prettier": "^3.2.5",
     "typescript": "^5.3.3"
   },
