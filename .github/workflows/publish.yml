@@ -20,6 +20,7 @@ jobs:
         with:
           node-version: 18
           cache: 'npm'
+      - run: git config --global url."https://${{ secrets.CONTROL_REPO_TOKEN }}@github.com/".insteadOf ssh://git@github.com/
 
       - name: Install app dependencies
         run: npm ci
@@ -58,6 +59,7 @@ jobs:
         with:
           node-version: 18
           cache: 'npm'
+      - run: git config --global url."https://${{ secrets.CONTROL_REPO_TOKEN }}@github.com/".insteadOf ssh://git@github.com/
 
       # https://github.com/nodejs/node-gyp/issues/2869
       - name: Fix distutils issue for node-gyp
@@ -94,13 +96,13 @@ jobs:
         with:
           token: ${{ secrets.CONTROL_REPO_TOKEN }}
           submodules: recursive
-      - run: git config --global url."https://${{ secrets.CONTROL_REPO_TOKEN }}@github.com/".insteadOf ssh://git@github.com/
 
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
           cache: 'npm'
+      - run: git config --global url."https://${{ secrets.CONTROL_REPO_TOKEN }}@github.com/".insteadOf ssh://git@github.com/
 
       - name: Install app dependencies
         run: npm ci
