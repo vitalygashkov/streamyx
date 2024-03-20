@@ -18,7 +18,7 @@ jobs:
       - name: Install Node
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
           cache: 'npm'
       - run: git config --global url."https://${{ secrets.CONTROL_REPO_TOKEN }}@github.com/".insteadOf ssh://git@github.com/
 
@@ -57,7 +57,7 @@ jobs:
       - name: Install Node
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
           cache: 'npm'
       - run: git config --global url."https://${{ secrets.CONTROL_REPO_TOKEN }}@github.com/".insteadOf ssh://git@github.com/
 
@@ -100,7 +100,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
           cache: 'npm'
       - run: git config --global url."https://${{ secrets.CONTROL_REPO_TOKEN }}@github.com/".insteadOf ssh://git@github.com/
 
@@ -140,7 +140,7 @@ jobs:
       - name: Install Node
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
           cache: 'npm'
 
       - name: Download Windows build
