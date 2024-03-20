@@ -24,9 +24,9 @@ Streamyx is a command-line tool that allows you to download videos from streamin
 The following dependencies are required and should be downloaded and placed in `files` folder.
 
 - **[FFmpeg](https://ffmpeg.org/download.html)**
-- **[mp4decrypt](https://www.bento4.com/downloads/)**
+- **[Shaka Packager](https://github.com/shaka-project/shaka-packager/releases)**
 
-> **Note**: FFmpeg and mp4decrypt does not affect the download, only affects the final file merge and decryption.
+> **Note**: FFmpeg and Shaka Packager does not affect the download, only affects the final file merge and decryption.
 
 **Device private keys** are required for DRM-protected content and also should be placed in `files` folder.
 
