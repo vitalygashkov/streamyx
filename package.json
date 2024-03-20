@@ -49,6 +49,7 @@
   },
   "pkg": {
     "assets": [
+      "node_modules/shaka-packager/**/*",
       "node_modules/vm2/**/*",
       "node_modules/puppeteer-core/**/*.*",
       "node_modules/puppeteer-extra-plugin-stealth/**/*.*"
