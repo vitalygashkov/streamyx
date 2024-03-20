@@ -28,7 +28,6 @@
     "puppeteer-core": "^22.3.0",
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
-    "shaka-packager": "^3.0.3",
     "undici": "^6.9.0",
     "wive": "file:packages/wive"
   },
