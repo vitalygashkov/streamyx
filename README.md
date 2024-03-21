@@ -21,25 +21,16 @@ Streamyx is a command-line tool that allows you to download videos from streamin
 
 ### Prerequisites
 
-The following dependencies are required and should be downloaded and placed in `files` folder.
-
-- **[FFmpeg](https://ffmpeg.org/download.html)**
-- **[Shaka Packager](https://github.com/shaka-project/shaka-packager/releases)**
-
-> **Note**: FFmpeg and Shaka Packager does not affect the download, only affects the final file merge and decryption.
-
 **Device private keys** are required for DRM-protected content and also should be placed in `files` folder.
 
 ### Install
 
-Download build from [latest release](https://github.com/vitalygashkov/streamyx/releases/latest) (for Windows: `streamyx-win-x64.zip`), unzip, rename executable to `streamyx` and put `files` folder with all stuff next to it.
+Download build from [latest release](https://github.com/vitalygashkov/streamyx/releases/latest) (for Windows: `streamyx-win-x64.zip`), unzip, and put `files` folder with all stuff next to it.
 
 Final structure of files and folders (example for Windows):
 
 ```
 /streamyx.exe
-/files/ffmpeg.exe
-/files/mp4decrypt.exe
 /files/device_client_id_blob
 /files/device_private_key
 ```
