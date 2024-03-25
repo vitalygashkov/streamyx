@@ -10,13 +10,13 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Clone repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           token: ${{ secrets.CONTROL_REPO_TOKEN }}
           submodules: recursive
 
       - name: Install Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
@@ -49,13 +49,13 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: Clone repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           token: ${{ secrets.CONTROL_REPO_TOKEN }}
           submodules: recursive
 
       - name: Install Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
@@ -92,19 +92,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Clone repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           token: ${{ secrets.CONTROL_REPO_TOKEN }}
           submodules: recursive
 
       - name: Install Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
       - run: git config --global url."https://${{ secrets.CONTROL_REPO_TOKEN }}@github.com/".insteadOf ssh://git@github.com/
 
-      - name: Install app dependencies
+      - name: Install dependencies
         run: npm ci
 
       - name: Get package name and version
@@ -132,13 +132,13 @@ jobs:
     needs: [build-win, build-macos, build-linux]
     steps:
       - name: Clone repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           token: ${{ secrets.CONTROL_REPO_TOKEN }}
           submodules: recursive
 
       - name: Install Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
