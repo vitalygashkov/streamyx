@@ -1,19 +1,9 @@
-<h1 align="center">Streamyx</h1>
+# Streamyx
 
-<div align="center">
-  <a href="https://github.com/vitalygashkov/streamyx/releases">
-    <img src="https://img.shields.io/github/actions/workflow/status/vitalygashkov/streamyx/publish.yml?branch=main&logo=github" alt="Deploy">
-  </a>
-  <a href="https://github.com/vitalygashkov/streamyx/releases">
-    <img src="https://img.shields.io/github/release/vitalygashkov/streamyx.svg" alt="Latest release">
-  </a>
-  <a href="https://github.com/vitalygashkov/streamyx/releases">
-    <img src="https://img.shields.io/github/downloads/vitalygashkov/streamyx/latest/total" alt="Latest downloads">
-  </a>
-  <a href="https://github.com/vitalygashkov/streamyx/releases">
-    <img src="https://img.shields.io/github/downloads/vitalygashkov/streamyx/total" alt="Total downloads">
-  </a>
-</div>
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/vitalygashkov/streamyx/publish.yml?branch=main&logo=github&style=flat&color=grey)
+![GitHub Release](https://img.shields.io/github/v/release/vitalygashkov/streamyx?style=flat&color=grey)
+![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/vitalygashkov/streamyx/latest/total?style=flat&color=grey)
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/vitalygashkov/streamyx/total?style=flat&color=grey)
 
 Streamyx is a command-line tool that allows you to download videos from streaming services for offline-viewing.
 
@@ -41,7 +31,7 @@ Open terminal from the folder where the executable file is located and run the a
 
 Usage:
 
-```
+```shell
 streamyx [OPTIONS] URL [URL...]
 ```
 
@@ -49,8 +39,8 @@ Use `-h` option to see all available options.
 
 ### Download a video
 
-```console
-$ streamyx -q 720p https://wink.ru/movies/ofitsery-year-1971
+```shell
+streamyx -q 720p https://wink.ru/movies/ofitsery-year-1971
 2023-07-11 21:24:07 INFO   Офицеры
 2023-07-11 21:24:07 INFO   VIDEO ∙ 1280x720 ∙ 2160 Kbps ∙ 2024 MiB
 2023-07-11 21:24:07 INFO   ██████████████████████████████████████████████████ 100%
@@ -83,4 +73,6 @@ Output: `/downloads/Офицеры.720p.WINK.WEB-DL.x264/Офицеры.720p.WIN
 
 Compile sources and run:
 
-`npx streamyx -q 720p "https://wink.ru/movies/dostat-nozhi-year-2019-93328166"`
+```shell
+npx streamyx -q 720p "https://wink.ru/movies/dostat-nozhi-year-2019-93328166"
+```
