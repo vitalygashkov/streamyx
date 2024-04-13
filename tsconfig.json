@@ -12,10 +12,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "types": [],
-    "paths": {
-      "dasha": ["./packages/dasha"]
-    }
+    "types": []
   },
   "exclude": ["node_modules", "src/electron", "src/index.ts"]
 }

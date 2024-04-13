@@ -10,19 +10,20 @@
   "scripts": {
     "postinstall": "tsc",
     "start": "tsc && node dist/src/main",
+    "compile": "tsc && cd ./packages/dasha && npm install && cd ../plugin && npm install && cd ../wink && npm install",
     "build": "tsc && pkg . --public -t node20-win-x64,node20-macos-x64,node20-macos-arm64,node20-linux-x64 --out-path ./build/",
     "build:win": "tsc && pkg . --public -t node20-win-x64 -o ./build/win/streamyx.exe",
     "build:mac": "tsc && pkg . --public -t node20-macos-x64 -o ./build/mac/streamyx",
     "build:linux": "tsc && pkg . --public -t node20-linux-x64 -o ./build/linux/streamyx",
-    "clean": "rimraf build/*",
     "lint": "eslint --ext .js,.ts .",
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\""
   },
   "dependencies": {
     "@streamyx/crunchyroll": "^0.0.7",
-    "@streamyx/wink": "github:vitalygashkov/streamyx-wink",
+    "@streamyx/wink": "file:packages/wink",
     "@yao-pkg/pkg": "^5.11.5",
     "blowfish-node": "^1.1.4",
+    "dasha": "file:packages/dasha",
     "puppeteer-core": "^22.3.0",
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
