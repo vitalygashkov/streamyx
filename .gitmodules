@@ -11,3 +11,15 @@
 [submodule "src"]
 	path = src
 	url = https://github.com/vitalygashkov/streamyx-sources.git
+[submodule "packages/dasha"]
+	path = packages/dasha
+	url = https://github.com/vitalygashkov/dasha.git
+[submodule "packages/plugin"]
+	path = packages/plugin
+	url = https://github.com/vitalygashkov/streamyx-plugin.git
+[submodule "packages/wink"]
+	path = packages/wink
+	url = https://github.com/vitalygashkov/streamyx-wink.git
+[submodule "packages/crunchyroll"]
+	path = packages/crunchyroll
+	url = https://github.com/vitalygashkov/streamyx-crunchyroll.git

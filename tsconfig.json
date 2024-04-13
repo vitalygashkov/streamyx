@@ -4,6 +4,7 @@
     "moduleResolution": "NodeNext",
     "target": "ESNext",
     "outDir": "dist",
+    "baseUrl": "./",
     "rootDir": "./",
     "strict": true,
     "allowJs": false,
