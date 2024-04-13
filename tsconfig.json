@@ -4,6 +4,7 @@
     "moduleResolution": "NodeNext",
     "target": "ESNext",
     "outDir": "dist",
+    "baseUrl": "./",
     "rootDir": "./",
     "strict": true,
     "allowJs": false,
@@ -11,7 +12,10 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "types": []
+    "types": [],
+    "paths": {
+      "dasha": ["./packages/dasha"]
+    }
   },
   "exclude": ["node_modules", "src/electron", "src/index.ts"]
 }

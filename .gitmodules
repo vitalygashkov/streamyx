@@ -11,3 +11,6 @@
 [submodule "src"]
 	path = src
 	url = https://github.com/vitalygashkov/streamyx-sources.git
+[submodule "packages/dasha"]
+	path = packages/dasha
+	url = https://github.com/vitalygashkov/dasha.git
