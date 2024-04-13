@@ -19,7 +19,7 @@
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\""
   },
   "dependencies": {
-    "@streamyx/crunchyroll": "^0.0.5",
+    "@streamyx/crunchyroll": "^0.0.7",
     "@streamyx/wink": "github:vitalygashkov/streamyx-wink",
     "@yao-pkg/pkg": "^5.11.5",
     "blowfish-node": "^1.1.4",
