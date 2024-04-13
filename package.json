@@ -1,6 +1,6 @@
 {
   "name": "streamyx",
-  "version": "3.8.7-beta.4",
+  "version": "4.0.0-beta.1",
   "author": "Vitaly Gashkov <vitalygashkov@vk.com>",
   "description": "Cross-platform video downloader",
   "main": "dist/src/main.js",
@@ -19,7 +19,7 @@
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\""
   },
   "dependencies": {
-    "@streamyx/crunchyroll": "^0.0.4",
+    "@streamyx/crunchyroll": "^0.0.5",
     "@streamyx/wink": "github:vitalygashkov/streamyx-wink",
     "@yao-pkg/pkg": "^5.11.5",
     "blowfish-node": "^1.1.4",
