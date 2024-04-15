@@ -5,24 +5,24 @@
 ![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/vitalygashkov/streamyx/latest/total?style=flat&color=grey)
 ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/vitalygashkov/streamyx/total?style=flat&color=grey)
 
-Streamyx is a command-line tool that allows you to download videos from streaming services for offline-viewing.
+Streamyx - программа для скачивания контента со стриминговых сервисов для последующего оффлайн просмотра.
 
 <div align="left">
-  <span>English</span> •
-  <a href="https://github.com/vitalygashkov/streamyx/tree/main/docs/README.ru.md">Pусский</a>
+  <a href="https://github.com/vitalygashkov/streamyx/tree/main/README.md">English</a> •
+  <span>Русский</span>
 </div>
 
-## Installation
+## Установка
 
-### Prerequisites
+### Предварительная настройка
 
-**Device private keys** are required for DRM-protected content and also should be placed in `files` folder.
+**Приватные ключи устройства** необходимы для DRM-защищенного контента. Их следует поместить в папку `files` рядом с запускаемой утилитой.
 
-### Install
+### Скачивание
 
-Download build from [latest release](https://github.com/vitalygashkov/streamyx/releases/latest) (for Windows: `streamyx-win-x64.zip`), unzip, and put `files` folder with all stuff next to it.
+Скачайте сборку из [последнего релиза](https://github.com/vitalygashkov/streamyx/releases/latest) (для Windows: `streamyx-win-x64.zip`), разархивируйте и создайте папку `files` с необходимыми файлами рядом с разархивированным исполняемым файлом.
 
-Final structure of files and folders (example for Windows):
+Пример итоговой структуры файлов и папок для Windows:
 
 ```
 /streamyx.exe
@@ -30,19 +30,17 @@ Final structure of files and folders (example for Windows):
 /files/device_private_key
 ```
 
-## Getting Started
+## Запуск
 
-Open terminal from the folder where the executable file is located and run the application.
-
-Usage:
+Откройте терминал в папке, где находится скачанный исполняемый файл и вызовите утилиту из терминала:
 
 ```shell
 streamyx [OPTIONS] URL [URL...]
 ```
 
-Use `-h` option to see all available options.
+Используйте вызов с аргументом `-h`, чтобы получить справку по всем доступным опциям.
 
-### Download a video
+### Скачивание видео
 
 ```shell
 streamyx -q 720p https://wink.ru/movies/ofitsery-year-1971
@@ -57,26 +55,26 @@ streamyx -q 720p https://wink.ru/movies/ofitsery-year-1971
 2023-07-11 21:27:42 INFO   Muxed successfully
 ```
 
-Output: `/downloads/Офицеры.720p.WINK.WEB-DL.x264/Офицеры.720p.WINK.WEB-DL.x264.mkv`
+Результат: `/downloads/Офицеры.720p.WINK.WEB-DL.x264/Офицеры.720p.WINK.WEB-DL.x264.mkv`
 
-## Streaming services
+## Стриминговые сервисы
 
 | Title                                    | Status       | Details                               |
 | ---------------------------------------- | ------------ | ------------------------------------- |
-| [Kinopoisk](https://hd.kinopoisk.ru/)    | Supported    |                                       |
-| [IVI](https://www.ivi.ru/)               | Supported    | 3D movies are currently unavailable   |
+| [Кинопоиск](https://hd.kinopoisk.ru/)    | Supported    |                                       |
+| [Иви](https://www.ivi.ru/)               | Supported    | 3D movies are currently unavailable   |
 | [Wink](https://wink.ru/)                 | Supported    | Live videos are currently unavailable |
 | [Okko](https://okko.tv/)                 | Supported    |                                       |
 | [KION](https://kion.ru/)                 | Planned      |                                       |
 | [PREMIER](https://premier.one/)          | Planned      |                                       |
-| [START](https://start.ru/)               | Planned      |                                       |
-| [Amediateka](https://www.amediateka.ru/) | Planned      |                                       |
+| [Старт](https://start.ru/)               | Planned      |                                       |
+| [Амедиатека](https://www.amediateka.ru/) | Planned      |                                       |
 | [Crunchyroll](https://crunchyroll.com/)  | Experimental |                                       |
-| [NTV](https://www.ntv.ru/)               | In progress  | Only download link extracting         |
+| [НТВ](https://www.ntv.ru/)               | In progress  | Only download link extracting         |
 
-## Development
+## Разработка
 
-Compile sources and run:
+Скомпилируйте исходники и выполните команду:
 
 ```shell
 npx streamyx -q 720p "https://wink.ru/movies/dostat-nozhi-year-2019-93328166"
