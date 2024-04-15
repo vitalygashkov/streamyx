@@ -59,18 +59,18 @@ streamyx -q 720p https://wink.ru/movies/ofitsery-year-1971
 
 ## Стриминговые сервисы
 
-| Title                                    | Status       | Details                               |
-| ---------------------------------------- | ------------ | ------------------------------------- |
-| [Кинопоиск](https://hd.kinopoisk.ru/)    | Supported    |                                       |
-| [Иви](https://www.ivi.ru/)               | Supported    | 3D movies are currently unavailable   |
-| [Wink](https://wink.ru/)                 | Supported    | Live videos are currently unavailable |
-| [Okko](https://okko.tv/)                 | Supported    |                                       |
-| [KION](https://kion.ru/)                 | Planned      |                                       |
-| [PREMIER](https://premier.one/)          | Planned      |                                       |
-| [Старт](https://start.ru/)               | Planned      |                                       |
-| [Амедиатека](https://www.amediateka.ru/) | Planned      |                                       |
-| [Crunchyroll](https://crunchyroll.com/)  | Experimental |                                       |
-| [НТВ](https://www.ntv.ru/)               | In progress  | Only download link extracting         |
+| Сервис                                   | Статус         | Детали                                  |
+| ---------------------------------------- | -------------- | --------------------------------------- |
+| [Crunchyroll](https://crunchyroll.com/)  | Поддерживается |                                         |
+| [Кинопоиск](https://hd.kinopoisk.ru/)    | Поддерживается |                                         |
+| [Иви](https://www.ivi.ru/)               | Поддерживается | Скачивание 3D фильмов недоступно        |
+| [Wink](https://wink.ru/)                 | Поддерживается | Скачивание прямых трансляций недоступно |
+| [Okko](https://okko.tv/)                 | Поддерживается |                                         |
+| [KION](https://kion.ru/)                 | Запланировано  |                                         |
+| [PREMIER](https://premier.one/)          | Запланировано  |                                         |
+| [Старт](https://start.ru/)               | Запланировано  |                                         |
+| [Амедиатека](https://www.amediateka.ru/) | Запланировано  |                                         |
+| [НТВ](https://www.ntv.ru/)               | В работе       | Только извлечение ссылки манифеста      |
 
 ## Разработка
 

@@ -61,18 +61,18 @@ Output: `/downloads/Офицеры.720p.WINK.WEB-DL.x264/Офицеры.720p.WIN
 
 ## Streaming services
 
-| Title                                    | Status       | Details                               |
-| ---------------------------------------- | ------------ | ------------------------------------- |
-| [Kinopoisk](https://hd.kinopoisk.ru/)    | Supported    |                                       |
-| [IVI](https://www.ivi.ru/)               | Supported    | 3D movies are currently unavailable   |
-| [Wink](https://wink.ru/)                 | Supported    | Live videos are currently unavailable |
-| [Okko](https://okko.tv/)                 | Supported    |                                       |
-| [KION](https://kion.ru/)                 | Planned      |                                       |
-| [PREMIER](https://premier.one/)          | Planned      |                                       |
-| [START](https://start.ru/)               | Planned      |                                       |
-| [Amediateka](https://www.amediateka.ru/) | Planned      |                                       |
-| [Crunchyroll](https://crunchyroll.com/)  | Experimental |                                       |
-| [NTV](https://www.ntv.ru/)               | In progress  | Only download link extracting         |
+| Title                                    | Status      | Details                               |
+| ---------------------------------------- | ----------- | ------------------------------------- |
+| [Crunchyroll](https://crunchyroll.com/)  | Supported   |                                       |
+| [Kinopoisk](https://hd.kinopoisk.ru/)    | Supported   |                                       |
+| [IVI](https://www.ivi.ru/)               | Supported   | 3D movies are currently unavailable   |
+| [Wink](https://wink.ru/)                 | Supported   | Live videos are currently unavailable |
+| [Okko](https://okko.tv/)                 | Supported   |                                       |
+| [KION](https://kion.ru/)                 | Planned     |                                       |
+| [PREMIER](https://premier.one/)          | Planned     |                                       |
+| [START](https://start.ru/)               | Planned     |                                       |
+| [Amediateka](https://www.amediateka.ru/) | Planned     |                                       |
+| [NTV](https://www.ntv.ru/)               | In progress | Only download link extracting         |
 
 ## Development
 
