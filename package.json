@@ -24,6 +24,8 @@
     "@yao-pkg/pkg": "^5.11.5",
     "blowfish-node": "^1.1.4",
     "dasha": "file:packages/dasha",
+    "esor": "file:packages/esor",
+    "ora": "^8.0.1",
     "puppeteer-core": "^22.6.4",
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
