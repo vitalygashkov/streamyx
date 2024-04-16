@@ -144,17 +144,17 @@ jobs:
           cache: 'npm'
 
       - name: Download Windows build
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: win
 
       - name: Download macOS build artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: macos
 
       - name: Download Linux build
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: linux
 
