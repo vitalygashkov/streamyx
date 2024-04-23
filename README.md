@@ -5,7 +5,7 @@
 ![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/vitalygashkov/streamyx/latest/total?style=flat&color=grey)
 ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/vitalygashkov/streamyx/total?style=flat&color=grey)
 
-Streamyx is a command-line tool that allows you to download videos from streaming services for offline-viewing.
+Streamyx is a tool that allows you to download videos from streaming services for offline-viewing.
 
 <div align="left">
   <span>English</span> •
@@ -14,7 +14,7 @@ Streamyx is a command-line tool that allows you to download videos from streamin
 
 ## Installation
 
-### Prerequisites
+### Dependencies
 
 **Device private keys** are required for DRM-protected content and also should be placed in `files` folder.
 
@@ -59,20 +59,22 @@ streamyx -q 720p https://wink.ru/movies/ofitsery-year-1971
 
 Output: `/downloads/Офицеры.720p.WINK.WEB-DL.x264/Офицеры.720p.WINK.WEB-DL.x264.mkv`
 
-## Streaming services
+## Supported services
 
-| Title                                    | Status      | Details                               |
-| ---------------------------------------- | ----------- | ------------------------------------- |
-| [Crunchyroll](https://crunchyroll.com/)  | Supported   |                                       |
-| [Kinopoisk](https://hd.kinopoisk.ru/)    | Supported   |                                       |
-| [IVI](https://www.ivi.ru/)               | Supported   | 3D movies are currently unavailable   |
-| [Wink](https://wink.ru/)                 | Supported   | Live videos are currently unavailable |
-| [Okko](https://okko.tv/)                 | Supported   |                                       |
-| [KION](https://kion.ru/)                 | Planned     |                                       |
-| [PREMIER](https://premier.one/)          | Planned     |                                       |
-| [START](https://start.ru/)               | Planned     |                                       |
-| [Amediateka](https://www.amediateka.ru/) | Planned     |                                       |
-| [NTV](https://www.ntv.ru/)               | In progress | Only download link extracting         |
+| Service                                 | Downloading | Metadata | Authorization |
+| --------------------------------------- | ----------- | -------- | ------------- |
+| [Crunchyroll](https://crunchyroll.com/) | ✅          | ✅       | ✅            |
+| [Kinopoisk](https://hd.kinopoisk.ru/)   | ✅          | ✅       | ✅            |
+| [IVI](https://www.ivi.ru/)              | ✅          | ✅       | ✅            |
+| [Wink](https://wink.ru/)                | ✅          | ✅       | ✅            |
+| [Okko](https://okko.tv/)                | ✅          | ✅       | ✅            |
+| [NTV](https://www.ntv.ru/)              | ❌          | ✅       | ❌            |
+
+| Emoji | Meaning                   |
+| :---- | ------------------------- |
+| ✅    | Supported                 |
+| ❌    | Not supported             |
+| ➖    | Impossible / Unreasonable |
 
 ## Development
 
