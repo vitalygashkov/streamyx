@@ -1,6 +1,6 @@
 {
   "name": "streamyx",
-  "version": "4.0.0-beta.12",
+  "version": "4.0.0-beta.13",
   "author": "Vitaly Gashkov <vitalygashkov@vk.com>",
   "description": "Cross-platform video downloader",
   "main": "dist/src/main.js",
@@ -29,7 +29,7 @@
     "puppeteer-core": "^22.6.5",
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
-    "undici": "^6.14.0",
+    "undici": "^6.14.1",
     "wive": "file:packages/wive"
   },
   "devDependencies": {
