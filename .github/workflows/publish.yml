@@ -62,8 +62,9 @@ jobs:
       - run: git config --global url."https://${{ secrets.CONTROL_REPO_TOKEN }}@github.com/".insteadOf ssh://git@github.com/
 
       # https://github.com/nodejs/node-gyp/issues/2869
+      # https://github.com/actions/runner-images/issues/8615#issuecomment-1773563573
       - name: Fix distutils issue for node-gyp
-        run: python3 -m pip install setuptools
+        run: python3 -m pip install setuptools --break-system-packages
 
       - name: Install app dependencies
         run: npm ci
