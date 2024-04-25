@@ -174,3 +174,4 @@ jobs:
           tag: 'v${{ env.PACKAGE_VERSION }}'
           token: ${{ secrets.GITHUB_TOKEN }}
           draft: true
+          generateReleaseNotes: true
