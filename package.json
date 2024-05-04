@@ -1,8 +1,8 @@
 {
   "name": "streamyx",
-  "version": "4.0.0-beta.16",
+  "version": "4.0.0-beta.17",
   "author": "Vitaly Gashkov <vitalygashkov@vk.com>",
-  "description": "Cross-platform video downloader",
+  "description": "Powerful media downloader",
   "main": "dist/src/main.js",
   "bin": {
     "streamyx": "dist/src/main.js"
