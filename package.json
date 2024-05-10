@@ -1,6 +1,6 @@
 {
   "name": "streamyx",
-  "version": "4.0.0-beta.21",
+  "version": "4.0.0-beta.22",
   "author": "Vitaly Gashkov <vitalygashkov@vk.com>",
   "description": "Powerful media downloader",
   "main": "dist/src/main.js",
@@ -26,6 +26,8 @@
     "dasha": "file:packages/dasha",
     "esor": "file:packages/esor",
     "ora-classic": "^5.4.2",
+    "pino": "^9.0.0",
+    "pino-pretty": "^11.0.0",
     "puppeteer-core": "^22.7.1",
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
