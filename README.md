@@ -59,27 +59,12 @@ streamyx -q 720p https://wink.ru/movies/ofitsery-year-1971
 
 Output: `/downloads/Офицеры.720p.WINK.WEB-DL.x264/Офицеры.720p.WINK.WEB-DL.x264.mkv`
 
-## Supported services
+## Features
 
-| Service                                 | Downloading | Metadata | Authorization |
-| --------------------------------------- | ----------- | -------- | ------------- |
-| [Crunchyroll](https://crunchyroll.com/) | ✅          | ✅       | ✅            |
-| [Kinopoisk](https://hd.kinopoisk.ru/)   | ✅          | ✅       | ✅            |
-| [IVI](https://www.ivi.ru/)              | ✅          | ✅       | ✅            |
-| [Wink](https://wink.ru/)                | ✅          | ✅       | ✅            |
-| [Okko](https://okko.tv/)                | ✅          | ✅       | ✅            |
-| [NTV](https://www.ntv.ru/)              | ❌          | ✅       | ❌            |
-
-| Emoji | Meaning                   |
-| :---- | ------------------------- |
-| ✅    | Supported                 |
-| ❌    | Not supported             |
-| ➖    | Impossible / Unreasonable |
-
-## Development
-
-Compile sources and run:
-
-```shell
-npx streamyx -q 720p "https://wink.ru/movies/dostat-nozhi-year-2019-93328166"
-```
+- **Multiple media formats** support: progressive, MPEG-DASH, HLS (soon)
+- **Concurrency**: multiple simultaneous connections for faster downloads
+- **Retry** in case of request failure during download
+- **HTTP2** support
+- **Templates** for movie and episode filenames
+- **Content keys** obtaining using PSSH and license URL
+- **Decryption** of MPEG-DASH stream with specified content key
