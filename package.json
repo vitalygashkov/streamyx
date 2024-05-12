@@ -1,6 +1,6 @@
 {
   "name": "streamyx",
-  "version": "4.0.0-beta.26",
+  "version": "4.0.0-beta.27",
   "author": "Vitaly Gashkov <vitalygashkov@vk.com>",
   "description": "Powerful media downloader",
   "main": "dist/src/main.js",
@@ -31,7 +31,7 @@
     "puppeteer-core": "^22.7.1",
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
-    "undici": "^6.16.0",
+    "undici": "^6.16.1",
     "wapter": "file:packages/wivenative",
     "wive": "file:packages/wive"
   },
