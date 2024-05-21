@@ -26,9 +26,9 @@
     "dasha": "file:packages/dasha",
     "esor": "file:packages/esor",
     "ora-classic": "^5.4.2",
-    "pino": "^9.0.0",
+    "pino": "^9.1.0",
     "pino-pretty": "^11.0.0",
-    "puppeteer-core": "^22.7.1",
+    "puppeteer-core": "^22.8.1",
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
     "undici": "^6.16.1",
@@ -36,7 +36,7 @@
     "wive": "file:packages/wive"
   },
   "devDependencies": {
-    "@types/node": "^20.12.7",
+    "@types/node": "^20.12.12",
     "@typescript-eslint/eslint-plugin": "^5.61.0",
     "@typescript-eslint/parser": "^5.61.0",
     "eslint": "^8.57.0",
