@@ -25,6 +25,7 @@
     "blowfish-node": "^1.1.4",
     "dasha": "file:packages/dasha",
     "esor": "file:packages/esor",
+    "ffi-napi": "^4.0.3",
     "ora-classic": "^5.4.2",
     "pino": "^9.1.0",
     "pino-pretty": "^11.0.0",
@@ -36,6 +37,7 @@
     "wive": "file:packages/wive"
   },
   "devDependencies": {
+    "@types/ffi-napi": "^4.0.10",
     "@types/node": "^20.12.12",
     "@typescript-eslint/eslint-plugin": "^5.61.0",
     "@typescript-eslint/parser": "^5.61.0",
