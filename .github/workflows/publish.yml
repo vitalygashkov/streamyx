@@ -54,12 +54,6 @@ jobs:
           token: ${{ secrets.CONTROL_REPO_TOKEN }}
           submodules: recursive
 
-      - name: Install Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm'
-
       - run: git config --global url."https://${{ secrets.CONTROL_REPO_TOKEN }}@github.com/".insteadOf ssh://git@github.com/
 
       # https://github.com/nodejs/node-gyp/issues/2869
@@ -68,7 +62,7 @@ jobs:
         run: python3 -m pip install setuptools --break-system-packages
 
       - name: Install app dependencies
-        run: npm ci
+        run: npm ci --verbose
 
       - name: Get package name and version
         run: |
@@ -90,7 +84,7 @@ jobs:
           path: ./${{ env.PACKAGE_NAME }}-arm64-mac.zip
 
   build-macos-x64:
-    name: Build for macOS
+    name: Build for macOS x64
     runs-on: macos-13
     steps:
       - name: Clone repository
