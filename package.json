@@ -14,15 +14,16 @@
     "build": "tsc && pkg . --public -t node20-win-x64,node20-macos-x64,node20-macos-arm64,node20-linux-x64 --out-path ./build/",
     "build:win": "tsc && pkg . --public -t node20-win-x64 -o ./build/win/streamyx.exe",
     "build:mac": "tsc && pkg . --public -t node20-macos-x64 -o ./build/mac/streamyx",
+    "build:mac:arm": "tsc && pkg . --public -t node20-macos-arm64 -o ./build/mac-arm/streamyx",
     "build:linux": "tsc && pkg . --public -t node20-linux-x64 -o ./build/linux/streamyx",
     "lint": "eslint --ext .js,.ts .",
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\""
   },
   "dependencies": {
-    "@ossiana/node-libcurl": "file:../node-libcurl",
+    "@ossiana/node-libcurl": "github:vitalygashkov/node-libcurl",
     "@streamyx/crunchyroll": "file:packages/crunchyroll",
     "@streamyx/wink": "file:packages/wink",
-    "@yao-pkg/pkg": "^5.11.5",
+    "@yao-pkg/pkg": "^5.12.0",
     "blowfish-node": "^1.1.4",
     "dasha": "file:packages/dasha",
     "esor": "file:packages/esor",
@@ -54,6 +55,7 @@
   "pkg": {
     "assets": [
       "node_modules/vm2/**/*",
+      "node_modules/@ossiana/node-libcurl/build/Release/*.node",
       "node_modules/puppeteer-core/**/*.*",
       "node_modules/puppeteer-extra-plugin-stealth/**/*.*"
     ],
