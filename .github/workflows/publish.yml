@@ -41,7 +41,7 @@ jobs:
       - name: Upload build
         uses: actions/upload-artifact@v4
         with:
-          name: win
+          name: win-x64
           path: ./streamyx-x64-win.zip
 
   build-macos:
@@ -80,7 +80,7 @@ jobs:
       - name: Upload build
         uses: actions/upload-artifact@v4
         with:
-          name: macos
+          name: mac-arm64
           path: ./${{ env.PACKAGE_NAME }}-arm64-mac.zip
 
   build-macos-x64:
@@ -119,7 +119,7 @@ jobs:
       - name: Upload build
         uses: actions/upload-artifact@v4
         with:
-          name: macos
+          name: mac-x64
           path: ./${{ env.PACKAGE_NAME }}-x64-mac.zip
 
   build-linux:
@@ -158,7 +158,7 @@ jobs:
       - name: Upload build
         uses: actions/upload-artifact@v4
         with:
-          name: linux
+          name: linux-x64
           path: ./${{ env.PACKAGE_NAME }}-x64-linux.zip
 
   upload:
