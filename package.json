@@ -56,6 +56,7 @@
     "assets": [
       "node_modules/vm2/**/*",
       "node_modules/@ossiana/node-libcurl/build/Release/*.node",
+      "node_modules/@ossiana/node-libcurl/build/Release/*.dll",
       "node_modules/puppeteer-core/**/*.*",
       "node_modules/puppeteer-extra-plugin-stealth/**/*.*"
     ],
