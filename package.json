@@ -27,27 +27,27 @@
     "blowfish-node": "^1.1.4",
     "dasha": "file:packages/dasha",
     "esor": "file:packages/esor",
-    "koffi": "^2.8.9",
+    "koffi": "^2.8.11",
     "ora-classic": "^5.4.2",
-    "pino": "^9.1.0",
-    "pino-pretty": "^11.0.0",
+    "pino": "^9.2.0",
+    "pino-pretty": "^11.2.1",
     "puppeteer-core": "^22.8.1",
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
-    "undici": "^6.18.1",
+    "undici": "^6.19.2",
     "wapter": "file:packages/wivenative",
     "wive": "file:packages/wive"
   },
   "devDependencies": {
-    "@types/node": "^20.12.12",
+    "@types/node": "^20.14.8",
     "@typescript-eslint/eslint-plugin": "^5.61.0",
     "@typescript-eslint/parser": "^5.61.0",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-prettier": "^4.2.1",
-    "prettier": "^3.2.5",
-    "typescript": "^5.4.5"
+    "prettier": "^3.3.2",
+    "typescript": "^5.5.2"
   },
   "engines": {
     "node": ">=20"
