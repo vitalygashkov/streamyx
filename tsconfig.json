@@ -14,5 +14,5 @@
     "resolveJsonModule": true,
     "types": []
   },
-  "exclude": ["node_modules", "src/electron", "src/index.ts"]
+  "exclude": ["node_modules", "src/electron", "src/index.ts", "packages"]
 }
