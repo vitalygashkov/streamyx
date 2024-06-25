@@ -1,0 +1,16 @@
+diff --git a/node_modules/@yao-pkg/pkg/prelude/bootstrap.js b/node_modules/@yao-pkg/pkg/prelude/bootstrap.js
+index fa65407..3f0e9f6 100644
+--- a/node_modules/@yao-pkg/pkg/prelude/bootstrap.js
++++ b/node_modules/@yao-pkg/pkg/prelude/bootstrap.js
+@@ -2239,6 +2239,11 @@ function payloadFileSync(pointer) {
+       } else {
+         const tmpModulePath = path.join(tmpFolder, moduleBaseName);
+ 
++        // here we copy all files from the snapshot module folder to temporary folder
++        // we keep the module folder structure to prevent issues with modules that are statically
++        // linked using relative paths
++        copyFolderRecursiveSync(moduleFolder, tmpFolder);
++
+         if (!fs.existsSync(tmpModulePath)) {
+           fs.copyFileSync(modulePath, tmpModulePath);
+         }
