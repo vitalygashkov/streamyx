@@ -1,6 +1,6 @@
 {
   "name": "streamyx",
-  "version": "4.0.0-beta.40",
+  "version": "4.0.0-beta.41",
   "author": "Vitaly Gashkov <vitalygashkov@vk.com>",
   "description": "Powerful media downloader",
   "main": "dist/src/main.js",
@@ -21,7 +21,7 @@
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\""
   },
   "dependencies": {
-    "@ossiana/node-libcurl": "file:packages/node-libcurl",
+    "@ossiana/node-libcurl": "^1.4.7",
     "@streamyx/crunchyroll": "file:packages/crunchyroll",
     "@streamyx/wink": "file:packages/wink",
     "@yao-pkg/pkg": "^5.12.0",
@@ -60,6 +60,11 @@
       "node_modules/@ossiana/node-libcurl/build/Release/*.node",
       "node_modules/@ossiana/node-libcurl/build/Release/*.dll",
       "node_modules/@ossiana/node-libcurl/build/Release/*.lib",
+      "node_modules/@ossiana/node-libcurl-darwin-x64/*.node",
+      "node_modules/@ossiana/node-libcurl-darwin-arm64/*.node",
+      "node_modules/@ossiana/node-libcurl-linux-x64-gnu/*.node",
+      "node_modules/@ossiana/node-libcurl-win32-x64-msvc/*.node",
+      "node_modules/@ossiana/node-libcurl-win32-x64-msvc/*.dll",
       "node_modules/puppeteer-core/**/*.*",
       "node_modules/puppeteer-extra-plugin-stealth/**/*.*"
     ],
