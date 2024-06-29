@@ -26,6 +26,3 @@
 [submodule "packages/esor"]
 	path = packages/esor
 	url = https://github.com/vitalygashkov/esor.git
-[submodule "packages/node-libcurl"]
-	path = packages/node-libcurl
-	url = https://github.com/vitalygashkov/node-libcurl.git
