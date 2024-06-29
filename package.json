@@ -21,21 +21,13 @@
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\""
   },
   "dependencies": {
-    "@ossiana/node-libcurl": "^1.4.7",
+    "@streamyx/core": "file:packages/core",
     "@streamyx/crunchyroll": "file:packages/crunchyroll",
     "@streamyx/wink": "file:packages/wink",
     "@yao-pkg/pkg": "^5.12.0",
     "blowfish-node": "^1.1.4",
     "dasha": "file:packages/dasha",
     "esor": "file:packages/esor",
-    "koffi": "^2.8.11",
-    "ora-classic": "^5.4.2",
-    "pino": "^9.2.0",
-    "pino-pretty": "^11.2.1",
-    "puppeteer-core": "^22.8.1",
-    "puppeteer-extra": "^3.3.6",
-    "puppeteer-extra-plugin-stealth": "^2.11.2",
-    "undici": "^6.19.2",
     "wapter": "file:packages/wivenative",
     "wive": "file:packages/wive"
   },
