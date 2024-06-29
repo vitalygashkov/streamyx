@@ -190,8 +190,7 @@ class Http implements IHttp {
         await this.#nextRetry(resource);
         return this.fetchAsChrome(resource, init);
       }
-      const setCookie = responseHeaders.get('set-cookie') || responseHeaders.get('Set-Cookie');
-      if (setCookie) this.appendCookies(setCookie);
+      this.appendCookies(responseHeaders.getSetCookie());
       const response = new Response(text, {
         headers: Object.fromEntries(responseHeaders.entries()),
         status: status,
@@ -399,7 +398,7 @@ class Http implements IHttp {
   }
 
   appendCookies(setCookie: string | string[]) {
-    const newCookies = typeof setCookie === 'string' ? [setCookie] : setCookie;
+    const newCookies = typeof setCookie === 'string' ? setCookie.split(', ') : setCookie;
     if (!newCookies || !newCookies?.length) return;
     this.cookies = this.cookies.filter((cookie) => {
       const cookieKey = cookie.split('=')[0];
