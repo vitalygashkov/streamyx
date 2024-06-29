@@ -4,12 +4,12 @@ export type RunArgs = {
   urls: string[];
 
   videoQuality?: string;
-  videoCodec?: VideoCodec;
+  videoCodecs?: VideoCodec[];
   videoRange?: DynamicRange;
   videoBitrate?: number;
   videoDimension?: '2D' | '3D';
 
-  audioCodec?: AudioCodec;
+  audioCodecs?: AudioCodec[];
   audioChannels?: number;
   audioBitrate?: number;
 
@@ -26,11 +26,16 @@ export type RunArgs = {
   episodes: {
     values: [season: number, episode: number][];
     size: number;
-    set: (episode?: number, season?: number) => number;
-    has: (episode?: number, season?: number) => boolean;
+    set: (episode?: number | undefined, season?: number | undefined) => number;
+    has: (episode?: number | undefined, season?: number | undefined) => boolean;
+    getMin: () => number;
+    getMax: () => number;
   };
   retry: number;
   connections: number;
+  proxy: string | null;
+  proxyMeta: string | null;
+  proxyMedia: string | null;
 
   movieTemplate: string;
   episodeTemplate: string;
@@ -40,6 +45,7 @@ export type RunArgs = {
   pssh?: string;
   header?: Record<string, string>;
   http2: boolean;
+  keys?: { kid: string; key: string }[];
   debug: boolean;
   version: boolean;
   help: boolean;

@@ -1,14 +1,14 @@
 import { RunArgs } from './args';
-import { Http } from './http';
 import { logger } from './logger';
-import { Prompt } from './prompt';
+import { IHttp } from './http';
+import { IPrompt } from './prompt';
 import fs from './fs';
 
 export interface StreamyxInstance {
   log: typeof logger;
   fs: typeof fs;
-  http: Http;
-  prompt: Prompt;
+  http: IHttp;
+  prompt: IPrompt;
 }
 
 export type Plugin<T = unknown> = (streamyx: StreamyxInstance) => PluginInstance;

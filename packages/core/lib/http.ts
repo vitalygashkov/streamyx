@@ -89,7 +89,19 @@ const parseUrlFromResource = (resource: string | URL | Request) =>
 
 const DEFAULT_MAX_REDIRECTIONS = 5;
 
-class Http {
+export interface IHttp {
+  headers: Record<string, string>;
+  cookies: string[];
+  fetch(resource: string | URL | Request, options?: RequestInit): Promise<Response>;
+  fetchAsChrome(resource: string | URL | Request, options?: RequestInit): Promise<Response>;
+  appendCookies(setCookie: string | string[]): void;
+  setCookies(cookies: string[]): void;
+  setHeader(name: string, value: string): void;
+  setHeaders(headers: Record<string, string>): void;
+  removeHeader(name: string): void;
+}
+
+class Http implements IHttp {
   headers: Record<string, string>;
   cookies: string[];
 

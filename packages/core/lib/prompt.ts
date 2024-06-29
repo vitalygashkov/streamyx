@@ -6,7 +6,16 @@ import { setTimeout } from 'node:timers/promises';
 type PromptType = 'input' | 'confirm';
 type PromptAnswer<T> = T extends 'input' ? string : T extends 'confirm' ? boolean : never;
 
-export class Prompt extends EventEmitter {
+export interface IPrompt {
+  waitForInput<T extends PromptType = 'input'>(
+    message: string,
+    type?: T,
+    timeout?: number
+  ): Promise<PromptAnswer<T>>;
+  listen(listener: (message: string, type: PromptType, timeout?: number) => Promise<string>): void;
+}
+
+export class Prompt extends EventEmitter implements IPrompt {
   constructor() {
     super();
   }
