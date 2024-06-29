@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@ossiana/node-libcurl": "^1.4.7",
+    "dasha": "^3.0.3",
     "koffi": "^2.8.11",
     "ora-classic": "^5.4.2",
     "pino": "^9.2.0",
