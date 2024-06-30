@@ -16,8 +16,8 @@ const virtualroom = () => (streamyx) => {
     for (const translation of events.data.translations) {
       const title = `${info.data.roomParameters.name} ${translation.type} ${translation.source} ${translation.start}`;
       const mediaInfo = {
+        url: translation.url,
         provider: 'VRM',
-        manifestUrl: translation.url,
         movie: { title },
       };
       mediaInfoList.push(mediaInfo);

@@ -24,8 +24,8 @@ const ntv = () => (streamyx) => {
     if (subtitlesRoute) streamyx.log.info(`Subtitles: ${subtitlesUrl}`);
 
     const mediaInfo = {
+      url: hqFileLink,
       provider: 'NTV',
-      manifestUrl: hqFileLink,
       movie: { title },
     };
     mediaInfoList.push(mediaInfo);
