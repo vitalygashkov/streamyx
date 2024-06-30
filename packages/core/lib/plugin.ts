@@ -16,12 +16,24 @@ export type Plugin<T = unknown> = (streamyx: StreamyxInstance) => PluginInstance
 export interface PluginInstance<T = unknown> {
   name: string;
   api: T;
-  isValidUrl: (url: string) => boolean;
-  init: () => Promise<void>;
-  getConfigList: (url: string, args: RunArgs) => Promise<DownloadConfig[]>;
+
+  /**
+   * Performs initialization of the plugin (e.g. loading auth data from storage or token refresh)
+   */
+  init?: () => Promise<void>;
+
+  /**
+   * Checks if this plugin can handle the specified URL
+   */
+  checkUrl: (url: string) => boolean;
+
+  /**
+   * Fetches media info list from the specified URL
+   */
+  fetchMediaInfo: (url: string, args: RunArgs) => Promise<MediaInfo[]>;
 }
 
-export interface DownloadConfig {
+export interface MediaInfo {
   provider: string;
   movie?: { title: string };
   show?: { title: string };
