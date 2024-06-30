@@ -130,6 +130,7 @@ class Http implements IHttp {
   }
 
   setAgent(proxy?: string | null) {
+    if (this.#proxy === proxy) return;
     this.#proxy = proxy;
     const connector = buildConnector({ ciphers: randomizeCiphers() });
     if (proxy) {
