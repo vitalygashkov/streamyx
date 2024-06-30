@@ -6,7 +6,7 @@ import http2, {
 import { URL } from 'node:url';
 import { fetch, ProxyAgent, Agent, buildConnector } from 'undici';
 import { Browser, Page } from 'puppeteer-core';
-import { fetch as curl } from '@ossiana/node-libcurl';
+import { fetch as curl } from 'node-libcurl-dev';
 import { logger } from './logger';
 import { browserCookiesToList, launchBrowser } from './browser';
 import { randomizeCiphers } from './tls';
