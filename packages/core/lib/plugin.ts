@@ -34,17 +34,17 @@ export interface PluginInstance<T = unknown> {
 }
 
 export interface MediaInfo {
+  url: string;
   provider: string;
   movie?: { title: string };
   show?: { title: string };
   season?: { number: number };
   episode?: { number: number; title?: string };
-  manifestUrl: string;
   headers?: Record<string, string>;
-  drmConfig: DrmConfig | (() => Promise<DrmConfig>);
+  drmConfig?: DrmConfig | (() => Promise<DrmConfig>);
   subtitles?: any[];
   audioType?: string;
-  audioLanguage?: string[];
+  audioLanguage?: string;
   http2?: boolean;
 }
 

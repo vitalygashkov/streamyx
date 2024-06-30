@@ -1,6 +1,6 @@
 {
   "name": "@streamyx/core",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": "Vitaly Gashkov <vitalygashkov@vk.com>",
   "description": "Core modules for Streamyx",
   "license": "AGPL-3.0",
@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.14.9",
-    "typescript": "^5.5.2"
+    "typescript": "^5.5.2",
+    "vitest": "^1.6.0"
   }
 }
