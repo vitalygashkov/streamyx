@@ -7,12 +7,11 @@
   "main": "dist/lib/main.js",
   "scripts": {
     "prepare": "npm run build",
-    "postinstall": "patch-package",
     "build": "tsc -p tsconfig.json",
     "dev": "tsc --watch"
   },
   "dependencies": {
-    "@ossiana/node-libcurl": "^1.4.7",
+    "@ossiana/node-libcurl": "github:vitalygashkov/node-libcurl",
     "dasha": "^3.0.3",
     "koffi": "^2.8.11",
     "ora-classic": "^5.4.2",
@@ -21,8 +20,7 @@
     "puppeteer-core": "^22.12.1",
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
-    "undici": "^6.19.2",
-    "patch-package": "^8.0.0"
+    "undici": "^6.19.2"
   },
   "devDependencies": {
     "@types/node": "^20.14.9",
