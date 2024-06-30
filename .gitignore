@@ -18,8 +18,6 @@ yarn-error.log*
 # Build generated
 dist/
 build/
-/packages/core/dist
-/packages/core/node_modules
 
 
 # Optional npm cache directory
