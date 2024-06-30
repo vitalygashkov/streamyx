@@ -10,7 +10,7 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@streamyx/core": "^0.0.4"
+    "@streamyx/core": "^0.1.0"
   },
   "devDependencies": {
     "@types/node": "^20.14.9",

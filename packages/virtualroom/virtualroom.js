@@ -1,9 +1,7 @@
 const virtualroom = () => (streamyx) => {
-  const isValidUrl = (url) => new URL(url).host.includes('virtualroom');
+  const checkUrl = (url) => new URL(url).host.includes('virtualroom');
 
-  const init = async () => {};
-
-  const getConfigList = async (url) => {
+  const fetchMediaInfo = async (url) => {
     const recordId = new URL(url).searchParams.get('recordId');
 
     const infoUrl = `https://mv1.virtualroom.ru/vr/player/records/${recordId}/info`;
@@ -14,25 +12,24 @@ const virtualroom = () => (streamyx) => {
     const eventsResponse = await streamyx.http.fetch(eventsUrl);
     const events = await eventsResponse.json();
 
-    const configList = [];
+    const mediaInfoList = [];
     for (const translation of events.data.translations) {
       const title = `${info.data.roomParameters.name} ${translation.type} ${translation.source} ${translation.start}`;
-      const config = {
+      const mediaInfo = {
         provider: 'VRM',
         manifestUrl: translation.url,
         movie: { title },
       };
-      configList.push(config);
+      mediaInfoList.push(mediaInfo);
     }
-    return configList;
+    return mediaInfoList;
   };
 
   return {
     name: 'virtualroom',
     api: null,
-    isValidUrl,
-    init,
-    getConfigList,
+    checkUrl,
+    fetchMediaInfo,
   };
 };
 

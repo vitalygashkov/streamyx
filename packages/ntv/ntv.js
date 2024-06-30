@@ -1,8 +1,7 @@
 const ntv = () => (streamyx) => {
-  const isValidUrl = (url) => new URL(url).host.includes('ntv');
-  const init = async () => {};
-  const getConfigList = async (url) => {
-    const configList = [];
+  const checkUrl = (url) => new URL(url).host.includes('ntv');
+  const fetchMediaInfo = async (url) => {
+    const mediaInfoList = [];
     const pageResponse = await streamyx.http.fetch(url);
     const pageBody = await pageResponse.text();
     const videoFrameLink = pageBody
@@ -24,22 +23,21 @@ const ntv = () => (streamyx) => {
     streamyx.log.info(`Video: ${hqFileLink}`);
     if (subtitlesRoute) streamyx.log.info(`Subtitles: ${subtitlesUrl}`);
 
-    const config = {
+    const mediaInfo = {
       provider: 'NTV',
       manifestUrl: hqFileLink,
       movie: { title },
     };
-    configList.push(config);
+    mediaInfoList.push(mediaInfo);
 
-    return configList;
+    return mediaInfoList;
   };
 
   return {
     name: 'ntv',
     api: null,
-    isValidUrl,
-    init,
-    getConfigList,
+    checkUrl,
+    fetchMediaInfo,
   };
 };
 
