@@ -4,6 +4,7 @@ import http2, {
   IncomingHttpHeaders as IncomingHttp2Headers,
 } from 'node:http2';
 import { URL } from 'node:url';
+import { EOL } from 'node:os';
 import { fetch, ProxyAgent, Agent, buildConnector } from 'undici';
 import { Browser, Page } from 'puppeteer-core';
 import { fetch as curl } from '@ossiana/node-libcurl';
@@ -451,16 +452,16 @@ const importCookies = async (cookiesTxtPath: string): Promise<string[]> => {
   const text = await fs.readText(cookiesTxtPath).catch(() => '');
   if (!text) return [];
   const rows = text
-    .split('\n')
-    .filter((line: string) => !!line && !line.startsWith('#'))
-    .map((line: string) => line.split('\t'));
+    .split(EOL)
+    .filter((line: string) => !!line && !line.startsWith('# '))
+    .map((line: string) => line.replace('\r', '').split('\t'));
   const cookies: any[] = [];
   for (const row of rows) {
     const [domain, includeSubdomains, path, secure, expires, name, value] = row;
     cookies.push({
       name,
       value,
-      domain,
+      domain: domain.replace('#HttpOnly_', ''),
       hostOnly: includeSubdomains === 'FALSE',
       path,
       secure: secure === 'TRUE',
