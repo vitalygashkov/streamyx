@@ -447,7 +447,7 @@ class Http implements IHttp {
   }
 }
 
-const importCookies = async (cookiesTxtPath: string) => {
+const importCookies = async (cookiesTxtPath: string): Promise<string[]> => {
   const text = await fs.readText(cookiesTxtPath).catch(() => '');
   if (!text) return [];
   const rows = text
