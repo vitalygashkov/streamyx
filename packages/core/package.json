@@ -1,6 +1,6 @@
 {
   "name": "@streamyx/core",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": "Vitaly Gashkov <vitalygashkov@vk.com>",
   "description": "Core modules for Streamyx",
   "license": "AGPL-3.0",
@@ -11,9 +11,9 @@
     "dev": "tsc --watch"
   },
   "dependencies": {
+    "@ossiana/node-libcurl": "^1.4.10",
     "dasha": "^3.0.3",
     "koffi": "^2.8.11",
-    "node-libcurl-dev": "^1.4.8",
     "ora-classic": "^5.4.2",
     "pino": "^9.2.0",
     "pino-pretty": "^11.2.1",
