@@ -54,6 +54,12 @@ jobs:
           token: ${{ secrets.CONTROL_REPO_TOKEN }}
           submodules: recursive
 
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
       - run: git config --global url."https://${{ secrets.CONTROL_REPO_TOKEN }}@github.com/".insteadOf ssh://git@github.com/
 
       # https://github.com/nodejs/node-gyp/issues/2869
@@ -93,6 +99,12 @@ jobs:
           token: ${{ secrets.CONTROL_REPO_TOKEN }}
           submodules: recursive
 
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
       - run: git config --global url."https://${{ secrets.CONTROL_REPO_TOKEN }}@github.com/".insteadOf ssh://git@github.com/
 
       # https://github.com/nodejs/node-gyp/issues/2869
@@ -131,6 +143,12 @@ jobs:
         with:
           token: ${{ secrets.CONTROL_REPO_TOKEN }}
           submodules: recursive
+
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
 
       - run: git config --global url."https://${{ secrets.CONTROL_REPO_TOKEN }}@github.com/".insteadOf ssh://git@github.com/
 
