@@ -1,6 +1,6 @@
 {
   "name": "streamyx",
-  "version": "4.0.0-beta.43",
+  "version": "4.0.0-beta.44",
   "author": "Vitaly Gashkov <vitalygashkov@vk.com>",
   "description": "Powerful media downloader",
   "main": "dist/src/main.js",
@@ -52,14 +52,9 @@
   "pkg": {
     "assets": [
       "node_modules/vm2/**/*",
-      "node_modules/@ossiana/node-libcurl/build/Release/*.node",
-      "node_modules/@ossiana/node-libcurl/build/Release/*.dll",
-      "node_modules/@ossiana/node-libcurl/build/Release/*.lib",
-      "node_modules/@ossiana/node-libcurl-darwin-x64/*.node",
-      "node_modules/@ossiana/node-libcurl-darwin-arm64/*.node",
-      "node_modules/@ossiana/node-libcurl-linux-x64-gnu/*.node",
-      "node_modules/@ossiana/node-libcurl-win32-x64-msvc/*.node",
-      "node_modules/@ossiana/node-libcurl-win32-x64-msvc/*.dll",
+      "node_modules/@ossiana/node-libcurl/**/*.node",
+      "node_modules/@ossiana/node-libcurl/**/*.dll",
+      "node_modules/@ossiana/node-libcurl/**/*.lib",
       "node_modules/puppeteer-core/**/*.*",
       "node_modules/puppeteer-extra-plugin-stealth/**/*.*"
     ],
