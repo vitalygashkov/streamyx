@@ -24,7 +24,12 @@ export const AUDIO_QUALITY = { lowest: 'lowest', highest: 'highest' } as const;
 export type SubtitleStoreType = (typeof SUBTITLE_STORE_TYPE)[keyof typeof SUBTITLE_STORE_TYPE];
 export const SUBTITLE_STORE_TYPE = { embedded: 'embedded', external: 'external' } as const;
 
+export type Theme = (typeof THEME)[keyof typeof THEME];
+export const THEME = { dark: 'dark', light: 'light', system: 'system' } as const;
+
 export interface Settings {
+  theme: Theme;
+  language: string;
   // askForOptionsBeforeDownload: boolean;
   downloadDir: string;
   tempDir: string;
@@ -46,7 +51,15 @@ export interface Settings {
   chromePath: string | null;
 }
 
+const getDefaultLanguage = () => {
+  const locale = Intl.DateTimeFormat().resolvedOptions().locale;
+  if (locale.startsWith('ru')) return 'ru';
+  else return 'en';
+};
+
 const defaultSettings: Settings = {
+  theme: THEME.system,
+  language: getDefaultLanguage(),
   // askForOptionsBeforeDownload: true,
   downloadDir: join(fs.homeDir, 'Downloads'),
   tempDir: fs.tempDir,
