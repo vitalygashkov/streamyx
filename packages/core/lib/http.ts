@@ -451,10 +451,11 @@ class Http implements IHttp {
 const importCookies = async (cookiesTxtPath: string): Promise<string[]> => {
   const text = await fs.readText(cookiesTxtPath).catch(() => '');
   if (!text) return [];
-  const rows = text
-    .split(EOL)
-    .filter((line: string) => !!line && !line.startsWith('# '))
-    .map((line: string) => line.replace('\r', '').split('\t'));
+  const lines = text.split(EOL).flatMap((line) => line.split('\n'));
+  const linesWithoutComments = lines.filter(
+    (line: string) => !!line.trim() && !line.startsWith('# ')
+  );
+  const rows = linesWithoutComments.map((line: string) => line.split('\t'));
   const cookies: any[] = [];
   for (const row of rows) {
     const [domain, includeSubdomains, path, secure, expires, name, value] = row;
