@@ -7,7 +7,7 @@ import { URL } from 'node:url';
 import { EOL } from 'node:os';
 import { fetch, ProxyAgent, Agent, buildConnector } from 'undici';
 import { Browser, Page } from 'puppeteer-core';
-import { fetch as curl } from '@ossiana/node-libcurl';
+import { gotScraping } from 'got-scraping';
 import { logger } from './logger';
 import { browserCookiesToList, launchBrowser } from './browser';
 import { randomizeCiphers } from './tls';
@@ -171,40 +171,37 @@ class Http implements IHttp {
     this.browserPage = page;
   }
 
-  async fetchAsChrome(resource: string | URL | Request, options?: RequestInit): Promise<Response> {
+  async fetchAsChrome(
+    resource: string | URL | Request,
+    { redirect, ...options }: RequestInit = {}
+  ): Promise<Response> {
     try {
-      const headers = {
-        ...this.headers,
-        ...options?.headers,
-        ...CLIENT.headers,
-      };
-      const init = {
+      const response = await gotScraping({
+        url: resource as string | URL,
+        followRedirect: !redirect || redirect === 'follow',
+        proxyUrl: this.#proxy || undefined,
         ...options,
-        redirect: options?.redirect !== 'manual',
-        body: options?.body as Buffer | string,
-        headers,
-        ja3: CLIENT.fingerprint,
-      } as any;
-      const curlResponse = await curl(resource as string | URL, init);
-      const text = await curlResponse.text();
-      const status = curlResponse.status();
-      const responseHeaders = await curlResponse.headers();
+        headers: { ...this.headers, ...options.headers, ...CLIENT.headers },
+        useHeaderGenerator: true,
+        headerGeneratorOptions: { browsers: ['chrome'] },
+        http2: true,
+      });
+      const status = response.statusCode;
+      const headers = response.headers;
       const isSuccess = status >= 200 && status <= 299;
       if (!isSuccess && this.#hasAttempts(resource)) {
         await this.#nextRetry(resource);
-        return this.fetchAsChrome(resource, init);
+        return this.fetchAsChrome(resource, { redirect, ...options });
       }
-      this.appendCookies(responseHeaders.getSetCookie());
-      const response = new Response(text, {
-        headers: Object.fromEntries(responseHeaders.entries()),
+      this.appendCookies(response.headers['set-cookie'] || '');
+      delete response.headers['set-cookie'];
+      return new Response(response.body, {
+        headers: headers as Record<string, string>,
         status: status,
       });
-      return response;
     } catch (e) {
-      if (!this.#hasAttempts(resource)) {
-        logger.debug(e);
-        throw e;
-      }
+      logger.debug(e);
+      if (!this.#hasAttempts(resource)) throw e;
       await this.#nextRetry(resource);
       return this.fetchAsChrome(resource, options);
     }

@@ -11,8 +11,8 @@
     "dev": "tsc --watch"
   },
   "dependencies": {
-    "@ossiana/node-libcurl": "^1.4.10",
     "dasha": "^3.0.3",
+    "got-scraping": "^3.2.15",
     "koffi": "^2.8.11",
     "ora-classic": "^5.4.2",
     "pino": "^9.2.0",
