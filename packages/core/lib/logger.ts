@@ -49,6 +49,16 @@ if (process.platform === 'win32') {
   setConsoleCP(CP_UTF8);
 }
 
+// Enable debug mode if needed
+if (
+  process.argv.includes('-d') ||
+  process.argv.includes('--debug') ||
+  process.env.NODE_ENV_ELECTRON_VITE === 'development' ||
+  !!process.env.ELECTRON_CLI_ARGS
+) {
+  process.env.DEBUG = 'streamyx:*';
+}
+
 const streams = [
   {
     level: 'debug',
