@@ -1,6 +1,6 @@
 {
   "name": "streamyx",
-  "version": "4.0.0-beta.49",
+  "version": "4.0.0-beta.50",
   "author": "Vitaly Gashkov <vitalygashkov@vk.com>",
   "description": "Powerful media downloader",
   "main": "dist/src/main.js",
@@ -17,6 +17,7 @@
     "build:mac": "tsc && pkg . --public -t node20-macos-x64 -o ./build/mac/streamyx",
     "build:mac:arm": "tsc && pkg . --public -t node20-macos-arm64 -o ./build/mac-arm/streamyx",
     "build:linux": "tsc && pkg . --public -t node20-linux-x64 -o ./build/linux/streamyx",
+    "test": "vitest --config ./vitest.config.ts",
     "lint": "eslint --ext .js,.ts .",
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\""
   },
@@ -44,7 +45,8 @@
     "eslint-plugin-prettier": "^5.1.3",
     "patch-package": "^8.0.0",
     "prettier": "^3.3.3",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.3",
+    "vitest": "^2.0.3"
   },
   "engines": {
     "node": ">=20"
@@ -52,9 +54,7 @@
   "pkg": {
     "assets": [
       "node_modules/vm2/**/*",
-      "node_modules/@ossiana/node-libcurl/**/*.node",
-      "node_modules/@ossiana/node-libcurl/**/*.dll",
-      "node_modules/@ossiana/node-libcurl/**/*.lib",
+      "node_modules/header-generator/data_files/*.*",
       "node_modules/puppeteer-core/**/*.*",
       "node_modules/puppeteer-extra-plugin-stealth/**/*.*"
     ],
