@@ -33,54 +33,6 @@ const USER_AGENTS = {
     'Mozilla/5.0 (Linux; U; Tizen 2.0; en-us) AppleWebKit/537.1 (KHTML, like Gecko) Mobile TizenBrowser/2.0',
 };
 
-const COMMON_HEADERS = {
-  Accept:
-    'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
-  'Accept-Encoding': 'gzip, deflate, br, zstd',
-  'Accept-Language': 'ru-RU,ru;q=0.9,en-NL;q=0.8,en-US;q=0.7,en;q=0.6,vi;q=0.5',
-  'Sec-Ch-Ua-Mobile': '?0',
-  'Upgrade-Insecure-Requests': '1',
-};
-
-const CHROME_MACOS_JA3 =
-  '771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49171-49172-156-157-47-53,11-0-43-35-18-13-65281-27-10-23-45-17513-16-65037-51-5,25497-29-23-24,0';
-const CHROME_LINUX_JA3 =
-  '771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49171-49172-156-157-47-53,65037-16-27-45-0-10-18-17513-35-65281-51-13-11-5-23-43,25497-29-23-24,0';
-const CHROME_WINDOWS_JA3 =
-  '771,4865-4866-4867-49195-49199-49196-49200-52393-52392-49171-49172-156-157-47-53,65037-10-17513-18-13-43-45-11-51-35-0-16-5-65281-27-23,25497-29-23-24,0';
-
-const CLIENTS = {
-  darwin: {
-    headers: {
-      ...COMMON_HEADERS,
-      'User-Agent': USER_AGENTS.chromeMacOS,
-      'Sec-Ch-Ua': '"Google Chrome";v="126", "Chromium";v="126", "Not.A/Brand";v="24"',
-      'Sec-Ch-Ua-Platform': '"macOS"',
-    },
-    fingerprint: CHROME_MACOS_JA3,
-  },
-  linux: {
-    headers: {
-      ...COMMON_HEADERS,
-      'User-Agent': USER_AGENTS.chromeLinux,
-      'Sec-Ch-Ua': '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
-      'Sec-Ch-Ua-Platform': '"Linux"',
-    },
-    fingerprint: CHROME_LINUX_JA3,
-  },
-  win32: {
-    headers: {
-      ...COMMON_HEADERS,
-      'User-Agent': USER_AGENTS.chromeWindows,
-      'Sec-Ch-Ua': '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
-      'Sec-Ch-Ua-Platform': '"Windows"',
-    },
-    fingerprint: CHROME_WINDOWS_JA3,
-  },
-};
-
-const CLIENT = CLIENTS[process.platform as 'darwin' | 'linux' | 'win32'];
-
 const parseUrlFromResource = (resource: string | URL | Request) =>
   resource instanceof Request
     ? new URL(resource.url)
@@ -181,7 +133,7 @@ class Http implements IHttp {
         followRedirect: !redirect || redirect === 'follow',
         proxyUrl: this.#proxy || undefined,
         ...options,
-        headers: { ...this.headers, ...options.headers, ...CLIENT.headers },
+        headers: { ...this.headers, ...options.headers },
         useHeaderGenerator: true,
         headerGeneratorOptions: { browsers: ['chrome'] },
         http2: true,
