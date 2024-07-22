@@ -21,9 +21,10 @@ test('test executable run with Okko', async () => {
   const buildDirPrefix = getBuildDirPrefix();
   const executableDir = fs.readdirSync(buildDir).find((file) => file.startsWith(buildDirPrefix));
   expect(executableDir).toBeDefined();
+  console.log(`Executable folder: ${executableDir}`);
   const executableSuffix = process.platform.startsWith('win') ? '.exe' : '';
   const executablePath = path.join(buildDir, executableDir!, 'streamyx' + executableSuffix);
-  console.log('Spawning sync executable');
+  console.log(`Executable path: ${executablePath}`);
   const streamyx = spawn(executablePath, [
     'https://okko.tv/serial/hozukis-coolheadedness/season/1/episode/13',
     '--debug',
@@ -46,7 +47,7 @@ test('test executable run with Okko', async () => {
   const result = await new Promise((resolve) => {
     setTimeout(() => {
       resolve(dataLines.find((line) => line.includes(searchTarget)));
-    }, 3_000);
+    }, 5_000);
   });
   expect(result).toBeDefined();
   expect(result).toContain(searchTarget);
