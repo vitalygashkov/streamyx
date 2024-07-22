@@ -32,7 +32,6 @@
     "@yao-pkg/pkg": "^5.12.0",
     "dasha": "file:packages/dasha",
     "esor": "file:packages/esor",
-    "wapter": "file:packages/wivenative",
     "wive": "file:packages/wive"
   },
   "devDependencies": {
