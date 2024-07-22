@@ -97,7 +97,7 @@ jobs:
 
   build-macos-x64:
     name: Build for macOS x64
-    runs-on: macos-latest-large
+    runs-on: macos-13
     steps:
       - name: Clone repository
         uses: actions/checkout@v4
