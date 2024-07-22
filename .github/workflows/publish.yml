@@ -35,6 +35,9 @@ jobs:
       - name: Build
         run: npm run build:win
 
+      - name: Test
+        run: npm run test
+
       - name: Compress
         run: powershell Compress-Archive build\win\streamyx.exe streamyx-x64-win.zip
 
@@ -79,6 +82,9 @@ jobs:
 
       - name: Build
         run: npm run build:mac:arm
+
+      - name: Test
+        run: npm run test
 
       - name: Compress
         run: zip -9 -j ${{ env.APP_NAME }}-arm64-mac.zip ./build/mac-arm/${{ env.APP_NAME }}
@@ -125,6 +131,9 @@ jobs:
       - name: Build
         run: npm run build:mac
 
+      - name: Test
+        run: npm run test
+
       - name: Compress
         run: zip -9 -j ${{ env.APP_NAME }}-x64-mac.zip ./build/mac/${{ env.APP_NAME }}
 
@@ -164,6 +173,9 @@ jobs:
 
       - name: Build
         run: npm run build:linux
+
+      - name: Test
+        run: npm run test
 
       - name: Compress
         run: zip -9 -j ${{ env.APP_NAME }}-x64-linux.zip ./build/linux/${{ env.APP_NAME }}
