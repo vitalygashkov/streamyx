@@ -1,6 +1,6 @@
 import path from 'node:path';
 import fs from 'node:fs';
-import { spawn } from 'node:child_process';
+import { spawn, exec } from 'node:child_process';
 import { test, expect } from 'vitest';
 
 const getBuildDirPrefix = () => {
@@ -25,23 +25,42 @@ test('test executable run with Okko', { timeout: 240_000 }, async () => {
   const executableSuffix = process.platform.startsWith('win') ? '.exe' : '';
   const executablePath = path.join(buildDir, executableDir!, 'streamyx' + executableSuffix);
   console.log(`Executable path: ${executablePath}`);
-  const streamyx = spawn(executablePath, [
+  const streamyxSpawn = spawn(executablePath, [
     'https://okko.tv/serial/hozukis-coolheadedness/season/1/episode/13',
     '--debug',
   ]);
+  const streamyxExec = exec(
+    executablePath + ' https://okko.tv/serial/hozukis-coolheadedness/season/1/episode/13 --debug',
+    (error, stdout, stderr) => {
+      if (error) {
+        console.error(`exec error: ${error}`);
+        return;
+      }
+      console.log(`stdout: ${stdout}`);
+      console.log(`stderr: ${stderr}`);
+    }
+  );
   const dataLines: string[] = [];
-  streamyx.stdout.on('data', (data: Buffer) => {
+  streamyxSpawn.stdout.on('data', (data: Buffer) => {
     if (!data) return;
     const dataStr = data.toString();
     dataLines.push(dataStr);
     console.log(dataStr);
   });
   const errorLines: string[] = [];
-  streamyx.stderr.on('error', (error: Buffer) => {
+  streamyxSpawn.stderr.on('error', (error: Buffer) => {
     if (!error) return;
     const errorStr = error.toString();
     errorLines.push(errorStr);
     console.log(errorStr);
+  });
+  streamyxExec.stdout?.on('data', (data) => {
+    console.log(`stdout: ${data}`);
+    dataLines.push(data.toString());
+  });
+  streamyxExec.stderr?.on('data', (data) => {
+    console.log(`stderr: ${data}`);
+    errorLines.push(data.toString());
   });
   const searchTarget = 'Open page https://okko.tv/tv and enter';
   const result = await new Promise((resolve) => {
@@ -51,5 +70,5 @@ test('test executable run with Okko', { timeout: 240_000 }, async () => {
   });
   expect(result).toBeDefined();
   expect(result).toContain(searchTarget);
-  streamyx.kill();
+  streamyxSpawn.kill();
 });
