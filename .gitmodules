@@ -2,9 +2,6 @@
 [submodule "packages/wive"]
 	path = packages/wive
 	url = https://github.com/vitalygashkov/wive
-[submodule "packages/wivenative"]
-	path = packages/wivenative
-	url = https://github.com/vitalygashkov/wivenative
 [submodule "packages/wiveproto"]
 	path = packages/wiveproto
 	url = https://github.com/vitalygashkov/wiveproto
