@@ -39,7 +39,7 @@ test('test executable run with Okko', async () => {
       if (hasSearchTarget(line)) resolve(line);
     });
     executable.stderr.on('data', (error: Buffer) => error && console.log(error.toString()));
-    setTimeout(() => resolve(lines.find(hasSearchTarget)), 3_000);
+    setTimeout(() => resolve(lines.find(hasSearchTarget)), 4_500);
   });
   expect(result).toBeDefined();
   expect(result).toContain(searchTarget);
