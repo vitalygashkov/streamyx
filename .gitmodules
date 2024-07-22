@@ -11,9 +11,6 @@
 [submodule "packages/dasha"]
 	path = packages/dasha
 	url = https://github.com/vitalygashkov/dasha.git
-[submodule "packages/plugin"]
-	path = packages/plugin
-	url = https://github.com/vitalygashkov/streamyx-plugin.git
 [submodule "packages/wink"]
 	path = packages/wink
 	url = https://github.com/vitalygashkov/streamyx-wink.git
