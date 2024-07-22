@@ -46,8 +46,9 @@ test('test executable run with Okko', async () => {
   const result = await new Promise((resolve) => {
     setTimeout(() => {
       resolve(dataLines.find((line) => line.includes(searchTarget)));
-    }, 2_000);
+    }, 3_000);
   });
+  expect(result).toBeDefined();
   expect(result).toContain(searchTarget);
   streamyx.kill();
 });
