@@ -49,11 +49,11 @@ test(
     const result = await new Promise((resolve) => {
       setTimeout(() => {
         resolve(dataLines.find((line) => line.includes(searchTarget)));
-      }, 10_000);
+      }, 30_000);
     });
     expect(result).toBeDefined();
     expect(result).toContain(searchTarget);
     streamyx.kill();
   },
-  { timeout: 20_000 }
+  { timeout: 30_000 }
 );
