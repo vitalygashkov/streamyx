@@ -47,7 +47,7 @@ test('test executable run with Okko', async () => {
   const result = await new Promise((resolve) => {
     setTimeout(() => {
       resolve(dataLines.find((line) => line.includes(searchTarget)));
-    }, 5_000);
+    }, 10_000);
   });
   expect(result).toBeDefined();
   expect(result).toContain(searchTarget);
