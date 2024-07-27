@@ -71,9 +71,7 @@ streamyx -q 720p https://wink.ru/movies/ofitsery-year-1971
 
 <div style="display: flex; gap: 4px; flex-wrap: wrap">
 <img src="https://images.kinorium.com/web/vod/vod_crunchyroll.svg?3" />
-<div style="display: flex; padding: 8px; width: fit-content; background-color: #444">
-<img src="https://yastatic.net/s3/kinopoisk-frontend/special-static-www/release-792/dist/branding/dist/static/images/logos/logo-kp-white.svg" height="16" style="border-radius: 3px;" />
-</div>
+<img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Kinopoisk_white_color_logo_with_black_background_%282021-present%29.svg" height="32" style="border-radius: 3px;" />
 <img src="https://images.kinorium.com/web/vod/vod_ivi.svg?3" />
 <img src="https://images.kinorium.com/web/vod/vod_okko.svg?3" />
 <img src="https://images.kinorium.com/web/vod/vod_wink.svg?3" />
