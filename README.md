@@ -74,7 +74,7 @@ Output: `/downloads/Офицеры.720p.WINK.WEB-DL.x264/Офицеры.720p.WIN
 <div style="display: flex; gap: 4px; flex-wrap: wrap">
 <img src="https://images.kinorium.com/web/vod/vod_crunchyroll.svg?3" />
 <div style="display: flex; padding: 8px; width: fit-content; background-color: #444">
-<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Kinopoisk_black_color_logo_%282021-present%29.svg/2560px-Kinopoisk_black_color_logo_%282021-present%29.svg.png" height="16" style="filter: invert(1); border-radius: 3px;" />
+<img src="https://yastatic.net/s3/kinopoisk-frontend/special-static-www/release-792/dist/branding/dist/static/images/logos/logo-kp-white.svg" height="16" style="border-radius: 3px;" />
 </div>
 <img src="https://images.kinorium.com/web/vod/vod_ivi.svg?3" />
 <img src="https://images.kinorium.com/web/vod/vod_okko.svg?3" />
