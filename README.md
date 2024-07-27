@@ -68,3 +68,16 @@ Output: `/downloads/Офицеры.720p.WINK.WEB-DL.x264/Офицеры.720p.WIN
 - **Templates** for movie and episode filenames
 - **Content keys** obtaining using PSSH and license URL
 - **Decryption** of MPEG-DASH stream with specified content key
+
+## Supported services
+
+<div style="display: flex; gap: 4px; flex-wrap: wrap">
+<img src="https://images.kinorium.com/web/vod/vod_crunchyroll.svg?3" />
+<div style="display: flex; padding: 8px; width: fit-content; background-color: #444">
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Kinopoisk_black_color_logo_%282021-present%29.svg/2560px-Kinopoisk_black_color_logo_%282021-present%29.svg.png" height="16" style="filter: invert(1); border-radius: 3px;" />
+</div>
+<img src="https://images.kinorium.com/web/vod/vod_ivi.svg?3" />
+<img src="https://images.kinorium.com/web/vod/vod_okko.svg?3" />
+<img src="https://images.kinorium.com/web/vod/vod_wink.svg?3" />
+<img src="https://images.kinorium.com/web/vod/vod_amediateka.svg?3" />
+</div>
