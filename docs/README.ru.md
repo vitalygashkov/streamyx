@@ -70,10 +70,22 @@ streamyx -q 720p https://wink.ru/movies/ofitsery-year-1971
 ## Поддерживаемые сервисы
 
 <div style="display: flex; gap: 4px; flex-wrap: wrap">
-<img src="https://images.kinorium.com/web/vod/vod_crunchyroll.svg?3" />
-<img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Kinopoisk_white_color_logo_with_black_background_%282021-present%29.svg" height="32" style="border-radius: 3px;" />
-<img src="https://images.kinorium.com/web/vod/vod_ivi.svg?3" />
-<img src="https://images.kinorium.com/web/vod/vod_okko.svg?3" />
-<img src="https://images.kinorium.com/web/vod/vod_wink.svg?3" />
-<img src="https://images.kinorium.com/web/vod/vod_amediateka.svg?3" />
+  <a href="https://www.crunchyroll.com/">
+    <img src="https://images.kinorium.com/web/vod/vod_crunchyroll.svg?3" />
+  </a>
+  <a href="https://hd.kinopoisk.ru/">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Kinopoisk_white_color_logo_with_black_background_%282021-present%29.svg" height="32" style="border-radius: 3px;" />
+  </a>
+  <a href="https://www.ivi.ru/">
+    <img src="https://images.kinorium.com/web/vod/vod_ivi.svg?3" />
+  </a>
+  <a href="https://okko.tv/">
+    <img src="https://images.kinorium.com/web/vod/vod_okko.svg?3" />
+  </a>
+  <a href="https://wink.ru/">
+    <img src="https://images.kinorium.com/web/vod/vod_wink.svg?3" />
+  </a>
+  <a href="https://www.amediateka.ru/">
+    <img src="https://images.kinorium.com/web/vod/vod_amediateka.svg?3" />
+  </a>
 </div>
