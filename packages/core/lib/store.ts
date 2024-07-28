@@ -13,9 +13,9 @@ export const createStore = (name: string) => {
     if (cookiesKey && data?.[cookiesKey]) http.setCookies(data[cookiesKey]);
     return data as T;
   };
-  const setState = async (data?: Record<string, any>) => {
+  const setState = async <T = Record<string, any>>(data?: T) => {
     Object.assign(state, data);
     await fs.writeJson(storePath, data || state);
   };
-  return { getState, setState };
+  return { state, getState, setState };
 };
