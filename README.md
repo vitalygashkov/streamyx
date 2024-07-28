@@ -90,4 +90,7 @@ Output: `/downloads/Офицеры.720p.WINK.WEB-DL.x264/Офицеры.720p.WIN
   <a href="https://www.amediateka.ru/">
     <img src="https://images.kinorium.com/web/vod/vod_amediateka.svg?3" />
   </a>
+  <a href="https://start.ru/">
+    <img src="https://images.kinorium.com/web/vod/vod_start.svg?3" />
+  </a>
 </div>

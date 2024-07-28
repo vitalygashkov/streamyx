@@ -88,4 +88,7 @@ streamyx -q 720p https://wink.ru/movies/ofitsery-year-1971
   <a href="https://www.amediateka.ru/">
     <img src="https://images.kinorium.com/web/vod/vod_amediateka.svg?3" />
   </a>
+  <a href="https://start.ru/">
+    <img src="https://images.kinorium.com/web/vod/vod_start.svg?3" />
+  </a>
 </div>
