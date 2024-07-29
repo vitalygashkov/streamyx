@@ -1,3 +1,3 @@
-import { PluginInstance, StreamyxInstance } from '@streamyx/core';
+import { PluginInstance, StreamyxCorerom '@streamyx/core';
 
-export declare const virtualroom: () => (streamyx: StreamyxInstance) => PluginInstance<null>;
+export declare const virtualroom: () => (core: StreStreamyxCoreginInstance<null>;

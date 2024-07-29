@@ -1,3 +1,3 @@
-import { PluginInstance, StreamyxInstance } from '@streamyx/core';
+import { PluginInstance, StreamyxCorerom '@streamyx/core';
 
-export declare const ntv: () => (streamyx: StreamyxInstance) => PluginInstance<null>;
+export declare const ntv: () => (core: StreStreamyxCoreginInstance<null>;
