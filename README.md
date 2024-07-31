@@ -18,7 +18,7 @@ Streamyx is a tool that allows you to download videos from streaming services fo
 
 ### Dependencies
 
-**Device private keys** are required for DRM-protected content and also should be placed in `files` folder.
+Custom **Widevine client** data are required for DRM-protected content. Usually it is two files - `device_client_id_blob` and `device_private_key`. They should be placed in `files` folder next to the executable file.
 
 ### Install
 
