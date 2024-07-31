@@ -7,6 +7,8 @@
 
 Streamyx - программа для скачивания контента со стриминговых сервисов для последующего оффлайн просмотра.
 
+[Присоединяйтесь к сообществу в Discord (EN)](https://discord.gg/jkxq3VT7) • [Присоединяйтесь к сообществу в Telegram (RU)](https://t.me/streamyx_ru)
+
 <div align="left">
   <a href="https://github.com/vitalygashkov/streamyx/tree/main/README.md">English</a> •
   <span>Русский</span>

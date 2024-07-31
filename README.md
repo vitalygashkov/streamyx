@@ -7,6 +7,8 @@
 
 Streamyx is a tool that allows you to download videos from streaming services for offline-viewing.
 
+[Join Discord community (EN)](https://discord.gg/jkxq3VT7) • [Join Telegram community (RU)](https://t.me/streamyx_ru)
+
 <div align="left">
   <span>English</span> •
   <a href="https://github.com/vitalygashkov/streamyx/tree/main/docs/README.ru.md">Pусский</a>
