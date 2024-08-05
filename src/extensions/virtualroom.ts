@@ -1,4 +1,4 @@
-import { PluginInstance, StreamyxCore } from '@streamyx/core';
+import type { PluginInstance, StreamyxCore } from '@streamyx/core';
 
 export const virtualroom =
   () =>

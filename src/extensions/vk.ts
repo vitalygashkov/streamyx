@@ -1,4 +1,4 @@
-import { MediaInfo, PluginInstance, StreamyxCore, RunArgs } from '@streamyx/core';
+import type { MediaInfo, PluginInstance, StreamyxCore, RunArgs } from '@streamyx/core';
 
 export const vk =
   () =>
