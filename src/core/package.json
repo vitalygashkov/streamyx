@@ -1,6 +1,6 @@
 {
   "name": "@streamyx/core",
-  "version": "0.4.0",
+  "version": "1.0.0",
   "author": "Vitaly Gashkov <vitalygashkov@vk.com>",
   "description": "Core modules for Streamyx",
   "license": "AGPL-3.0",
@@ -13,18 +13,18 @@
   "dependencies": {
     "dasha": "^3.0.3",
     "got-scraping": "^3.2.15",
-    "koffi": "^2.8.11",
+    "koffi": "^2.9.0",
     "ora-classic": "^5.4.2",
-    "pino": "^9.2.0",
-    "pino-pretty": "^11.2.1",
-    "puppeteer-core": "^22.12.1",
+    "pino": "^9.3.2",
+    "pino-pretty": "^11.2.2",
+    "puppeteer-core": "^22.15.0",
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
-    "undici": "^6.19.2"
+    "undici": "^6.19.5"
   },
   "devDependencies": {
-    "@types/node": "^20.14.9",
-    "typescript": "^5.5.2",
-    "vitest": "^1.6.0"
+    "@types/node": "^22.1.0",
+    "typescript": "^5.5.4",
+    "vitest": "^2.0.5"
   }
 }
