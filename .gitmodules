@@ -2,9 +2,6 @@
 [submodule "packages/wive"]
 	path = packages/wive
 	url = https://github.com/vitalygashkov/wive
-[submodule "packages/wiveproto"]
-	path = packages/wiveproto
-	url = https://github.com/vitalygashkov/wiveproto
 [submodule "packages/dasha"]
 	path = packages/dasha
 	url = https://github.com/vitalygashkov/dasha.git
