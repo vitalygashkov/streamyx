@@ -23,3 +23,6 @@
 [submodule "packages/ivi"]
 	path = packages/ivi
 	url = https://github.com/vitalygashkov/streamyx-ivi.git
+[submodule "src/app"]
+	path = src/app
+	url = https://github.com/vitalygashkov/streamyx-sources.git

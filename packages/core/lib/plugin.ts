@@ -37,7 +37,7 @@ export interface StreamyxCore {
  */
 export type StreamyxInstance = StreamyxCore;
 
-export type Plugin<T = unknown> = (streamyx: StreamyxInstance) => PluginInstance;
+export type Plugin<T = unknown> = (streamyx: StreamyxCore) => PluginInstance<T>;
 
 export interface PluginInstance<T = unknown> {
   /**

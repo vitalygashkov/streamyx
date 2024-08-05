@@ -3,9 +3,9 @@
   "version": "4.0.0-beta.54",
   "author": "Vitaly Gashkov <vitalygashkov@vk.com>",
   "description": "Powerful media downloader",
-  "main": "dist/src/main.js",
+  "main": "dist/src/app/main.js",
   "bin": {
-    "streamyx": "dist/src/main.js"
+    "streamyx": "dist/src/app/main.js"
   },
   "scripts": {
     "prepare": "tsc",
