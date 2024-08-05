@@ -2,9 +2,9 @@ import type { PluginInstance, StreamyxCore } from '@streamyx/core';
 
 export const ntv =
   () =>
-  (core: StreamyxCore): PluginInstance => {
-    const checkUrl = (url: string) => new URL(url).host.includes('ntv');
-    const fetchMediaInfo = async (url: string) => {
+  (core: StreamyxCore): PluginInstance => ({
+    name: 'ntv',
+    fetchMediaInfo: async (url: string) => {
       const mediaInfoList = [];
       const pageResponse = await core.http.fetch(url);
       const pageBody = await pageResponse.text();
@@ -35,12 +35,5 @@ export const ntv =
       mediaInfoList.push(mediaInfo);
 
       return mediaInfoList;
-    };
-
-    return {
-      name: 'ntv',
-      api: null,
-      checkUrl,
-      fetchMediaInfo,
-    };
-  };
+    },
+  });

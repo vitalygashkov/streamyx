@@ -2,10 +2,9 @@ import type { PluginInstance, StreamyxCore } from '@streamyx/core';
 
 export const virtualroom =
   () =>
-  (core: StreamyxCore): PluginInstance => {
-    const checkUrl = (url: string) => new URL(url).host.includes('virtualroom');
-
-    const fetchMediaInfo = async (url: string) => {
+  (core: StreamyxCore): PluginInstance => ({
+    name: 'virtualroom',
+    fetchMediaInfo: async (url) => {
       const recordId = new URL(url).searchParams.get('recordId');
 
       const infoUrl = `https://mv1.virtualroom.ru/vr/player/records/${recordId}/info`;
@@ -27,12 +26,5 @@ export const virtualroom =
         mediaInfoList.push(mediaInfo);
       }
       return mediaInfoList;
-    };
-
-    return {
-      name: 'virtualroom',
-      api: null,
-      checkUrl,
-      fetchMediaInfo,
-    };
-  };
+    },
+  });

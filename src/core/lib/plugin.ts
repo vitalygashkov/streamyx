@@ -32,11 +32,6 @@ export interface StreamyxCore {
   store: ReturnType<typeof createStore>;
 }
 
-/**
- * @deprecated Use `StreamyxCore` instead
- */
-export type StreamyxInstance = StreamyxCore;
-
 export type Plugin<T = unknown> = (streamyx: StreamyxCore) => PluginInstance<T>;
 
 export interface PluginInstance<T = unknown> {
@@ -58,21 +53,14 @@ export interface PluginInstance<T = unknown> {
   /**
    * Substring pattern to match URL host handled by this plugin
    */
-  pattern?: string;
+  match?: string;
 
-  api: T;
+  api?: T;
 
   /**
    * Performs initialization of the plugin (e.g. loading auth data from storage or token refresh)
    */
   init?: () => void | Promise<void>;
-
-  /**
-   * Checks if this plugin can handle the specified URL
-   *
-   * @deprecated Use `pattern` instead
-   */
-  checkUrl: (url: string) => boolean;
 
   /**
    * Fetches media info list from the specified URL
