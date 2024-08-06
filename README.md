@@ -23,12 +23,10 @@ Streamyx is a tool that allows you to download videos for offline-viewing.
 
 ## Installation
 
+Download build from [latest release](https://github.com/vitalygashkov/streamyx/releases/latest) (for Windows: `streamyx-win-x64.zip`) and unzip.
+
 > [!NOTE]  
 > Custom **Widevine client** data are required for DRM-protected content. Usually it is two files - `device_client_id_blob` and `device_private_key`. They should be placed in `files` folder next to the executable file.
-
-### Install
-
-Download build from [latest release](https://github.com/vitalygashkov/streamyx/releases/latest) (for Windows: `streamyx-win-x64.zip`) and unzip.
 
 ## Getting Started
 
