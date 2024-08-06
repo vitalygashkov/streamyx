@@ -45,19 +45,14 @@ streamyx [OPTIONS] URL [URL...]
 ### Скачивание видео
 
 ```shell
-streamyx -q 720p https://wink.ru/movies/ofitsery-year-1971
-2023-07-11 21:24:07 INFO   Офицеры
-2023-07-11 21:24:07 INFO   VIDEO ∙ 1280x720 ∙ 2160 Kbps ∙ 2024 MiB
-2023-07-11 21:24:07 INFO   ██████████████████████████████████████████████████ 100%
-2023-07-11 21:26:57 INFO   AUDIO ∙ 48 kHz ∙ 320 Kbps ∙ 300 MiB
-2023-07-11 21:26:57 INFO   ██████████████████████████████████████████████████ 100%
-2023-07-11 21:27:26 INFO   Starting decryption
-2023-07-11 21:27:36 INFO   Decrypted successfully
-2023-07-11 21:27:36 INFO   Muxing
-2023-07-11 21:27:42 INFO   Muxed successfully
+streamyx https://vk.com/video-21665793_456241344
+22:42:00.012 INFO : Fetching metadata...
+22:42:00.655 INFO : Fetching metadata finished
+22:42:00.656 INFO : Смешарики. День учителя Смешарики
+17:42:00.696 INFO : ✔ Смешарики.День.учителя.Смешарики.VK.WEB-DL.x264 ∙ VIDEO
 ```
 
-Результат: `/downloads/Офицеры.720p.WINK.WEB-DL.x264/Офицеры.720p.WINK.WEB-DL.x264.mkv`
+Результат: `/downloads/Смешарики.День.учителя.Смешарики.VK.WEB-DL.x264/Смешарики.День.учителя.Смешарики.VK.WEB-DL.x264.mp4`
 
 ## Особенности
 
