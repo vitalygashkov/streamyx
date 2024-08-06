@@ -6,12 +6,12 @@ export const rutube = () => (core: StreamyxCore) => {
     fetchMediaInfo: async (url: string) => {
       const mediaInfoList: MediaInfo[] = [];
       const patterns = [
-        '/video/:id',
-        '/play/embed/:id',
-        '/shorts/:id',
-        '/yappy/:yappyId',
-        '/video/private/:id?p=:key',
-        '/video/private/:id',
+        '/video/:id{/}?',
+        '/play/embed/:id{/}?',
+        '/shorts/:id{/}?',
+        '/yappy/:yappyId{/}?',
+        '/video/private/:id{/}??p=:key',
+        '/video/private/:id{/}?',
       ];
 
       const params: Record<'yappyId' | 'id' | 'key', string | undefined> = {
