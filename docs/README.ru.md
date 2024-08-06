@@ -1,13 +1,19 @@
-# Streamyx
+<p align="center">
+  <h1 align="center">Streamyx</h1>
+</p>
 
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/vitalygashkov/streamyx/publish.yml?branch=main&logo=github&style=flat&color=grey)
-![GitHub Release](https://img.shields.io/github/v/release/vitalygashkov/streamyx?style=flat&color=grey)
-![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/vitalygashkov/streamyx/latest/total?style=flat&color=grey)
-![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/vitalygashkov/streamyx/total?style=flat&color=grey)
+<p align="center">
+  <a aria-label="Join Discord community" href="https://discord.gg/fHMgAgc7gU">
+    <img alt="" src="https://img.shields.io/badge/Discord-server-black?style=flat&logo=Discord&logoColor=white">
+  </a>
+  <a aria-label="Join Telegram community" href="https://t.me/streamyxtalks">
+    <img alt="" src="https://img.shields.io/badge/Telegram-chat-black?style=flat&logo=Telegram&logoColor=white">
+  </a>
+  <img alt="" src="https://img.shields.io/github/downloads/vitalygashkov/streamyx/latest/total?style=flat&color=black">
+  <img alt="" src="https://img.shields.io/github/downloads/vitalygashkov/streamyx/total?style=flat&color=black">
+</p>
 
-Streamyx - программа для скачивания контента со стриминговых сервисов для последующего оффлайн просмотра.
-
-[Присоединяйтесь к сообществу в Discord (EN)](https://discord.gg/jkxq3VT7) • [Присоединяйтесь к сообществу в Telegram (RU)](https://t.me/streamyx_ru)
+Streamyx - программа для скачивания видео для последующего оффлайн просмотра.
 
 <div align="left">
   <a href="https://github.com/vitalygashkov/streamyx/tree/main/README.md">English</a> •
@@ -16,21 +22,10 @@ Streamyx - программа для скачивания контента со 
 
 ## Установка
 
-### Зависимости
+Скачайте сборку из [последнего релиза](https://github.com/vitalygashkov/streamyx/releases/latest) (для Windows: `streamyx-win-x64.zip`) и разархивируйте.
 
-Данные пользовательского **клиента Widevine** необходимы для скачивания защищенного контента. Обычно это два файла - `device_client_id_blob` и `device_private_key`. Их следует поместить в папку `files` рядом с запускаемой утилитой.
-
-### Скачивание
-
-Скачайте сборку из [последнего релиза](https://github.com/vitalygashkov/streamyx/releases/latest) (для Windows: `streamyx-win-x64.zip`), разархивируйте и создайте папку `files` с необходимыми файлами рядом с разархивированным исполняемым файлом.
-
-Пример итоговой структуры файлов и папок для Windows:
-
-```
-/streamyx.exe
-/files/device_client_id_blob
-/files/device_private_key
-```
+> [!NOTE]  
+> Для скачивания защищенного контента необходимы данные пользовательского **клиента Widevine**. Обычно это два файла - `device_client_id_blob` и `device_private_key`. Их следует поместить в папку `files` рядом с запускаемой утилитой.
 
 ## Запуск
 
@@ -45,23 +40,18 @@ streamyx [OPTIONS] URL [URL...]
 ### Скачивание видео
 
 ```shell
-streamyx -q 720p https://wink.ru/movies/ofitsery-year-1971
-2023-07-11 21:24:07 INFO   Офицеры
-2023-07-11 21:24:07 INFO   VIDEO ∙ 1280x720 ∙ 2160 Kbps ∙ 2024 MiB
-2023-07-11 21:24:07 INFO   ██████████████████████████████████████████████████ 100%
-2023-07-11 21:26:57 INFO   AUDIO ∙ 48 kHz ∙ 320 Kbps ∙ 300 MiB
-2023-07-11 21:26:57 INFO   ██████████████████████████████████████████████████ 100%
-2023-07-11 21:27:26 INFO   Starting decryption
-2023-07-11 21:27:36 INFO   Decrypted successfully
-2023-07-11 21:27:36 INFO   Muxing
-2023-07-11 21:27:42 INFO   Muxed successfully
+streamyx https://vk.com/video-21665793_456241344
+22:42:00.012 INFO : Fetching metadata...
+22:42:00.655 INFO : Fetching metadata finished
+22:42:00.656 INFO : Смешарики. День учителя Смешарики
+17:42:00.696 INFO : ✔ Смешарики.День.учителя.Смешарики.VK.WEB-DL.x264 ∙ VIDEO
 ```
 
-Результат: `/downloads/Офицеры.720p.WINK.WEB-DL.x264/Офицеры.720p.WINK.WEB-DL.x264.mkv`
+Результат: `/downloads/Смешарики.День.учителя.Смешарики.VK.WEB-DL.x264/Смешарики.День.учителя.Смешарики.VK.WEB-DL.x264.mp4`
 
 ## Особенности
 
-- **Поддержка нескольких медиаформатов**: прогрессивный, MPEG-DASH, HLS (скоро)
+- **Поддержка нескольких медиаформатов**: прогрессивный, MPEG-DASH, HLS
 - **Параллелизм**: несколько одновременных соединений для более быстрой закачки
 - **Повторное выполнение** запросов в случае неудачи во время скачивания
 - Поддержка **HTTP2**
