@@ -3,29 +3,64 @@ import { logger } from './logger';
 import { IHttp } from './http';
 import { IPrompt } from './prompt';
 import fs from './fs';
+import { createStore } from './store';
 
-export interface StreamyxInstance {
+export interface StreamyxCore {
+  /**
+   * Basic logger
+   */
   log: typeof logger;
+
+  /**
+   * Common file system utilities
+   */
   fs: typeof fs;
+
+  /**
+   * Basic HTTP client
+   */
   http: IHttp;
+
+  /**
+   * Prompt for user input (e.g. login/password)
+   */
   prompt: IPrompt;
+
+  /**
+   * Store for persistent data (e.g. cookies, tokens, etc.)
+   */
+  store: ReturnType<typeof createStore>;
 }
 
-export type Plugin<T = unknown> = (streamyx: StreamyxInstance) => PluginInstance;
+export type Plugin<T = unknown> = (streamyx: StreamyxCore) => PluginInstance<T>;
 
 export interface PluginInstance<T = unknown> {
+  /**
+   * Streaming service name (e.g. Netflix, Prime Video, Apple TV+, etc.)
+   */
   name: string;
-  api: T;
+
+  /**
+   * Short tag (e.g. NF, AMZN, ATVP, etc.)
+   */
+  tag?: string;
+
+  /**
+   * Logo icon URL
+   */
+  icon?: string;
+
+  /**
+   * Substring pattern to match URL host handled by this plugin
+   */
+  match?: string;
+
+  api?: T;
 
   /**
    * Performs initialization of the plugin (e.g. loading auth data from storage or token refresh)
    */
-  init?: () => Promise<void>;
-
-  /**
-   * Checks if this plugin can handle the specified URL
-   */
-  checkUrl: (url: string) => boolean;
+  init?: () => void | Promise<void>;
 
   /**
    * Fetches media info list from the specified URL
@@ -35,7 +70,7 @@ export interface PluginInstance<T = unknown> {
 
 export interface MediaInfo {
   url: string;
-  provider: string;
+  provider?: string;
   movie?: { title: string };
   show?: { title: string };
   season?: { number: number };

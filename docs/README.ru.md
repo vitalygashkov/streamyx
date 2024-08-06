@@ -7,6 +7,8 @@
 
 Streamyx - программа для скачивания контента со стриминговых сервисов для последующего оффлайн просмотра.
 
+[Присоединяйтесь к сообществу в Discord (EN)](https://discord.gg/jkxq3VT7) • [Присоединяйтесь к сообществу в Telegram (RU)](https://t.me/streamyx_ru)
+
 <div align="left">
   <a href="https://github.com/vitalygashkov/streamyx/tree/main/README.md">English</a> •
   <span>Русский</span>
@@ -16,7 +18,7 @@ Streamyx - программа для скачивания контента со 
 
 ### Зависимости
 
-**Приватные ключи устройства** необходимы для DRM-защищенного контента. Их следует поместить в папку `files` рядом с запускаемой утилитой.
+Данные пользовательского **клиента Widevine** необходимы для скачивания защищенного контента. Обычно это два файла - `device_client_id_blob` и `device_private_key`. Их следует поместить в папку `files` рядом с запускаемой утилитой.
 
 ### Скачивание
 
@@ -64,17 +66,4 @@ streamyx -q 720p https://wink.ru/movies/ofitsery-year-1971
 - **Повторное выполнение** запросов в случае неудачи во время скачивания
 - Поддержка **HTTP2**
 - **Шаблоны** названий файлов для фильмов и эпизодов
-- **Получение ключей контента** с помощью PSSH и URL сервера лицензий
 - **Дешифрование** MPEG-DASH потока с указанным ключом контента
-
-## Поддерживаемые сервисы
-
-<div style="display: flex; gap: 4px; flex-wrap: wrap">
-  <a href="https://www.crunchyroll.com/"><img src="https://images.kinorium.com/web/vod/vod_crunchyroll.svg?3" /></a>
-  <a href="https://hd.kinopoisk.ru/"><img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Kinopoisk_white_color_logo_with_black_background_%282021-present%29.svg" height="32" style="border-radius: 3px;" /></a>
-  <a href="https://www.ivi.ru/"><img src="https://images.kinorium.com/web/vod/vod_ivi.svg?3" /></a>
-  <a href="https://okko.tv/"><img src="https://images.kinorium.com/web/vod/vod_okko.svg?3" /></a>
-  <a href="https://wink.ru/"><img src="https://images.kinorium.com/web/vod/vod_wink.svg?3" /></a>
-  <a href="https://www.amediateka.ru/"><img src="https://images.kinorium.com/web/vod/vod_amediateka.svg?3" /></a>
-  <a href="https://start.ru/"><img src="https://images.kinorium.com/web/vod/vod_start.svg?3" /></a>
-</div>

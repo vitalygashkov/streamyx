@@ -7,6 +7,8 @@
 
 Streamyx is a tool that allows you to download videos from streaming services for offline-viewing.
 
+[Join Discord community (EN)](https://discord.gg/jkxq3VT7) • [Join Telegram community (RU)](https://t.me/streamyx_ru)
+
 <div align="left">
   <span>English</span> •
   <a href="https://github.com/vitalygashkov/streamyx/tree/main/docs/README.ru.md">Pусский</a>
@@ -16,7 +18,7 @@ Streamyx is a tool that allows you to download videos from streaming services fo
 
 ### Dependencies
 
-**Device private keys** are required for DRM-protected content and also should be placed in `files` folder.
+Custom **Widevine client** data are required for DRM-protected content. Usually it is two files - `device_client_id_blob` and `device_private_key`. They should be placed in `files` folder next to the executable file.
 
 ### Install
 
@@ -66,17 +68,4 @@ Output: `/downloads/Офицеры.720p.WINK.WEB-DL.x264/Офицеры.720p.WIN
 - **Retry** in case of request failure during download
 - **HTTP2** support
 - **Templates** for movie and episode filenames
-- **Content keys** obtaining using PSSH and license URL
 - **Decryption** of MPEG-DASH stream with specified content key
-
-## Supported services
-
-<div style="display: flex; gap: 4px; flex-wrap: wrap">
-  <a href="https://www.crunchyroll.com/"><img src="https://images.kinorium.com/web/vod/vod_crunchyroll.svg?3" /></a>
-  <a href="https://hd.kinopoisk.ru/"><img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Kinopoisk_white_color_logo_with_black_background_%282021-present%29.svg" height="32" style="border-radius: 3px;" /></a>
-  <a href="https://www.ivi.ru/"><img src="https://images.kinorium.com/web/vod/vod_ivi.svg?3" /></a>
-  <a href="https://okko.tv/"><img src="https://images.kinorium.com/web/vod/vod_okko.svg?3" /></a>
-  <a href="https://wink.ru/"><img src="https://images.kinorium.com/web/vod/vod_wink.svg?3" /></a>
-  <a href="https://www.amediateka.ru/"><img src="https://images.kinorium.com/web/vod/vod_amediateka.svg?3" /></a>
-  <a href="https://start.ru/"><img src="https://images.kinorium.com/web/vod/vod_start.svg?3" /></a>
-</div>
