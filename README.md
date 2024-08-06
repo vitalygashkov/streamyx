@@ -1,13 +1,20 @@
-# Streamyx
+<p align="center">
+  <h1 align="center">Streamyx</h1>
+</p>
 
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/vitalygashkov/streamyx/publish.yml?branch=main&logo=github&style=flat&color=grey)
-![GitHub Release](https://img.shields.io/github/v/release/vitalygashkov/streamyx?style=flat&color=grey)
-![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/vitalygashkov/streamyx/latest/total?style=flat&color=grey)
-![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/vitalygashkov/streamyx/total?style=flat&color=grey)
+<p align="center">
+  <a aria-label="Join Discord community" href="https://discord.gg/fHMgAgc7gU">
+    <img alt="" src="https://img.shields.io/badge/Discord-server-black?style=flat&logo=Discord&logoColor=white">
+  </a>
+  <a aria-label="Join Telegram community" href="https://t.me/streamyxtalks">
+    <img alt="" src="https://img.shields.io/badge/Telegram-chat-black?style=flat&logo=Telegram&logoColor=white">
+  </a>
+  <img alt="" src="https://img.shields.io/github/v/release/vitalygashkov/streamyx?style=flat&color=black">
+  <img alt="" src="https://img.shields.io/github/downloads/vitalygashkov/streamyx/latest/total?style=flat&color=black">
+  <img alt="" src="https://img.shields.io/github/downloads/vitalygashkov/streamyx/total?style=flat&color=black">
+</p>
 
-Streamyx is a tool that allows you to download videos from streaming services for offline-viewing.
-
-[Join Discord community (EN)](https://discord.gg/jkxq3VT7) • [Join Telegram community (RU)](https://t.me/streamyx_ru)
+Streamyx is a tool that allows you to download videos for offline-viewing.
 
 <div align="left">
   <span>English</span> •

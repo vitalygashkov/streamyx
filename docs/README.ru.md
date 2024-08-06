@@ -1,13 +1,20 @@
-# Streamyx
+<p align="center">
+  <h1 align="center">Streamyx</h1>
+</p>
 
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/vitalygashkov/streamyx/publish.yml?branch=main&logo=github&style=flat&color=grey)
-![GitHub Release](https://img.shields.io/github/v/release/vitalygashkov/streamyx?style=flat&color=grey)
-![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/vitalygashkov/streamyx/latest/total?style=flat&color=grey)
-![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/vitalygashkov/streamyx/total?style=flat&color=grey)
+<p align="center">
+  <a aria-label="Join Discord community" href="https://discord.gg/fHMgAgc7gU">
+    <img alt="" src="https://img.shields.io/badge/Discord-server-black?style=flat&logo=Discord&logoColor=white">
+  </a>
+  <a aria-label="Join Telegram community" href="https://t.me/streamyxtalks">
+    <img alt="" src="https://img.shields.io/badge/Telegram-chat-black?style=flat&logo=Telegram&logoColor=white">
+  </a>
+  <img alt="" src="https://img.shields.io/github/v/release/vitalygashkov/streamyx?style=flat&color=black">
+  <img alt="" src="https://img.shields.io/github/downloads/vitalygashkov/streamyx/latest/total?style=flat&color=black">
+  <img alt="" src="https://img.shields.io/github/downloads/vitalygashkov/streamyx/total?style=flat&color=black">
+</p>
 
-Streamyx - программа для скачивания контента со стриминговых сервисов для последующего оффлайн просмотра.
-
-[Присоединяйтесь к сообществу в Discord (EN)](https://discord.gg/jkxq3VT7) • [Присоединяйтесь к сообществу в Telegram (RU)](https://t.me/streamyx_ru)
+Streamyx - программа для скачивания видео для последующего оффлайн просмотра.
 
 <div align="left">
   <a href="https://github.com/vitalygashkov/streamyx/tree/main/README.md">English</a> •
