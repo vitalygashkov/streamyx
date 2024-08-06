@@ -10,7 +10,7 @@ export const rutube = () => (core: StreamyxCore) => {
         '/play/embed/:id{/}?',
         '/shorts/:id{/}?',
         '/yappy/:yappyId{/}?',
-        '/video/private/:id{/}??p=:key',
+        '/video/private/:id{/}??p=:key{/}?',
         '/video/private/:id{/}?',
       ];
 
@@ -20,7 +20,7 @@ export const rutube = () => (core: StreamyxCore) => {
         key: '',
       };
       for (const path of patterns) {
-        const pattern = new URLPattern({ pathname: path });
+        const pattern = new URLPattern(path, 'https://rutube.ru');
         const patternResult = pattern.exec(url);
         if (patternResult) {
           Object.assign(params, patternResult.pathname.groups);
