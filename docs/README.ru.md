@@ -9,7 +9,6 @@
   <a aria-label="Join Telegram community" href="https://t.me/streamyxtalks">
     <img alt="" src="https://img.shields.io/badge/Telegram-chat-black?style=flat&logo=Telegram&logoColor=white">
   </a>
-  <img alt="" src="https://img.shields.io/github/v/release/vitalygashkov/streamyx?style=flat&color=black">
   <img alt="" src="https://img.shields.io/github/downloads/vitalygashkov/streamyx/latest/total?style=flat&color=black">
   <img alt="" src="https://img.shields.io/github/downloads/vitalygashkov/streamyx/total?style=flat&color=black">
 </p>
@@ -52,7 +51,7 @@ streamyx https://vk.com/video-21665793_456241344
 
 ## Особенности
 
-- **Поддержка нескольких медиаформатов**: прогрессивный, MPEG-DASH, HLS (скоро)
+- **Поддержка нескольких медиаформатов**: прогрессивный, MPEG-DASH, HLS
 - **Параллелизм**: несколько одновременных соединений для более быстрой закачки
 - **Повторное выполнение** запросов в случае неудачи во время скачивания
 - Поддержка **HTTP2**

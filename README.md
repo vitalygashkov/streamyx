@@ -9,7 +9,6 @@
   <a aria-label="Join Telegram community" href="https://t.me/streamyxtalks">
     <img alt="" src="https://img.shields.io/badge/Telegram-chat-black?style=flat&logo=Telegram&logoColor=white">
   </a>
-  <img alt="" src="https://img.shields.io/github/v/release/vitalygashkov/streamyx?style=flat&color=black">
   <img alt="" src="https://img.shields.io/github/downloads/vitalygashkov/streamyx/latest/total?style=flat&color=black">
   <img alt="" src="https://img.shields.io/github/downloads/vitalygashkov/streamyx/total?style=flat&color=black">
 </p>
@@ -68,7 +67,7 @@ Output: `/downloads/Tsurune.S01.JA.1080p.CR.WEB-DL.x264/Tsurune.S01.E01.The.Youn
 
 ## Features
 
-- **Multiple media formats** support: progressive, MPEG-DASH, HLS (soon)
+- **Multiple media formats** support: progressive, MPEG-DASH, HLS
 - **Concurrency**: multiple simultaneous connections for faster downloads
 - **Retry** in case of request failure during download
 - **HTTP2** support
