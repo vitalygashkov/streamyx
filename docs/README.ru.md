@@ -25,19 +25,12 @@ Streamyx - программа для скачивания видео для по
 
 ### Зависимости
 
-Данные пользовательского **клиента Widevine** необходимы для скачивания защищенного контента. Обычно это два файла - `device_client_id_blob` и `device_private_key`. Их следует поместить в папку `files` рядом с запускаемой утилитой.
+> [!NOTE]  
+> Для скачивания защищенного контента необходимы данные пользовательского **клиента Widevine**. Обычно это два файла - `device_client_id_blob` и `device_private_key`. Их следует поместить в папку `files` рядом с запускаемой утилитой.
 
 ### Скачивание
 
-Скачайте сборку из [последнего релиза](https://github.com/vitalygashkov/streamyx/releases/latest) (для Windows: `streamyx-win-x64.zip`), разархивируйте и создайте папку `files` с необходимыми файлами рядом с разархивированным исполняемым файлом.
-
-Пример итоговой структуры файлов и папок для Windows:
-
-```
-/streamyx.exe
-/files/device_client_id_blob
-/files/device_private_key
-```
+Скачайте сборку из [последнего релиза](https://github.com/vitalygashkov/streamyx/releases/latest) (для Windows: `streamyx-win-x64.zip`) и разархивируйте.
 
 ## Запуск
 
