@@ -140,17 +140,24 @@ class Http implements IHttp {
       });
       const status = response.statusCode;
       const headers = response.headers;
-      const isSuccess = status >= 200 && status <= 299;
+      const isRedirect = status >= 300 && status <= 399;
+      const isSuccess = (status >= 200 && status <= 299) || isRedirect;
       if (!isSuccess && this.#hasAttempts(resource)) {
         await this.#nextRetry(resource);
         logger.debug(response.body);
         logger.debug(response.statusCode);
         return this.fetchAsChrome(resource, { redirect, ...options });
       }
+      const newHeaders = new Headers();
+      for (const [key, value] of Object.entries(headers)) {
+        if (!value || typeof value !== 'string') continue;
+        newHeaders.append(key, value);
+      }
+      for (const cookie of headers['set-cookie'] || []) newHeaders.append('set-cookie', cookie);
       this.appendCookies(response.headers['set-cookie'] || '');
       delete response.headers['set-cookie'];
       return new Response(response.body, {
-        headers: headers as Record<string, string>,
+        headers: newHeaders,
         status: status,
       });
     } catch (e) {
