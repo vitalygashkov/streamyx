@@ -1,6 +1,6 @@
-import type { StreamyxCore } from '@streamyx/core';
+import { defineService } from '@streamyx/core';
 
-export const virtualroom = () => (core: StreamyxCore) => ({
+export default defineService(() => (core) => ({
   name: 'virtualroom',
   fetchMediaInfo: async (url: string) => {
     const recordId = new URL(url).searchParams.get('recordId');
@@ -25,4 +25,4 @@ export const virtualroom = () => (core: StreamyxCore) => ({
     }
     return mediaInfoList;
   },
-});
+}));

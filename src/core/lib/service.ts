@@ -41,8 +41,6 @@ export interface StreamyxCore {
   };
 }
 
-export type Plugin<T = unknown> = (streamyx: StreamyxCore) => PluginInstance<T>;
-
 export interface PluginInstance<T = unknown> {
   /**
    * Streaming service name (e.g. Netflix, Prime Video, Apple TV+, etc.)
@@ -76,6 +74,16 @@ export interface PluginInstance<T = unknown> {
    */
   fetchMediaInfo: (url: string, args: RunArgs) => Promise<MediaInfo[]>;
 }
+
+export type Plugin<T = unknown> = (streamyx: StreamyxCore) => PluginInstance<T>;
+
+export type ServiceInstance<T> = PluginInstance<T>;
+
+export const defineService = <T = undefined, K = undefined>(
+  service: (options: T) => (core: StreamyxCore) => ServiceInstance<K>
+) => {
+  return service;
+};
 
 export interface MediaInfo {
   url: string;

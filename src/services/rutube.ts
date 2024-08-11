@@ -1,10 +1,9 @@
-import { MediaInfo, StreamyxCore } from '@streamyx/core';
+import { defineService, MediaInfo } from '@streamyx/core';
 
-export const rutube = () => (core: StreamyxCore) => {
+export default defineService(() => (core) => {
   return {
     name: 'rutube',
     fetchMediaInfo: async (url: string) => {
-      const mediaInfoList: MediaInfo[] = [];
       const patterns = [
         '/video/:id{/}?',
         '/play/embed/:id{/}?',
@@ -28,6 +27,7 @@ export const rutube = () => (core: StreamyxCore) => {
         }
       }
 
+      const mediaInfoList: MediaInfo[] = [];
       if (params.yappyId) {
         const yappy = await fetch(
           `https://rutube.ru/pangolin/api/web/yappy/yappypage/?client=wdp&videoId=${params.yappyId}&page=1&page_size=15`
@@ -80,4 +80,4 @@ export const rutube = () => (core: StreamyxCore) => {
       return mediaInfoList;
     },
   };
-};
+});

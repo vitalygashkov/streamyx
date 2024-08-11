@@ -1,5 +1,5 @@
 import { createStore } from './store';
-import { StreamyxCore } from './plugin';
+import { StreamyxCore } from './service';
 import { Http } from './http';
 import { default as fs } from './fs';
 import { logger as log } from './logger';
@@ -23,6 +23,7 @@ export * from './browser';
 export * from './bin';
 export * from './prompt';
 export * from './spinner';
+export * from './store';
 
 export * from './args';
-export * from './plugin';
+export * from './service';
