@@ -15,11 +15,11 @@ export const createStore = (name: string) => {
   const storePath = createStorePath(name);
   const state = {} as Record<string, any>;
   const getState = async <T = any>(cookiesKey: string | null = 'cookies') => {
-    const data = await fs.readJson<any>(storePath).catch(() => null);
-    if (data) Object.assign(state, data);
+    const data = (await fs.readJson<any>(storePath).catch(() => {})) || {};
+    Object.assign(state, data);
     const cookies = await getCookiesFromTxt(storePath);
     const hasCookiesInTxt = !!cookies.length;
-    const hasCookiesInState = cookiesKey && data?.[cookiesKey];
+    const hasCookiesInState = cookiesKey && data[cookiesKey];
     if (hasCookiesInTxt) http.setCookies(cookies);
     else if (hasCookiesInState) http.setCookies(data[cookiesKey]);
     return data as T;
