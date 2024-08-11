@@ -11,9 +11,6 @@
 [submodule "packages/esor"]
 	path = packages/esor
 	url = https://github.com/vitalygashkov/esor.git
-[submodule "packages/boosty"]
-	path = packages/boosty
-	url = https://github.com/vitalygashkov/streamyx-boosty.git
 [submodule "src/app"]
 	path = src/app
 	url = https://github.com/vitalygashkov/streamyx-sources.git
