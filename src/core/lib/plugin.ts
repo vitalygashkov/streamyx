@@ -4,6 +4,7 @@ import { IHttp } from './http';
 import { IPrompt } from './prompt';
 import fs from './fs';
 import { createStore } from './store';
+import { execUrlPatterns, sanitizeString } from './utils';
 
 export interface StreamyxCore {
   /**
@@ -30,6 +31,14 @@ export interface StreamyxCore {
    * Store for persistent data (e.g. cookies, tokens, etc.)
    */
   store: ReturnType<typeof createStore>;
+
+  /**
+   * Utility functions
+   */
+  utils: {
+    sanitizeString: typeof sanitizeString;
+    execUrlPatterns: typeof execUrlPatterns;
+  };
 }
 
 export type Plugin<T = unknown> = (streamyx: StreamyxCore) => PluginInstance<T>;
