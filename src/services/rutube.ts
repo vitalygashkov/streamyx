@@ -41,7 +41,7 @@ export default defineService(() => (core) => {
         }
         mediaInfoList.push({
           url: yappyURL,
-          movie: { title: `rutube_yappy_${params.yappyId}` },
+          title: `rutube_yappy_${params.yappyId}`,
         });
         return mediaInfoList;
       }

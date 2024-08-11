@@ -25,7 +25,7 @@ export default defineService(() => (core) => {
             (pic: any) => pic.type === 'video' || pic.type === 'livephoto'
           );
           for (const video of videos) {
-            mediaInfoList.push({ url: video.videoSrc, movie: { title: video.pid } });
+            mediaInfoList.push({ url: video.videoSrc, title: video.pid });
           }
         } else if (info.type === 'video') {
           const pageInfoUrl = Object.values(info.urls)?.[0] as string | undefined;

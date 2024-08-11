@@ -89,8 +89,6 @@ export interface MediaInfo {
   url: string;
   headers?: Record<string, string>;
 
-  type?: 'video' | 'audio' | 'subtitle' | 'any';
-
   title?: string;
   seasonNumber?: number;
   episodeNumber?: number;
@@ -99,12 +97,7 @@ export interface MediaInfo {
 
   drmConfig?: DrmConfig | (() => Promise<DrmConfig>);
 
-  movie?: { title: string };
-  show?: { title: string };
-  season?: { number: number };
-  episode?: { number: number; title?: string };
-  provider?: string;
-
+  type?: 'video' | 'audio' | 'subtitle' | 'any';
   subtitles?: any[];
   audioType?: string;
   audioLanguage?: string;
