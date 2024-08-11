@@ -32,7 +32,7 @@ export default defineService(() => (core) => {
           const mediaInfoUrl = info.media_info?.stream_url_hd || info.media_info?.stream_url;
           const url = pageInfoUrl || mediaInfoUrl;
           const title = info.title || info.page_title;
-          mediaInfoList.push({ url, movie: { title } });
+          mediaInfoList.push({ url, title });
         }
       }
       return mediaInfoList;

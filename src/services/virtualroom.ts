@@ -16,12 +16,7 @@ export default defineService(() => (core) => ({
     const mediaInfoList = [];
     for (const translation of events.data.translations) {
       const title = `${info.data.roomParameters.name} ${translation.type} ${translation.source} ${translation.start}`;
-      const mediaInfo = {
-        url: translation.url,
-        provider: 'VRM',
-        movie: { title },
-      };
-      mediaInfoList.push(mediaInfo);
+      mediaInfoList.push({ url: translation.url, title });
     }
     return mediaInfoList;
   },

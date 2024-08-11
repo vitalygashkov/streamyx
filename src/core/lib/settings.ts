@@ -76,9 +76,9 @@ const defaultSettings: Settings = {
   proxyMeta: null,
   proxyMedia: null,
   // storeSubtitlesAs: SUBTITLE_STORE_TYPE.embedded,
-  movieFilenameTemplate: '{title}.{audioType}.{quality}.{provider}.{format}.{codec}',
+  movieFilenameTemplate: '{title}.{audioType}.{quality}.{tag}.{format}.{codec}',
   seriesFilenameTemplate:
-    '{show}.S{s}E{e}.{title}.{audioType}.{quality}.{provider}.{format}.{codec}',
+    '{title}.S{s}E{e}.{episodeTitle}.{audioType}.{quality}.{tag}.{format}.{codec}',
   chromePath: null,
 };
 

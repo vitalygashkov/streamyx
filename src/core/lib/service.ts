@@ -87,13 +87,24 @@ export const defineService = <T = undefined, K = undefined>(
 
 export interface MediaInfo {
   url: string;
-  provider?: string;
+  headers?: Record<string, string>;
+
+  type?: 'video' | 'audio' | 'subtitle' | 'any';
+
+  title?: string;
+  seasonNumber?: number;
+  episodeNumber?: number;
+  episodeTitle?: string;
+  tag?: string;
+
+  drmConfig?: DrmConfig | (() => Promise<DrmConfig>);
+
   movie?: { title: string };
   show?: { title: string };
   season?: { number: number };
   episode?: { number: number; title?: string };
-  headers?: Record<string, string>;
-  drmConfig?: DrmConfig | (() => Promise<DrmConfig>);
+  provider?: string;
+
   subtitles?: any[];
   audioType?: string;
   audioLanguage?: string;
@@ -104,4 +115,6 @@ export interface DrmConfig {
   server: string;
   headers: Record<string, string>;
   params?: object;
+  template?: string;
+  http2?: boolean;
 }

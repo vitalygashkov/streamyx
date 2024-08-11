@@ -71,11 +71,7 @@ export default defineService(() => (core) => {
       const title = play.title.trim();
       const artist = play.author.name.trim();
 
-      mediaInfoList.push({
-        url: playlistUrl,
-        provider: 'RTB',
-        movie: { title: `${title} ${artist}` },
-      });
+      mediaInfoList.push({ url: playlistUrl, title: `${title} ${artist}` });
 
       return mediaInfoList;
     },

@@ -36,11 +36,7 @@ export default defineService(() => (core) => ({
     }
     const title = js.player.params[0].md_title.trim();
     const author = js.player.params[0].md_author.trim();
-    mediaInfoList.push({
-      url: mediaUrl,
-      provider: 'VK',
-      movie: { title: `${title} ${author}` },
-    });
+    mediaInfoList.push({ url: mediaUrl, title: `${title} ${author}` });
     return mediaInfoList;
   },
 }));

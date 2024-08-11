@@ -115,10 +115,7 @@ export default defineService(() => (core) => {
       const mediaInfoList: MediaInfo[] = [];
       const title = json.title.trim();
       const artist = json.user.username.trim();
-      mediaInfoList.push({
-        url: file,
-        movie: { title: `${title} ${artist}` },
-      });
+      mediaInfoList.push({ url: file, title: `${title} ${artist}` });
       return mediaInfoList;
     },
   };
