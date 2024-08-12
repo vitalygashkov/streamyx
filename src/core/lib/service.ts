@@ -129,6 +129,44 @@ export const registerService = <T extends RegisterService<T>>(
   };
 };
 
+export const withDefaultArgs = (args: Partial<RunArgs>): RunArgs => {
+  return {
+    urls: args.urls || [],
+
+    subtitleFormat: args.subtitleFormat || '',
+    subtitleLanguages: args.subtitleLanguages || [],
+
+    languages: args.languages || [],
+
+    skipVideo: args.skipVideo || false,
+    skipAudio: args.skipAudio || false,
+    skipSubtitles: args.skipSubtitles || false,
+    skipMux: args.skipMux || false,
+
+    episodes: args.episodes || {
+      values: [],
+      size: NaN,
+      set: (episode?: number | undefined, season?: number | undefined) => NaN,
+      has: (episode?: number | undefined, season?: number | undefined) => false,
+      getMin: () => NaN,
+      getMax: () => NaN,
+    },
+    retry: args.retry || NaN,
+    connections: args.connections || NaN,
+    proxy: args.proxy || null,
+    proxyMeta: args.proxyMeta || null,
+    proxyMedia: args.proxyMedia || null,
+
+    movieTemplate: args.movieTemplate || '',
+    episodeTemplate: args.episodeTemplate || '',
+    hardsub: args.hardsub || false,
+    http2: args.http2 || false,
+    debug: args.debug || false,
+    version: args.version || false,
+    help: args.help || false,
+  };
+};
+
 export interface MediaInfo {
   url: string;
   headers?: Record<string, string>;
