@@ -1,16 +1,18 @@
 import { RunArgs } from './args';
-import { logger } from './logger';
 import { IHttp } from './http';
 import { IPrompt } from './prompt';
-import fs from './fs';
 import { createStore } from './store';
+import { Http } from './http';
+import { default as fs } from './fs';
+import { logger as log } from './logger';
+import { prompt } from './prompt';
 import { execUrlPatterns, sanitizeString } from './utils';
 
 export interface StreamyxCore {
   /**
    * Basic logger
    */
-  log: typeof logger;
+  log: typeof log;
 
   /**
    * Common file system utilities
@@ -77,12 +79,54 @@ export interface PluginInstance<T = unknown> {
 
 export type Plugin<T = unknown> = (streamyx: StreamyxCore) => PluginInstance<T>;
 
+export const create = (name: string): StreamyxCore => ({
+  log,
+  http: new Http(),
+  prompt,
+  fs,
+  store: createStore(name),
+  utils: { sanitizeString, execUrlPatterns },
+});
+
 export type ServiceInstance<T> = PluginInstance<T>;
 
 export const defineService = <T = undefined, K = undefined>(
   service: (options: T) => (core: StreamyxCore) => ServiceInstance<K>
 ) => {
   return service;
+};
+
+export type RegisteredService<A = unknown> = {
+  name: string;
+  instance: ServiceInstance<A>;
+  core: StreamyxCore;
+};
+
+export type Service<T = undefined, K = any> = (
+  options: T
+) => (core: StreamyxCore) => ServiceInstance<K>;
+
+export type RegisterService<T extends Service> = Service<
+  Parameters<T>[0],
+  ReturnType<ReturnType<T>>['api']
+>;
+
+export const registerService = <T extends RegisterService<T>>(
+  service: T,
+  options?: Parameters<T>[0]
+) => {
+  const core = create('streamyx');
+  const instance = service(options)(core) as ServiceInstance<ReturnType<ReturnType<T>>['api']> & {
+    core: StreamyxCore;
+  };
+  const name = instance.name;
+  core.store = createStore(name);
+  core.log.debug(`Service registered: ${name}`);
+  instance.core = core;
+  return instance as ServiceInstance<ReturnType<ReturnType<T>>['api']> & {
+    api: ReturnType<ReturnType<T>>['api'];
+    core: StreamyxCore;
+  };
 };
 
 export interface MediaInfo {
