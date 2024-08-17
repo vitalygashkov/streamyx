@@ -74,7 +74,7 @@ export interface PluginInstance<T = unknown> {
   /**
    * Fetches media info list from the specified URL
    */
-  fetchMediaInfo: (url: string, args: RunArgs) => Promise<MediaInfo[]>;
+  fetchMediaInfo: (url: string, args: RunArgs) => Promise<(MediaInfo | AsyncMediaInfo)[]>;
 }
 
 export type Plugin<T = unknown> = (streamyx: StreamyxCore) => PluginInstance<T>;
@@ -184,7 +184,11 @@ export interface MediaInfo {
   audioType?: string;
   audioLanguage?: string;
   http2?: boolean;
+
+  onDownloadFinished?: () => Promise<void>;
 }
+
+export type AsyncMediaInfo = () => Promise<MediaInfo>;
 
 export interface DrmConfig {
   server: string;
