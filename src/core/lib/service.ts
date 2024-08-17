@@ -124,7 +124,7 @@ export const registerService = <T extends RegisterService<T>>(
   core.log.debug(`Service registered: ${name}`);
   instance.core = core;
   return instance as ServiceInstance<ReturnType<ReturnType<T>>['api']> & {
-    api: ReturnType<ReturnType<T>>['api'];
+    api: NonNullable<ReturnType<ReturnType<T>>['api']>;
     core: StreamyxCore;
   };
 };
