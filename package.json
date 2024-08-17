@@ -1,6 +1,6 @@
 {
   "name": "streamyx",
-  "version": "4.0.0-beta.56",
+  "version": "4.0.0-beta.57",
   "author": "Vitaly Gashkov <vitalygashkov@vk.com>",
   "description": "Powerful media downloader",
   "main": "dist/src/app/main.js",
