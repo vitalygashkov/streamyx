@@ -1,10 +1,9 @@
-import { MediaInfo, StreamyxCore } from '@streamyx/core';
+import { defineService, MediaInfo } from '@streamyx/core';
 
-export const rutube = () => (core: StreamyxCore) => {
+export default defineService(() => (core) => {
   return {
     name: 'rutube',
     fetchMediaInfo: async (url: string) => {
-      const mediaInfoList: MediaInfo[] = [];
       const patterns = [
         '/video/:id{/}?',
         '/play/embed/:id{/}?',
@@ -28,6 +27,7 @@ export const rutube = () => (core: StreamyxCore) => {
         }
       }
 
+      const mediaInfoList: MediaInfo[] = [];
       if (params.yappyId) {
         const yappy = await fetch(
           `https://rutube.ru/pangolin/api/web/yappy/yappypage/?client=wdp&videoId=${params.yappyId}&page=1&page_size=15`
@@ -41,7 +41,7 @@ export const rutube = () => (core: StreamyxCore) => {
         }
         mediaInfoList.push({
           url: yappyURL,
-          movie: { title: `rutube_yappy_${params.yappyId}` },
+          title: `rutube_yappy_${params.yappyId}`,
         });
         return mediaInfoList;
       }
@@ -71,13 +71,9 @@ export const rutube = () => (core: StreamyxCore) => {
       const title = play.title.trim();
       const artist = play.author.name.trim();
 
-      mediaInfoList.push({
-        url: playlistUrl,
-        provider: 'RTB',
-        movie: { title: `${title} ${artist}` },
-      });
+      mediaInfoList.push({ url: playlistUrl, title: `${title} ${artist}` });
 
       return mediaInfoList;
     },
   };
-};
+});

@@ -375,8 +375,9 @@ class Http implements IHttp {
     this.setCookies([...this.cookies, ...newCookies]);
   }
 
-  setCookies(cookies: string[]) {
-    this.cookies = cookies;
+  setCookies(cookies: string[] | string = []) {
+    const newCookies = typeof cookies === 'string' ? [cookies] : cookies;
+    this.cookies = newCookies;
     this.headers.cookie = this.cookies.join('; ');
   }
 

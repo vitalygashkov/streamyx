@@ -1,8 +1,8 @@
-import type { MediaInfo, StreamyxCore, RunArgs } from '@streamyx/core';
+import { defineService, MediaInfo } from '@streamyx/core';
 
-export const vk = () => (core: StreamyxCore) => ({
+export default defineService(() => (core) => ({
   name: 'vk',
-  fetchMediaInfo: async (url: string, args: RunArgs) => {
+  fetchMediaInfo: async (url, args) => {
     const html = await core.http
       .fetch(url)
       .then((r) => r.arrayBuffer())
@@ -36,11 +36,7 @@ export const vk = () => (core: StreamyxCore) => ({
     }
     const title = js.player.params[0].md_title.trim();
     const author = js.player.params[0].md_author.trim();
-    mediaInfoList.push({
-      url: mediaUrl,
-      provider: 'VK',
-      movie: { title: `${title} ${author}` },
-    });
+    mediaInfoList.push({ url: mediaUrl, title: `${title} ${author}` });
     return mediaInfoList;
   },
-});
+}));

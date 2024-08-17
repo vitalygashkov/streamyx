@@ -1,6 +1,6 @@
-import type { StreamyxCore } from '@streamyx/core';
+import { defineService } from '@streamyx/core';
 
-export const virtualroom = () => (core: StreamyxCore) => ({
+export default defineService(() => (core) => ({
   name: 'virtualroom',
   fetchMediaInfo: async (url: string) => {
     const recordId = new URL(url).searchParams.get('recordId');
@@ -16,13 +16,8 @@ export const virtualroom = () => (core: StreamyxCore) => ({
     const mediaInfoList = [];
     for (const translation of events.data.translations) {
       const title = `${info.data.roomParameters.name} ${translation.type} ${translation.source} ${translation.start}`;
-      const mediaInfo = {
-        url: translation.url,
-        provider: 'VRM',
-        movie: { title },
-      };
-      mediaInfoList.push(mediaInfo);
+      mediaInfoList.push({ url: translation.url, title });
     }
     return mediaInfoList;
   },
-});
+}));

@@ -1,9 +1,9 @@
-import { MediaInfo, RunArgs, StreamyxCore } from '@streamyx/core';
+import { defineService, MediaInfo } from '@streamyx/core';
 
-export const weibo = () => (core: StreamyxCore) => {
+export default defineService(() => (core) => {
   return {
     name: 'weibo',
-    fetchMediaInfo: async (url: string, args: RunArgs) => {
+    fetchMediaInfo: async (url) => {
       const patterns = ['/:userId(\\d+)/:bid', '/detail/:mid'];
       const baseUrls = ['https://weibo.com/', 'https://m.weibo.cn'];
       const result = core.utils.execUrlPatterns(url, patterns, baseUrls);
@@ -25,17 +25,17 @@ export const weibo = () => (core: StreamyxCore) => {
             (pic: any) => pic.type === 'video' || pic.type === 'livephoto'
           );
           for (const video of videos) {
-            mediaInfoList.push({ url: video.videoSrc, movie: { title: video.pid } });
+            mediaInfoList.push({ url: video.videoSrc, title: video.pid });
           }
         } else if (info.type === 'video') {
           const pageInfoUrl = Object.values(info.urls)?.[0] as string | undefined;
           const mediaInfoUrl = info.media_info?.stream_url_hd || info.media_info?.stream_url;
           const url = pageInfoUrl || mediaInfoUrl;
           const title = info.title || info.page_title;
-          mediaInfoList.push({ url, movie: { title } });
+          mediaInfoList.push({ url, title });
         }
       }
       return mediaInfoList;
     },
   };
-};
+});

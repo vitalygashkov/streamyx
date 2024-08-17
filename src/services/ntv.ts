@@ -1,8 +1,8 @@
-import type { StreamyxCore } from '@streamyx/core';
+import { defineService } from '@streamyx/core';
 
-export const ntv = () => (core: StreamyxCore) => ({
+export default defineService(() => (core) => ({
   name: 'ntv',
-  fetchMediaInfo: async (url: string) => {
+  fetchMediaInfo: async (url) => {
     const pageResponse = await core.http.fetch(url);
     const pageBody = await pageResponse.text();
     const videoFrameLink = pageBody
@@ -25,4 +25,4 @@ export const ntv = () => (core: StreamyxCore) => ({
     if (subtitlesRoute) core.log.info(`Subtitles: ${subtitlesUrl}`);
     return [{ url: hqFileLink, provider: 'NTV', movie: { title } }];
   },
-});
+}));

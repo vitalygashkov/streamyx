@@ -1,11 +1,8 @@
-import { MediaInfo, RunArgs, StreamyxCore } from '@streamyx/core';
+import { defineService, MediaInfo } from '@streamyx/core';
 
-const cachedID = {
-  version: '',
-  id: '',
-};
+const cachedID = { version: '', id: '' };
 
-export const soundcloud = () => (core: StreamyxCore) => {
+export default defineService(() => (core) => {
   async function findClientID() {
     try {
       const sc = await fetch('https://soundcloud.com/')
@@ -55,7 +52,7 @@ export const soundcloud = () => (core: StreamyxCore) => {
 
   return {
     name: 'soundcloud',
-    fetchMediaInfo: async (url: string, args: RunArgs) => {
+    fetchMediaInfo: async (url, args) => {
       const patterns = [':author/:song/s-:accessKey', ':author/:song', ':shortLink'];
       const baseUrls = ['https://soundcloud.com', 'https://on.soundcloud.com'];
       const result = core.utils.execUrlPatterns(url, patterns, baseUrls);
@@ -118,11 +115,8 @@ export const soundcloud = () => (core: StreamyxCore) => {
       const mediaInfoList: MediaInfo[] = [];
       const title = json.title.trim();
       const artist = json.user.username.trim();
-      mediaInfoList.push({
-        url: file,
-        movie: { title: `${title} ${artist}` },
-      });
+      mediaInfoList.push({ url: file, title: `${title} ${artist}` });
       return mediaInfoList;
     },
   };
-};
+});
