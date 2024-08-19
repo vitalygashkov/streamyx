@@ -201,14 +201,17 @@ class Http implements IHttp {
       }
       page
         .evaluate(
-          (resource, init) => {
+          (resource, init: globalThis.RequestInit) => {
             const fetchData = async () => {
-              const response = await globalThis.fetch(
-                resource as globalThis.RequestInfo,
-                init as globalThis.RequestInit
-              );
+              const initBody = init.body as string | { type: 'Buffer'; data: number[] };
+              const body =
+                typeof initBody === 'object' && initBody.type === 'Buffer'
+                  ? Uint8Array.from(initBody.data)
+                  : init.body;
+              init.body = body;
+              const response = await globalThis.fetch(resource as globalThis.RequestInfo, init);
               return {
-                body: await response.text(),
+                body: new Uint8Array(await response.arrayBuffer()),
                 init: {
                   headers: response.headers as unknown as Headers,
                   status: response.status,
@@ -221,7 +224,11 @@ class Http implements IHttp {
           resource,
           init
         )
-        .then(({ body, init }) => (isWaitingForRedirect ? {} : resolve(new Response(body, init))))
+        .then(({ body, init }) => {
+          return isWaitingForRedirect
+            ? {}
+            : resolve(new Response(Buffer.from(Object.values(body)), init));
+        })
         .catch((e) => {
           logger.debug(`Error while evaluate browser fetch: ${e?.message}`);
           return { body: null, init: undefined };
