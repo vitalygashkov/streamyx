@@ -2,7 +2,7 @@ import { RunArgs } from './args';
 import { IHttp } from './http';
 import { IPrompt } from './prompt';
 import { createStore } from './store';
-import { Http } from './http';
+import { Http, http } from './http';
 import { default as fs } from './fs';
 import { logger as log } from './logger';
 import { prompt } from './prompt';
@@ -81,7 +81,7 @@ export type Plugin<T = unknown> = (streamyx: StreamyxCore) => PluginInstance<T>;
 
 export const create = (name: string): StreamyxCore => ({
   log,
-  http: new Http(),
+  http,
   prompt,
   fs,
   store: createStore(name),
@@ -120,6 +120,7 @@ export const registerService = <T extends RegisterService<T>>(
     core: StreamyxCore;
   };
   const name = instance.name;
+  core.http = new Http();
   core.store = createStore(name);
   core.log.debug(`Service registered: ${name}`);
   instance.core = core;

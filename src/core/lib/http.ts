@@ -22,16 +22,52 @@ const HTTP_METHOD = {
 
 const USER_AGENTS = {
   chromeWindows:
-    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36',
   chromeMacOS:
-    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36',
   chromeLinux:
-    'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+    'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36',
   smartTv:
     'Mozilla/5.0 (SMART-TV; LINUX; Tizen 6.0) AppleWebKit/537.36 (KHTML, like Gecko) 76.0.3809.146/6.0 TV Safari/537.36',
   tizen:
     'Mozilla/5.0 (Linux; U; Tizen 2.0; en-us) AppleWebKit/537.1 (KHTML, like Gecko) Mobile TizenBrowser/2.0',
 };
+
+const COMMON_HEADERS = {
+  Accept:
+    'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+  'Accept-Encoding': 'gzip, deflate, br, zstd',
+  'Accept-Language': 'ru-RU,ru;q=0.9,en-NL;q=0.8,en-US;q=0.7,en;q=0.6,vi;q=0.5',
+  'Sec-Ch-Ua-Mobile': '?0',
+  'Upgrade-Insecure-Requests': '1',
+  'Sec-Fetch-Site': 'none',
+  'Sec-Fetch-Mode': 'navigate',
+  'Sec-Fetch-User': '?1',
+  'Sec-Fetch-Dest': 'document',
+};
+
+const DEFAULT_HEADERS_MAP = {
+  darwin: {
+    ...COMMON_HEADERS,
+    'User-Agent': USER_AGENTS.chromeMacOS,
+    'Sec-Ch-Ua': '"Google Chrome";v="127", "Chromium";v="127", "Not.A/Brand";v="24"',
+    'Sec-Ch-Ua-Platform': '"macOS"',
+  },
+  linux: {
+    ...COMMON_HEADERS,
+    'User-Agent': USER_AGENTS.chromeLinux,
+    'Sec-Ch-Ua': '"Not/A)Brand";v="8", "Chromium";v="127", "Google Chrome";v="127"',
+    'Sec-Ch-Ua-Platform': '"Linux"',
+  },
+  win32: {
+    ...COMMON_HEADERS,
+    'User-Agent': USER_AGENTS.chromeWindows,
+    'Sec-Ch-Ua': '"Not/A)Brand";v="8", "Chromium";v="127", "Google Chrome";v="127"',
+    'Sec-Ch-Ua-Platform': '"Windows"',
+  },
+};
+
+const DEFAULT_HEADERS = DEFAULT_HEADERS_MAP[process.platform as 'darwin' | 'linux' | 'win32'];
 
 const parseUrlFromResource = (resource: string | URL | Request) =>
   resource instanceof Request
@@ -72,7 +108,7 @@ class Http implements IHttp {
   #proxy?: string | null;
 
   constructor({ proxy }: { proxy?: string | null } = {}) {
-    this.headers = { 'User-Agent': USER_AGENTS.tizen };
+    this.headers = DEFAULT_HEADERS;
     this.cookies = [];
     this.#sessions = new Map();
     this.#retryThreshold = 3;
@@ -133,7 +169,7 @@ class Http implements IHttp {
         followRedirect: !redirect || redirect === 'follow',
         proxyUrl: this.#proxy || undefined,
         ...options,
-        headers: { ...this.headers, ...options.headers },
+        headers: { ...this.headers, ...options.headers, ...DEFAULT_HEADERS },
         useHeaderGenerator: true,
         headerGeneratorOptions: { browsers: ['chrome'] },
         http2: true,
@@ -156,7 +192,7 @@ class Http implements IHttp {
       for (const cookie of headers['set-cookie'] || []) newHeaders.append('set-cookie', cookie);
       this.appendCookies(response.headers['set-cookie'] || '');
       delete response.headers['set-cookie'];
-      return new Response(response.body, {
+      return new Response(response.rawBody, {
         headers: newHeaders,
         status: status,
       });
