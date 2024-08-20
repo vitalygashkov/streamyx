@@ -1,5 +1,6 @@
 import path from 'node:path';
 import fs from 'node:fs';
+import { setTimeout } from 'node:timers/promises';
 import { spawn } from 'node:child_process';
 import { test, expect } from 'vitest';
 
@@ -39,7 +40,7 @@ test('test executable run with Okko', async () => {
       if (hasSearchTarget(line)) resolve(line);
     });
     executable.stderr.on('data', (error: Buffer) => error && console.log(error.toString()));
-    setTimeout(() => resolve(lines.find(hasSearchTarget)), 4_500);
+    setTimeout(4_900).then(() => resolve(lines.find(hasSearchTarget)));
   });
   expect(result).toBeDefined();
   expect(result).toContain(searchTarget);
