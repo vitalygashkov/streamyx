@@ -42,12 +42,6 @@ const parseUrlFromResource = (resource: string | URL | Request) =>
 
 const DEFAULT_MAX_REDIRECTIONS = 5;
 
-const getOS = () => {
-  if (process.platform === 'darwin') return 'macos';
-  else if (process.platform === 'linux') return 'linux';
-  else return 'windows';
-};
-
 export interface IHttp {
   headers: Record<string, string>;
   cookies: string[];
@@ -143,7 +137,7 @@ class Http implements IHttp {
         useHeaderGenerator: true,
         headerGeneratorOptions: {
           browserListQuery: 'last 2 Chrome versions',
-          operatingSystems: [getOS()],
+          operatingSystems: [process.platform === 'win32' ? 'windows' : 'macos'],
         },
         http2: true,
       });
