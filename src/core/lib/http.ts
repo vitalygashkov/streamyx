@@ -33,42 +33,6 @@ const USER_AGENTS = {
     'Mozilla/5.0 (Linux; U; Tizen 2.0; en-us) AppleWebKit/537.1 (KHTML, like Gecko) Mobile TizenBrowser/2.0',
 };
 
-const COMMON_HEADERS = {
-  Accept:
-    'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
-  'Accept-Encoding': 'gzip, deflate, br, zstd',
-  'Accept-Language': 'ru-RU,ru;q=0.9,en-NL;q=0.8,en-US;q=0.7,en;q=0.6,vi;q=0.5',
-  'Sec-Ch-Ua-Mobile': '?0',
-  'Upgrade-Insecure-Requests': '1',
-  'Sec-Fetch-Site': 'none',
-  'Sec-Fetch-Mode': 'navigate',
-  'Sec-Fetch-User': '?1',
-  'Sec-Fetch-Dest': 'document',
-};
-
-const DEFAULT_HEADERS_MAP = {
-  darwin: {
-    ...COMMON_HEADERS,
-    'User-Agent': USER_AGENTS.chromeMacOS,
-    'Sec-Ch-Ua': '"Google Chrome";v="127", "Chromium";v="127", "Not.A/Brand";v="24"',
-    'Sec-Ch-Ua-Platform': '"macOS"',
-  },
-  linux: {
-    ...COMMON_HEADERS,
-    'User-Agent': USER_AGENTS.chromeLinux,
-    'Sec-Ch-Ua': '"Not/A)Brand";v="8", "Chromium";v="127", "Google Chrome";v="127"',
-    'Sec-Ch-Ua-Platform': '"Linux"',
-  },
-  win32: {
-    ...COMMON_HEADERS,
-    'User-Agent': USER_AGENTS.chromeWindows,
-    'Sec-Ch-Ua': '"Not/A)Brand";v="8", "Chromium";v="127", "Google Chrome";v="127"',
-    'Sec-Ch-Ua-Platform': '"Windows"',
-  },
-};
-
-const DEFAULT_HEADERS = DEFAULT_HEADERS_MAP[process.platform as 'darwin' | 'linux' | 'win32'];
-
 const parseUrlFromResource = (resource: string | URL | Request) =>
   resource instanceof Request
     ? new URL(resource.url)
@@ -108,7 +72,7 @@ class Http implements IHttp {
   #proxy?: string | null;
 
   constructor({ proxy }: { proxy?: string | null } = {}) {
-    this.headers = DEFAULT_HEADERS;
+    this.headers = {};
     this.cookies = [];
     this.#sessions = new Map();
     this.#retryThreshold = 3;
@@ -169,9 +133,9 @@ class Http implements IHttp {
         followRedirect: !redirect || redirect === 'follow',
         proxyUrl: this.#proxy || undefined,
         ...options,
-        headers: { ...this.headers, ...options.headers, ...DEFAULT_HEADERS },
+        headers: { ...this.headers, ...options.headers },
         useHeaderGenerator: true,
-        headerGeneratorOptions: { browsers: ['chrome'] },
+        headerGeneratorOptions: { browserListQuery: 'last 2 Chrome versions' },
         http2: true,
       });
       const status = response.statusCode;
