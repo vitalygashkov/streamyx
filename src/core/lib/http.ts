@@ -6,7 +6,7 @@ import http2, {
 import { URL } from 'node:url';
 import { EOL } from 'node:os';
 import { fetch, ProxyAgent, Agent, buildConnector } from 'undici';
-import { Browser, Page } from 'puppeteer-core';
+import { Browser, Cookie, Page } from 'puppeteer-core';
 import { gotScraping } from 'got-scraping';
 import { logger } from './logger';
 import { browserCookiesToList, launchBrowser } from './browser';
@@ -369,8 +369,15 @@ class Http implements IHttp {
     logger.debug(`Retry ${failuresCount}/${this.#retryThreshold}: ${String(resource)}`);
   }
 
-  appendCookies(setCookie: string | string[]) {
-    const newCookies = typeof setCookie === 'string' ? setCookie.split(', ') : setCookie;
+  appendCookies(setCookie: string | string[] | Cookie[]) {
+    const newCookies: string[] = [];
+    if (typeof setCookie === 'string') {
+      newCookies.push(setCookie);
+    } else if (typeof setCookie[0] !== 'string') {
+      newCookies.push(...browserCookiesToList(setCookie as Cookie[]));
+    } else {
+      newCookies.push(...(setCookie as string[]));
+    }
     if (!newCookies || !newCookies?.length) return;
     this.cookies = this.cookies.filter((cookie) => {
       const cookieKey = cookie.split('=')[0];
@@ -385,8 +392,15 @@ class Http implements IHttp {
     this.setCookies([...this.cookies, ...newCookies]);
   }
 
-  setCookies(cookies: string[] | string = []) {
-    const newCookies = typeof cookies === 'string' ? [cookies] : cookies;
+  setCookies(cookies: Cookie[] | string[] | string = []) {
+    const newCookies: string[] = [];
+    if (typeof cookies === 'string') {
+      newCookies.push(cookies);
+    } else if (typeof cookies[0] !== 'string') {
+      newCookies.push(...browserCookiesToList(cookies as Cookie[]));
+    } else {
+      newCookies.push(...(cookies as string[]));
+    }
     this.cookies = newCookies;
     this.headers.cookie = this.cookies.join('; ');
   }
