@@ -49,6 +49,7 @@ export interface Settings {
   movieFilenameTemplate: string;
   seriesFilenameTemplate: string;
   chromePath: string | null;
+  bounds?: { x: number; y: number; width: number; height: number };
 }
 
 const getDefaultLanguage = () => {
@@ -80,6 +81,7 @@ const defaultSettings: Settings = {
   seriesFilenameTemplate:
     '{title}.S{s}E{e}.{episodeTitle}.{audioType}.{quality}.{tag}.{format}.{codec}',
   chromePath: null,
+  bounds: undefined,
 };
 
 const getSettingsPath = async () => {

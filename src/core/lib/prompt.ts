@@ -3,54 +3,38 @@ import { EventEmitter } from 'node:events';
 import { createInterface } from 'node:readline/promises';
 import { setTimeout } from 'node:timers/promises';
 
-type PromptType = 'input' | 'confirm';
-type PromptAnswer<T> = T extends 'input' ? string : T extends 'confirm' ? boolean : never;
+export type PromptForm = {
+  title?: string;
+  subtitle?: string;
+} & {
+  [field: string]: { label: string; defaultValue?: string };
+};
 
-export interface IPrompt {
-  waitForInput<T extends PromptType = 'input'>(
-    message: string,
-    type?: T,
-    timeout?: number
-  ): Promise<PromptAnswer<T>>;
-  listen(listener: (message: string, type: PromptType, timeout?: number) => Promise<string>): void;
-}
+export type PromptFormResponse = {
+  [field: string]: string;
+};
+
+export type IPrompt = typeof prompt;
 
 export class Prompt extends EventEmitter implements IPrompt {
   constructor() {
     super();
   }
 
-  async waitForInput<T extends PromptType = 'input'>(
-    message: string,
-    type?: T,
-    timeout?: number
-  ): Promise<PromptAnswer<T>> {
-    const answer = await this.waitForListenerResponse(message, type, timeout);
-    if (type === 'confirm') {
-      if (typeof answer === 'string')
-        return (answer?.toLowerCase() === 'y') as PromptAnswer<boolean>;
-      else return !!answer as PromptAnswer<boolean>;
-    } else {
-      return String(answer).trim() as PromptAnswer<string>;
-    }
-  }
-
-  private async waitForListenerResponse(
-    message: string,
-    type: PromptType = 'input',
-    timeout?: number
-  ) {
-    return new Promise((resolve) => {
-      this.emit('prompt', message, type, timeout);
-      this.addListener('prompt:response', (response) => {
+  async ask<T = PromptFormResponse>(form: PromptForm): Promise<T> {
+    const response = new Promise<PromptFormResponse>((resolve) => {
+      this.emit('form', form);
+      this.addListener('form:response', (response) => {
+        console.log({ response });
         resolve(response);
       });
     });
+    return response as Promise<T>;
   }
 
-  listen(listener: (message: string, type: PromptType, timeout?: number) => Promise<string>) {
-    this.addListener('prompt', (message, type, timeout) =>
-      listener(message, type, timeout).then((answer) => this.emit('prompt:response', answer))
+  listen(listener: (form: PromptForm) => Promise<PromptFormResponse>) {
+    this.addListener('form', (form: PromptForm) =>
+      listener(form).then((answer) => this.emit('form:response', answer))
     );
   }
 }
@@ -60,16 +44,21 @@ export const prompt = new Prompt();
 const TIMEOUT = 120_000; // Wait 2 minutes for user input
 
 export const enableCliPrompt = () => {
-  prompt.listen(async (message, type, timeout = TIMEOUT) => {
+  prompt.listen(async (form) => {
     const readline = createInterface({ input: stdin, output: stdout });
-    const question = { message, type };
-    const isBooleanQuestion = question.type === 'confirm';
-    const formattedMessage = question.message + (isBooleanQuestion ? ' (y/n)' : '') + ': ';
-    const answer = await Promise.race([
-      readline.question(formattedMessage),
-      setTimeout(timeout, ''),
-    ]);
+    const { title, subtitle, ...fields } = form;
+    const response: PromptFormResponse = {};
+    for (const [field, { label, defaultValue }] of Object.entries(fields)) {
+      const question = { message: label, type: 'input' };
+      const isBooleanQuestion = question.type === 'confirm';
+      const formattedMessage = question.message + (isBooleanQuestion ? ' (y/n)' : '') + ': ';
+      const answer = await Promise.race([
+        readline.question(formattedMessage),
+        setTimeout(TIMEOUT, ''),
+      ]);
+      response[field] = answer;
+    }
     readline.close();
-    return answer;
+    return response;
   });
 };
