@@ -49,6 +49,7 @@ export interface Settings {
   movieFilenameTemplate: string;
   seriesFilenameTemplate: string;
   chromePath: string | null;
+  bounds?: { x: number; y: number; width: number; height: number };
 }
 
 const getDefaultLanguage = () => {
@@ -80,6 +81,7 @@ const defaultSettings: Settings = {
   seriesFilenameTemplate:
     '{title}.S{s}E{e}.{episodeTitle}.{audioType}.{quality}.{tag}.{format}.{codec}',
   chromePath: null,
+  bounds: undefined,
 };
 
 const getSettingsPath = async () => {
@@ -90,7 +92,7 @@ const getSettingsPath = async () => {
   return settingsPath;
 };
 
-let settings = defaultSettings;
+const settings = defaultSettings;
 
 export const getSettings = (): Readonly<Settings> => settings;
 
@@ -109,7 +111,8 @@ const validateSettings = (values: Partial<Settings>) => {
 
 export const loadSettings = async (customPath?: string): Promise<Settings> => {
   const settingsPath = customPath || (await getSettingsPath());
-  settings = await fs.readJson<Settings>(settingsPath).catch(() => defaultSettings);
+  const newSettings = await fs.readJson<Settings>(settingsPath).catch(() => defaultSettings);
+  Object.assign(settings, newSettings);
   return validateSettings(settings);
 };
 
