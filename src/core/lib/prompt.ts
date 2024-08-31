@@ -25,7 +25,6 @@ export class Prompt extends EventEmitter implements IPrompt {
     const response = new Promise<PromptFormResponse>((resolve) => {
       this.emit('form', form);
       this.addListener('form:response', (response) => {
-        console.log({ response });
         resolve(response);
       });
     });

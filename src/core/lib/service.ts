@@ -122,7 +122,6 @@ export const registerService = <T extends RegisterService<T>>(
   const name = instance.name;
   core.http = new Http();
   core.store = createStore(name);
-  core.log.debug(`Service registered: ${name}`);
   instance.core = core;
   return instance as ServiceInstance<ReturnType<ReturnType<T>>['api']> & {
     api: NonNullable<ReturnType<ReturnType<T>>['api']>;
