@@ -33,6 +33,17 @@ const USER_AGENTS = {
     'Mozilla/5.0 (Linux; U; Tizen 2.0; en-us) AppleWebKit/537.1 (KHTML, like Gecko) Mobile TizenBrowser/2.0',
 };
 
+export const getDefaultUserAgent = () => {
+  switch (process.platform) {
+    case 'darwin':
+      return USER_AGENTS.chromeMacOS;
+    case 'linux':
+      return USER_AGENTS.chromeLinux;
+    default:
+      return USER_AGENTS.chromeWindows;
+  }
+};
+
 const parseUrlFromResource = (resource: string | URL | Request) =>
   resource instanceof Request
     ? new URL(resource.url)
@@ -72,7 +83,7 @@ class Http implements IHttp {
   #proxy?: string | null;
 
   constructor({ proxy }: { proxy?: string | null } = {}) {
-    this.headers = {};
+    this.headers = { 'User-Agent': getDefaultUserAgent() };
     this.cookies = [];
     this.#sessions = new Map();
     this.#retryThreshold = 3;
@@ -128,12 +139,17 @@ class Http implements IHttp {
     { redirect, ...options }: RequestInit = {}
   ): Promise<Response> {
     try {
+      const allHeaders: Record<string, string> = {
+        ...this.headers,
+        ...(options.headers as Record<string, string>),
+      };
+      delete allHeaders['User-Agent'];
       const response = await gotScraping({
         url: resource as string | URL,
         followRedirect: !redirect || redirect === 'follow',
         proxyUrl: this.#proxy || undefined,
         ...options,
-        headers: { ...this.headers, ...options.headers },
+        headers: allHeaders,
         useHeaderGenerator: true,
         headerGeneratorOptions: {
           browserListQuery: 'last 2 Chrome versions',
