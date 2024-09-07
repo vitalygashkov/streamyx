@@ -1,73 +1,28 @@
 {
   "name": "streamyx",
-  "version": "4.0.0-rc.3",
-  "author": "Vitaly Gashkov <vitalygashkov@vk.com>",
-  "description": "Powerful media downloader",
-  "main": "dist/src/app/main.js",
-  "bin": {
-    "streamyx": "dist/src/app/main.js"
+  "version": "0.0.0",
+  "description": "Streamyx Client Applications",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vitalygashkov/streamyx.git"
   },
+  "author": "Vitaly Gashkov <vitalygashkov@vk.com>",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/vitalygashkov/streamyx/issues"
+  },
+  "homepage": "https://streamyx.ru",
   "scripts": {
-    "prepare": "tsc",
-    "dev": "tsc --watch",
-    "start": "tsc && node .",
-    "build": "tsc && pkg . --targets node20-win-x64,node20-macos-x64,node20-macos-arm64,node20-linux-x64 --out-path ./build/",
-    "build:win": "tsc && pkg . --targets node20-win-x64 --output ./build/win/streamyx.exe",
-    "build:mac": "tsc && pkg . --targets node20-macos-x64 --output ./build/mac/streamyx",
-    "build:mac:arm": "tsc && pkg . --targets node20-macos-arm64 --output ./build/mac-arm/streamyx",
-    "build:linux": "tsc && pkg . --targets node20-linux-x64 --output ./build/linux/streamyx",
-    "test": "vitest --config ./vitest.config.ts",
+    "test": "vitest",
     "lint": "eslint --ext .js,.ts .",
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\""
   },
-  "dependencies": {
-    "@streamyx/core": "file:src/core",
-    "@streamyx/crunchyroll": "file:packages/crunchyroll",
-    "blowfish-node": "^1.1.4",
-    "dasha": "file:packages/dasha",
-    "esor": "file:packages/esor",
-    "urlpattern-polyfill": "^10.0.0",
-    "wive": "file:packages/wive"
-  },
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "dependencies": {},
   "devDependencies": {
-    "@types/node": "^22.2.0",
-    "@typescript-eslint/eslint-plugin": "^7.16.0",
-    "@typescript-eslint/parser": "^7.16.0",
-    "@yao-pkg/pkg": "^5.12.0",
-    "eslint": "^8.57.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-import-x": "^3.1.0",
-    "eslint-plugin-prettier": "^5.2.1",
-    "prettier": "^3.3.3",
-    "typescript": "^5.5.4",
-    "vitest": "^2.0.5"
-  },
-  "engines": {
-    "node": ">=20"
-  },
-  "pkg": {
-    "assets": [
-      "node_modules/vm2/**/*",
-      "node_modules/header-generator/data_files/*.*",
-      "node_modules/puppeteer-core/**/*.*",
-      "node_modules/puppeteer-extra-plugin-stealth/**/*.*"
-    ],
-    "scripts": [
-      "node_modules/thread-stream/lib/worker.js",
-      "node_modules/pino/pino.js",
-      "node_modules/pino/file.js",
-      "node_modules/pino/bin.js",
-      "node_modules/pino/lib/*.js"
-    ],
-    "patches": {
-      "node_modules/thread-stream/lib/worker.js": [
-        "fn = (await realImport(filename))",
-        "fn = realRequire(filename.replace(/file:\\/\\/?/, ''))"
-      ],
-      "node_modules/pino/lib/transport-stream.js": [
-        "fn = (await realImport(toLoad))",
-        "fn = realRequire(target)"
-      ]
-    }
+    "@types/node": "^22.5.4"
   }
 }
