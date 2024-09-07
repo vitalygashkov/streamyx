@@ -11,7 +11,14 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "types": ["node"]
+    "types": ["node"],
+    "paths": {
+      "@streamyx/core": ["packages/core/lib/main"],
+      "@streamyx/crunchyroll": ["packages/crunchyroll/crunchyroll"],
+      "dasha": ["packages/dasha"],
+      "molnia": ["packages/molnia"],
+      "wive": ["packages/wive"]
+    }
   },
   "include": ["packages/core/src/**/*.ts"],
   "exclude": []
