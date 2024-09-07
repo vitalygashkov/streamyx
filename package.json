@@ -18,7 +18,11 @@
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\""
   },
   "workspaces": [
-    "packages/*",
+    "packages/molnia",
+    "packages/dasha",
+    "packages/wive",
+    "packages/crunchyroll",
+    "packages/core",
     "apps/*"
   ],
   "devDependencies": {
