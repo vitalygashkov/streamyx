@@ -4,8 +4,7 @@
     "moduleResolution": "NodeNext",
     "target": "ESNext",
     "outDir": "dist",
-    "baseUrl": "./",
-    "rootDir": "./",
+    "baseUrl": ".",
     "strict": true,
     "allowJs": false,
     "esModuleInterop": true,
@@ -14,6 +13,6 @@
     "resolveJsonModule": true,
     "types": []
   },
-  "include": ["package.json", "src/app/**/*.ts", "src/services/**/*.ts"],
-  "exclude": ["node_modules", "packages/core", "src/app/electron", "src/app/index.ts", "packages"]
+  "include": ["packages/core/src/**/*.ts"],
+  "exclude": []
 }

@@ -9,8 +9,8 @@
 	path = packages/crunchyroll
 	url = https://github.com/vitalygashkov/streamyx-crunchyroll.git
 [submodule "packages/esor"]
-	path = packages/esor
+	path = packages/molnia
 	url = https://github.com/vitalygashkov/esor.git
 [submodule "src/app"]
-	path = src/app
+	path = apps/cli
 	url = https://github.com/vitalygashkov/streamyx-sources.git
