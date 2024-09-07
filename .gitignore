@@ -4,12 +4,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# App files
-/files
-/downloads
-/.config
-/config
-
 # Dependency directories
 /node_modules
 /jspm_packages
