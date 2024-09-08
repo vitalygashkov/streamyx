@@ -32,6 +32,7 @@ jobs:
         run: python3 -m pip install setuptools --break-system-packages
 
       - run: npm ci --loglevel verbose
+        working-directory: ./
 
       - run: |
           test -n $(node -p -e "require('./package.json').name") &&
