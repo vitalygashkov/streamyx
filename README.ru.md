@@ -1,13 +1,13 @@
 <p align="center">
-  <h1 align="center">Streamyx</h1>
+  <h1 align="center">Стримикс</h1>
 </p>
 
 <p align="center">
   <a aria-label="Join Discord community" href="https://discord.gg/fHMgAgc7gU">
-    <img alt="" src="https://img.shields.io/badge/Discord-server-black?style=flat&logo=Discord&logoColor=white">
+    <img alt="" src="https://img.shields.io/badge/Discord-сервер-black?style=flat&logo=Discord&logoColor=white">
   </a>
   <a aria-label="Join Telegram community" href="https://t.me/streamyxtalks">
-    <img alt="" src="https://img.shields.io/badge/Telegram-chat-black?style=flat&logo=Telegram&logoColor=white">
+    <img alt="" src="https://img.shields.io/badge/Telegram-чат-black?style=flat&logo=Telegram&logoColor=white">
   </a>
   <img alt="" src="https://img.shields.io/github/downloads/vitalygashkov/streamyx/latest/total?style=flat&color=black">
   <img alt="" src="https://img.shields.io/github/downloads/vitalygashkov/streamyx/total?style=flat&color=black">
@@ -22,7 +22,7 @@ Streamyx - программа для скачивания видео для по
 
 ## Установка
 
-Скачайте сборку из [последнего релиза](https://github.com/vitalygashkov/streamyx/releases/latest) (для Windows: `streamyx-win-x64.zip`) и разархивируйте.
+Скачайте сборку из [последнего релиза](https://github.com/vitalygashkov/streamyx/releases/latest) и разархивируйте.
 
 ## Запуск
 

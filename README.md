@@ -22,7 +22,7 @@ Streamyx is a tool that allows you to download videos for offline-viewing.
 
 ## Installation
 
-Download build from [latest release](https://github.com/vitalygashkov/streamyx/releases/latest) (for Windows: `streamyx-win-x64.zip`) and unzip.
+Download build from [latest release](https://github.com/vitalygashkov/streamyx/releases/latest) and unzip.
 
 ## Getting Started
 
