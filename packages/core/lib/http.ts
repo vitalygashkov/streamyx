@@ -44,6 +44,17 @@ export const getDefaultUserAgent = () => {
   }
 };
 
+const getOsFromPlatform = () => {
+  switch (process.platform) {
+    case 'darwin':
+      return 'macos';
+    case 'linux':
+      return 'linux';
+    default:
+      return 'windows';
+  }
+};
+
 const parseUrlFromResource = (resource: string | URL | Request) =>
   resource instanceof Request
     ? new URL(resource.url)
@@ -152,8 +163,10 @@ class Http implements IHttp {
         headers: allHeaders,
         useHeaderGenerator: true,
         headerGeneratorOptions: {
-          browserListQuery: 'last 2 Chrome versions',
-          operatingSystems: [process.platform === 'win32' ? 'windows' : 'macos'],
+          browserListQuery: 'last 1 Chrome version',
+          devices: ['desktop'],
+          locales: ['en-US', 'ru-RU'],
+          operatingSystems: [getOsFromPlatform()],
         },
         http2: true,
       });
