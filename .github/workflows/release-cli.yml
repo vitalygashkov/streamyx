@@ -109,7 +109,7 @@ jobs:
             ${{ env.APP_NAME }}-x64-mac.zip,
             ${{ env.APP_NAME }}-x64-linux.zip'
           tag: cli-v${{ env.APP_VERSION }}
-          name: CLI v${{ env.PKG_VERSION }}
+          name: CLI v${{ env.APP_VERSION }}
           token: ${{ secrets.GITHUB_TOKEN }}
           draft: true
           generateReleaseNotes: true
