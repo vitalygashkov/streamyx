@@ -55,17 +55,6 @@ const getOsFromPlatform = () => {
   }
 };
 
-const getOsFromPlatform = () => {
-  switch (process.platform) {
-    case 'darwin':
-      return 'macos';
-    case 'linux':
-      return 'linux';
-    default:
-      return 'windows';
-  }
-};
-
 const parseUrlFromResource = (resource: string | URL | Request) =>
   resource instanceof Request
     ? new URL(resource.url)
