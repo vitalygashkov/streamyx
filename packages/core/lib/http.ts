@@ -55,6 +55,17 @@ const getOsFromPlatform = () => {
   }
 };
 
+const getOsFromPlatform = () => {
+  switch (process.platform) {
+    case 'darwin':
+      return 'macos';
+    case 'linux':
+      return 'linux';
+    default:
+      return 'windows';
+  }
+};
+
 const parseUrlFromResource = (resource: string | URL | Request) =>
   resource instanceof Request
     ? new URL(resource.url)
@@ -166,7 +177,7 @@ class Http implements IHttp {
           browserListQuery: 'last 1 Chrome version',
           devices: ['desktop'],
           locales: ['en-US', 'ru-RU'],
-          operatingSystems: [getOsFromPlatform()],
+          operatingSystems: [process.platform === 'win32' ? 'windows' : 'macos'],
         },
         http2: true,
       });
