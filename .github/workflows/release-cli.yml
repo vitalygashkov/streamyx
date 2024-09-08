@@ -31,7 +31,7 @@ jobs:
       - if: matrix.os == 'macos-latest' || matrix.os == 'macos-13'
         run: python3 -m pip install setuptools --break-system-packages
 
-      - run: npm ci
+      - run: npm ci --loglevel verbose
 
       - run: |
           test -n $(node -p -e "require('./package.json').name") &&
