@@ -64,7 +64,7 @@ jobs:
         if: ${{ matrix.os == 'windows-latest' }}
         with:
           name: win-x64
-          path: ./apps/cli/${{ env.APP_NAME }}-x64-win.zip
+          path: ./apps/cli/streamyx-x64-win.zip
       - uses: actions/upload-artifact@v4
         if: ${{ matrix.os == 'macos-latest' }}
         with:
