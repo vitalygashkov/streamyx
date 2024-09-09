@@ -53,7 +53,7 @@ jobs:
       - run: npm run test
 
       - if: ${{ matrix.os == 'windows-latest' }}
-        run: powershell Compress-Archive build\win\{{ env.APP_NAME }}.exe {{ env.APP_NAME }}-x64-win.zip
+        run: powershell Compress-Archive build\win\$env:APP_NAME.exe $env:APP_NAME-x64-win.zip
       - if: ${{ matrix.os == 'macos-latest' }}
         run: zip -9 -j ${{ env.APP_NAME }}-arm64-mac.zip ./build/mac-arm/${{ env.APP_NAME }}
       - if: ${{ matrix.os == 'macos-13' }}
