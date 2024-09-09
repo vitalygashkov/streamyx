@@ -3,7 +3,7 @@ name: Release CLI
 on: workflow_dispatch
 
 env:
-  APP_NAME: streamyx-cli
+  APP_NAME: streamyx
 
 defaults:
   run:
