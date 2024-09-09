@@ -2,6 +2,9 @@ name: Release CLI
 
 on: workflow_dispatch
 
+env:
+  APP_NAME: streamyx-cli
+
 defaults:
   run:
     working-directory: apps/cli
@@ -35,9 +38,7 @@ jobs:
         working-directory: ./
 
       - run: |
-          test -n $(node -p -e "require('./package.json').name") &&
           test -n $(node -p -e "require('./package.json').version") &&
-          echo APP_NAME=$(node -p -e "require('./package.json').name") >> $GITHUB_ENV &&
           echo APP_VERSION=$(node -p -e "require('./package.json').version") >> $GITHUB_ENV || exit 1
 
       - if: matrix.os == 'windows-latest'
@@ -52,7 +53,7 @@ jobs:
       - run: npm run test
 
       - if: ${{ matrix.os == 'windows-latest' }}
-        run: powershell Compress-Archive build\win\streamyx.exe streamyx-x64-win.zip
+        run: powershell Compress-Archive build\win\{{ env.APP_NAME }}.exe {{ env.APP_NAME }}-x64-win.zip
       - if: ${{ matrix.os == 'macos-latest' }}
         run: zip -9 -j ${{ env.APP_NAME }}-arm64-mac.zip ./build/mac-arm/${{ env.APP_NAME }}
       - if: ${{ matrix.os == 'macos-13' }}
@@ -64,7 +65,7 @@ jobs:
         if: ${{ matrix.os == 'windows-latest' }}
         with:
           name: win-x64
-          path: ./apps/cli/streamyx-x64-win.zip
+          path: ./apps/cli/{{ env.APP_NAME }}-x64-win.zip
       - uses: actions/upload-artifact@v4
         if: ${{ matrix.os == 'macos-latest' }}
         with:
@@ -111,9 +112,7 @@ jobs:
 
       - name: Get package name and version
         run: |
-          test -n $(node -p -e "require('./package.json').name") &&
           test -n $(node -p -e "require('./package.json').version") &&
-          echo APP_NAME=$(node -p -e "require('./package.json').name") >> $GITHUB_ENV &&
           echo APP_VERSION=$(node -p -e "require('./package.json').version") >> $GITHUB_ENV || exit 1
 
       - name: Create release
