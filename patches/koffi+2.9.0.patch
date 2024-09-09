@@ -1,0 +1,99 @@
+diff --git a/node_modules/koffi/index.js b/node_modules/koffi/index.js
+index 493438f..e749c97 100644
+--- a/node_modules/koffi/index.js
++++ b/node_modules/koffi/index.js
+@@ -464,8 +464,6 @@ var require_init = __commonJS({
+       }
+       if (native == null)
+         throw new Error("Cannot find the native Koffi module; did you bundle it correctly?");
+-      if (native.version != pkg.version)
+-        throw new Error("Mismatched native Koffi modules");
+       let mod = wrap(native);
+       return mod;
+     }
+@@ -514,46 +512,21 @@ try {
+         native2 = require("./build/koffi/freebsd_arm64/koffi.node");
+       }
+       break;
+-    case "freebsd_ia32":
+-      {
+-        native2 = require("./build/koffi/freebsd_ia32/koffi.node");
+-      }
+-      break;
+     case "freebsd_x64":
+       {
+         native2 = require("./build/koffi/freebsd_x64/koffi.node");
+       }
+       break;
+-    case "linux_armhf":
+-      {
+-        native2 = require("./build/koffi/linux_armhf/koffi.node");
+-      }
+-      break;
+     case "linux_arm64":
+       {
+         native2 = require("./build/koffi/linux_arm64/koffi.node");
+       }
+       break;
+-    case "linux_ia32":
+-      {
+-        native2 = require("./build/koffi/linux_ia32/koffi.node");
+-      }
+-      break;
+-    case "linux_riscv64d":
+-      {
+-        native2 = require("./build/koffi/linux_riscv64d/koffi.node");
+-      }
+-      break;
+     case "linux_x64":
+       {
+         native2 = require("./build/koffi/linux_x64/koffi.node");
+       }
+       break;
+-    case "openbsd_ia32":
+-      {
+-        native2 = require("./build/koffi/openbsd_ia32/koffi.node");
+-      }
+-      break;
+     case "openbsd_x64":
+       {
+         native2 = require("./build/koffi/openbsd_x64/koffi.node");
+@@ -564,11 +537,6 @@ try {
+         native2 = require("./build/koffi/win32_arm64/koffi.node");
+       }
+       break;
+-    case "win32_ia32":
+-      {
+-        native2 = require("./build/koffi/win32_ia32/koffi.node");
+-      }
+-      break;
+     case "win32_x64":
+       {
+         native2 = require("./build/koffi/win32_x64/koffi.node");
+@@ -578,26 +546,6 @@ try {
+ } catch {
+   try {
+     switch (triplet2) {
+-      case "linux_armhf":
+-        {
+-          native2 = require("./build/koffi/musl_armhf/koffi.node");
+-        }
+-        break;
+-      case "linux_arm64":
+-        {
+-          native2 = require("./build/koffi/musl_arm64/koffi.node");
+-        }
+-        break;
+-      case "linux_ia32":
+-        {
+-          native2 = require("./build/koffi/musl_ia32/koffi.node");
+-        }
+-        break;
+-      case "linux_riscv64d":
+-        {
+-          native2 = require("./build/koffi/musl_riscv64d/koffi.node");
+-        }
+-        break;
+       case "linux_x64":
+         {
+           native2 = require("./build/koffi/musl_x64/koffi.node");

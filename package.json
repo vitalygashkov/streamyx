@@ -13,6 +13,7 @@
   },
   "homepage": "https://streamyx.ru",
   "scripts": {
+    "postinstall": "patch-package",
     "test": "vitest",
     "lint": "eslint --ext .js,.ts .",
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\""
@@ -23,6 +24,7 @@
   ],
   "devDependencies": {
     "@types/node": "^22.5.4",
+    "patch-package": "^8.0.0",
     "typescript": "^5.5.4"
   }
 }
