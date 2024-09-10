@@ -78,6 +78,8 @@ export interface IHttp {
   destroySessions(): Promise<void>;
 }
 
+const sessionToken = { id: crypto.randomUUID() };
+
 class Http implements IHttp {
   headers: Record<string, string>;
   cookies: string[];
@@ -161,11 +163,11 @@ class Http implements IHttp {
         proxyUrl: this.#proxy || undefined,
         ...options,
         headers: allHeaders,
+        sessionToken,
         useHeaderGenerator: true,
         headerGeneratorOptions: {
-          browserListQuery: 'last 1 Chrome version',
+          browsers: ['chrome'],
           devices: ['desktop'],
-          locales: ['en-US', 'ru-RU'],
           operatingSystems: [process.platform === 'win32' ? 'windows' : 'macos'],
         },
         http2: true,
