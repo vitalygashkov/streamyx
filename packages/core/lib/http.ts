@@ -370,7 +370,7 @@ class Http implements IHttp {
       }
       const setCookie = response.headers.get('set-cookie');
       if (setCookie) this.appendCookies(setCookie);
-      return response as Response;
+      return response as unknown as Response;
     } catch (e) {
       if (!this.#hasAttempts(resource)) throw e;
       await this.#nextRetry(resource);
