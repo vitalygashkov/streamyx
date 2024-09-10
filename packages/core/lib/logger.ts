@@ -2,7 +2,6 @@ import { pid } from 'node:process';
 import { inspect } from 'node:util';
 import fsp from 'node:fs/promises';
 import { Stats, mkdirSync, existsSync } from 'node:fs';
-import koffi from 'koffi';
 import pino from 'pino';
 import pretty from 'pino-pretty';
 import fs from './fs';
@@ -20,7 +19,7 @@ const LOG_PATH = fs.join(LOG_DIR, `streamyx_${CURRENT_DATETIME}_${pid}.log`);
 
 if (!existsSync(LOG_DIR)) mkdirSync(LOG_DIR, { recursive: true });
 
-const clearLogs = async () => {
+const clearOutdatedLogs = async () => {
   const files = await fs.readDir(LOG_DIR);
   const toPath = (name: string) => fs.join(LOG_DIR, name);
   const statsQueue = files.map((name: string) =>
@@ -37,17 +36,7 @@ const clearLogs = async () => {
   await Promise.allSettled(deleteQueue).catch(logger.error);
 };
 
-clearLogs();
-
-// https://github.com/pinojs/pino/issues/1722
-if (process.platform === 'win32') {
-  const CP_UTF8 = 65001;
-  const kernel32 = koffi.load('Kernel32');
-  const setConsoleOutputCP = kernel32.func('SetConsoleOutputCP', 'bool', ['int']);
-  const setConsoleCP = kernel32.func('SetConsoleCP', 'bool', ['int']);
-  setConsoleOutputCP(CP_UTF8);
-  setConsoleCP(CP_UTF8);
-}
+clearOutdatedLogs();
 
 // Enable debug mode if needed
 if (
