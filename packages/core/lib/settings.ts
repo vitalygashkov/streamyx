@@ -1,5 +1,6 @@
 import { join } from 'node:path';
 import fs from './fs';
+import { logger } from './logger';
 
 export type VideoQuality = (typeof VIDEO_QUALITY)[keyof typeof VIDEO_QUALITY];
 export const VIDEO_QUALITY = {
@@ -111,7 +112,16 @@ const validateSettings = (values: Partial<Settings>) => {
 
 export const loadSettings = async (customPath?: string): Promise<Settings> => {
   const settingsPath = customPath || (await getSettingsPath());
-  const newSettings = await fs.readJson<Settings>(settingsPath).catch(() => defaultSettings);
+  const exists = fs.exists(settingsPath);
+  if (!exists) {
+    logger.info('Settings file not found. Fallback to defaults...');
+    return defaultSettings;
+  }
+  const newSettings = await fs.readJson<Settings>(settingsPath).catch((e) => {
+    logger.error('Failed to load settings. Fallback to defaults...');
+    logger.debug(e.message);
+    return defaultSettings;
+  });
   Object.assign(settings, newSettings);
   return validateSettings(settings);
 };
