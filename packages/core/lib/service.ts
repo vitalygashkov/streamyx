@@ -6,7 +6,9 @@ import { Http, http } from './http';
 import { default as fs } from './fs';
 import { logger as log } from './logger';
 import { prompt } from './prompt';
-import { execUrlPatterns, sanitizeString } from './utils';
+import { execUrlPatterns, sanitizeString, safeEval } from './utils';
+
+const coreUtils = { sanitizeString, execUrlPatterns, safeEval };
 
 export interface StreamyxCore {
   /**
@@ -37,10 +39,7 @@ export interface StreamyxCore {
   /**
    * Utility functions
    */
-  utils: {
-    sanitizeString: typeof sanitizeString;
-    execUrlPatterns: typeof execUrlPatterns;
-  };
+  utils: typeof coreUtils;
 }
 
 export interface PluginInstance<T = unknown> {
@@ -85,7 +84,7 @@ export const create = (name: string): StreamyxCore => ({
   prompt,
   fs,
   store: createStore(name),
-  utils: { sanitizeString, execUrlPatterns },
+  utils: coreUtils,
 });
 
 export type ServiceInstance<T> = PluginInstance<T>;

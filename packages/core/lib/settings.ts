@@ -59,7 +59,7 @@ const getDefaultLanguage = () => {
   else return 'en';
 };
 
-const defaultSettings: Settings = {
+export const defaultSettings: Settings = {
   theme: THEME.system,
   language: getDefaultLanguage(),
   // askForOptionsBeforeDownload: true,
