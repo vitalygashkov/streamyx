@@ -1,5 +1,6 @@
 // @ts-ignore
 import 'urlpattern-polyfill';
+import { logger } from './logger';
 
 export const sanitizeString = (text: string) => {
   const forbidden = ['}', '{', '%', '>', '<', '^', ';', '`', '$', '"', '@', '='];
@@ -22,4 +23,20 @@ export const execUrlPatterns = (url: string, patterns: string[], baseUrls: strin
     }
   }
   return { pathname, search };
+};
+
+// Like global eval but just for JS objects
+export const safeEval = <T = any>(jsObjectString: string): T | null => {
+  const jsonString = jsObjectString
+    .trim()
+    .replace(/(\w+):/g, '"$1":')
+    .replace(/'/g, '"');
+  try {
+    return JSON.parse(jsonString);
+  } catch (e) {
+    logger.error('JSON parsing failed');
+    logger.debug(jsonString);
+    logger.debug(e);
+    return null as T;
+  }
 };
