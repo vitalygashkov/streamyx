@@ -113,12 +113,10 @@ const validateSettings = (values: Partial<Settings>) => {
 export const loadSettings = async (customPath?: string): Promise<Settings> => {
   const settingsPath = customPath || (await getSettingsPath());
   const exists = fs.exists(settingsPath);
-  if (!exists) {
-    logger.info('Settings file not found. Fallback to defaults...');
-    return defaultSettings;
-  }
+  if (!exists) logger.info('Settings file not found');
   const newSettings = await fs.readJson<Settings>(settingsPath).catch((e) => {
-    logger.error('Failed to load settings. Fallback to defaults...');
+    logger.error('Failed to load settings');
+    logger.warn('Fallback to default settings...');
     logger.debug(e.message);
     return defaultSettings;
   });
