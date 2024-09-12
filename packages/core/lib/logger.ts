@@ -1,7 +1,7 @@
 import { pid } from 'node:process';
 import { inspect } from 'node:util';
+import { Stats, mkdirSync, existsSync, createWriteStream } from 'node:fs';
 import fsp from 'node:fs/promises';
-import { Stats, mkdirSync, existsSync } from 'node:fs';
 import pino from 'pino';
 import pretty from 'pino-pretty';
 import fs from './fs';
@@ -48,13 +48,23 @@ if (
   process.env.DEBUG = 'streamyx:*';
 }
 
+// https://github.com/pinojs/pino/issues/1722
+// Use native Node.js streams on Windows due to lack of Cyrillic support in pino's sonic-boom
+const isWindows = process.platform === 'win32';
+const fileStream = isWindows
+  ? createWriteStream(LOG_PATH, { flags: 'a' })
+  : pino.destination({ dest: LOG_PATH, append: true });
+const prettyDestination = isWindows ? process.stdout : undefined;
+
+const level = process.env.DEBUG?.startsWith('streamyx') ? 'debug' : 'info';
+
 const streams = [
   {
     level: 'debug',
-    stream: pino.destination({ dest: LOG_PATH, append: true }),
+    stream: fileStream,
   },
   {
-    level: process.env.DEBUG?.startsWith('streamyx') ? 'debug' : 'info',
+    level,
     stream: pretty({
       colorize: true,
       sync: true,
@@ -64,6 +74,7 @@ const streams = [
         level: (_logLevel, _key, _log, { labelColorized }: any) =>
           `${labelColorized}`.padEnd(15, ' '),
       },
+      destination: prettyDestination,
       messageFormat: (log, messageKey, _levelLabel, { colors }) => {
         const message = log[messageKey];
         if (typeof message === 'string') return colors.whiteBright(message);
