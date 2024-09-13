@@ -3,11 +3,11 @@
 </p>
 
 <p align="center">
-  <a aria-label="Join Discord community" href="https://discord.gg/fHMgAgc7gU">
-    <img alt="" src="https://img.shields.io/badge/Discord-сервер-black?style=flat&logo=Discord&logoColor=white">
+  <a aria-label="Дискорд" href="https://discord.gg/fHMgAgc7gU">
+    <img alt="" src="https://img.shields.io/badge/Дискорд-сервер-black?style=flat&logo=Discord&logoColor=white">
   </a>
-  <a aria-label="Join Telegram community" href="https://t.me/streamyxtalks">
-    <img alt="" src="https://img.shields.io/badge/Telegram-чат-black?style=flat&logo=Telegram&logoColor=white">
+  <a aria-label="Телеграм" href="https://t.me/streamyxtalks">
+    <img alt="" src="https://img.shields.io/badge/Телеграм-чат-black?style=flat&logo=Telegram&logoColor=white">
   </a>
   <img alt="" src="https://img.shields.io/github/downloads/vitalygashkov/streamyx/latest/total?style=flat&color=black">
   <img alt="" src="https://img.shields.io/github/downloads/vitalygashkov/streamyx/total?style=flat&color=black">
