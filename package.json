@@ -1,5 +1,6 @@
 {
   "name": "streamyx",
+  "private": true,
   "version": "0.0.0",
   "description": "Streamyx Client Applications",
   "repository": {

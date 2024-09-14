@@ -4,11 +4,23 @@
   "author": "Vitaly Gashkov <vitalygashkov@vk.com>",
   "description": "Core modules for Streamyx",
   "license": "AGPL-3.0",
-  "main": "dist/lib/main.js",
+  "main": "dist/main.js",
+  "module": "dist/main.mjs",
+  "types": "dist/main.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/main.d.ts",
+      "import": "./dist/main.mjs",
+      "require": "./dist/main.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "prepare": "npm run build",
-    "build": "tsc -p tsconfig.json",
-    "dev": "tsc --watch"
+    "build": "tsup ./lib/main.ts --format esm,cjs --dts --clean",
+    "dev": "tsup ./lib/main.ts --format esm,cjs --watch --dts --clean"
   },
   "dependencies": {
     "dasha": "^3.0.4",
@@ -23,6 +35,7 @@
   },
   "devDependencies": {
     "@types/node": "^22.5.4",
+    "tsup": "^8.2.4",
     "typescript": "^5.6.2",
     "vitest": "^2.0.5"
   }
