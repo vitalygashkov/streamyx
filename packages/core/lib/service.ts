@@ -71,10 +71,57 @@ export interface PluginInstance<T = unknown> {
   init?: () => void | Promise<void>;
 
   /**
-   * Fetches media info list from the specified URL
+   * Fetches content metadata from URL
    */
-  fetchMediaInfo: (url: string, args: RunArgs) => Promise<(MediaInfo | AsyncMediaInfo)[]>;
+  fetchContentMetadata: (url: string, args: RunArgs) => Promise<ContentMetadata[]>;
+
+  /**
+   * Fetches data about content source (e.g. manifest URL, external subtitles, etc.)
+   */
+  fetchContentSource?: (contentId: string, args: RunArgs) => Promise<ContentSource | null>;
+
+  /**
+   * Fetches just content DRM config (e.g. license server URL, request headers, etc.)
+   */
+  fetchContentDrm?: (payload: any, args: RunArgs) => Promise<DrmConfig>;
 }
+
+export interface CommonContentMetadata {
+  tag?: string;
+  /**
+   * Required if no `fetchContentSource` method is provided
+   */
+  source?: ContentSource;
+}
+
+export interface MovieMetadata extends CommonContentMetadata {
+  id?: string;
+  title?: string;
+}
+
+export interface EpisodeMetadata extends CommonContentMetadata {
+  id?: string;
+  title?: string;
+  episodeNumber: number;
+  seasonNumber?: number;
+  episodeTitle?: string;
+}
+
+export type ContentMetadata = MovieMetadata | EpisodeMetadata;
+
+export type ContentSource = {
+  /**
+   * URL of the content: manifest URL / playlist URL / direct link to media file
+   */
+  url: string;
+  headers?: Record<string, string>;
+  http2?: boolean;
+  type?: 'video' | 'audio' | 'subtitle' | 'any';
+  audioLanguage?: string;
+  audioType?: string;
+  subtitles?: any[];
+  drm?: DrmConfig;
+};
 
 export type Plugin<T = unknown> = (streamyx: StreamyxCore) => PluginInstance<T>;
 
@@ -189,10 +236,12 @@ export interface MediaInfo {
 
 export type AsyncMediaInfo = () => Promise<MediaInfo>;
 
-export interface DrmConfig {
-  server: string;
-  headers: Record<string, string>;
-  params?: object;
-  template?: string;
-  http2?: boolean;
-}
+export type DrmConfig =
+  | {
+      server: string;
+      headers?: Record<string, string>;
+      params?: object;
+      template?: string;
+      http2?: boolean;
+    }
+  | { payload: any };
