@@ -40,3 +40,33 @@ export const safeEval = <T = any>(jsObjectString: string): T | null => {
     return null as T;
   }
 };
+
+export const withEpisodes = (episodesBySeasons: Map<number, Set<number>>) => {
+  const has = (episode?: number, season?: number) => {
+    for (const s of episodesBySeasons.keys()) {
+      for (const e of episodesBySeasons.get(s) || []) {
+        const seasonEmpty = season === undefined || isNaN(season);
+        const episodeEmpty = episode === undefined || isNaN(episode);
+        let hasMatch = false;
+        if (episodeEmpty) hasMatch = s === season;
+        else hasMatch = (seasonEmpty ? isNaN(s) : s === season) && e === episode;
+        if (hasMatch) return true;
+      }
+    }
+    return false;
+  };
+  const set = (episode?: number, season?: number) => {
+    const s = season || NaN;
+    const e = episode || NaN;
+    if (episodesBySeasons.has(s)) episodesBySeasons.get(s)?.add(e);
+    else episodesBySeasons.set(s, new Set([e]));
+  };
+  const getAllEpisodeNumbers = () =>
+    Array.from(episodesBySeasons.values()).flatMap(Array.from) as number[];
+  const seasonsCount = episodesBySeasons.size;
+  const episodes = getAllEpisodeNumbers();
+  const episodesCount = episodes.length;
+  const getMin = () => Math.min(...episodes);
+  const getMax = () => Math.max(...episodes);
+  return { has, set, getMin, getMax, seasonsCount, episodesCount };
+};
