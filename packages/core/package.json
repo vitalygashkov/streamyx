@@ -1,6 +1,6 @@
 {
   "name": "@streamyx/core",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "author": "Vitaly Gashkov <vitalygashkov@vk.com>",
   "description": "Core modules for Streamyx",
   "license": "AGPL-3.0",

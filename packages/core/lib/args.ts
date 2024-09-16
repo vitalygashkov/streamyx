@@ -23,14 +23,7 @@ export type RunArgs = {
   skipSubtitles: boolean;
   skipMux: boolean;
 
-  episodes: {
-    values: [season: number, episode: number][];
-    size: number;
-    set: (episode?: number | undefined, season?: number | undefined) => number;
-    has: (episode?: number | undefined, season?: number | undefined) => boolean;
-    getMin: () => number;
-    getMax: () => number;
-  };
+  episodes: Map<number, Set<number>>;
   retry: number;
   connections: number;
   proxy: string | null;

@@ -41,7 +41,7 @@ export const safeEval = <T = any>(jsObjectString: string): T | null => {
   }
 };
 
-export const withEpisodes = (episodesBySeasons: Map<number, Set<number>>) => {
+export const extendEpisodes = (episodesBySeasons: Map<number, Set<number>>) => {
   const has = (episode?: number, season?: number) => {
     for (const s of episodesBySeasons.keys()) {
       for (const e of episodesBySeasons.get(s) || []) {
@@ -68,5 +68,5 @@ export const withEpisodes = (episodesBySeasons: Map<number, Set<number>>) => {
   const episodesCount = episodes.length;
   const getMin = () => Math.min(...episodes);
   const getMax = () => Math.max(...episodes);
-  return { has, set, getMin, getMax, seasonsCount, episodesCount };
+  return { items: episodesBySeasons, has, set, getMin, getMax, seasonsCount, episodesCount };
 };
