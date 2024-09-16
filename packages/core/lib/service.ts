@@ -6,9 +6,9 @@ import { Http, http } from './http';
 import { default as fs } from './fs';
 import { logger as log } from './logger';
 import { prompt } from './prompt';
-import { execUrlPatterns, sanitizeString, safeEval } from './utils';
+import { execUrlPatterns, sanitizeString, safeEval, extendEpisodes } from './utils';
 
-const coreUtils = { sanitizeString, execUrlPatterns, safeEval };
+const coreUtils = { sanitizeString, execUrlPatterns, safeEval, extendEpisodes };
 
 export interface StreamyxCore {
   /**
@@ -189,14 +189,7 @@ export const withDefaultArgs = (args: Partial<RunArgs>): RunArgs => {
     skipSubtitles: args.skipSubtitles || false,
     skipMux: args.skipMux || false,
 
-    episodes: args.episodes || {
-      values: [],
-      size: NaN,
-      set: (episode?: number | undefined, season?: number | undefined) => NaN,
-      has: (episode?: number | undefined, season?: number | undefined) => false,
-      getMin: () => NaN,
-      getMax: () => NaN,
-    },
+    episodes: args.episodes || new Map(),
     retry: args.retry || NaN,
     connections: args.connections || NaN,
     proxy: args.proxy || null,
