@@ -62,7 +62,7 @@ export const extendEpisodes = (episodesBySeasons: Map<number, Set<number>>) => {
     else episodesBySeasons.set(s, new Set([e]));
   };
   const getAllEpisodeNumbers = () =>
-    Array.from(episodesBySeasons.values()).flatMap(Array.from) as number[];
+    Array.from(episodesBySeasons.values()).flatMap((value) => Array.from(value)) as number[];
   const seasonsCount = episodesBySeasons.size;
   const episodes = getAllEpisodeNumbers();
   const episodesCount = episodes.length;
