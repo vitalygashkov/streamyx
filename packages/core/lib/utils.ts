@@ -25,17 +25,13 @@ export const execUrlPatterns = (url: string, patterns: string[], baseUrls: strin
   return { pathname, search };
 };
 
-// Like global eval but just for JS objects
+// Like eval but just for JS objects
 export const safeEval = <T = any>(jsObjectString: string): T | null => {
-  const jsonString = jsObjectString
-    .trim()
-    .replace(/(\w+):/g, '"$1":')
-    .replace(/'/g, '"');
   try {
-    return JSON.parse(jsonString);
+    return new Function('return ' + jsObjectString)();
   } catch (e) {
-    logger.error('JSON parsing failed');
-    logger.debug(jsonString);
+    logger.error('Evaluation JS object failed. Input:');
+    logger.debug(jsObjectString);
     logger.debug(e);
     return null as T;
   }
@@ -62,7 +58,7 @@ export const extendEpisodes = (episodesBySeasons: Map<number, Set<number>>) => {
     else episodesBySeasons.set(s, new Set([e]));
   };
   const getAllEpisodeNumbers = () =>
-    Array.from(episodesBySeasons.values()).flatMap(Array.from) as number[];
+    Array.from(episodesBySeasons.values()).flatMap((value) => Array.from(value)) as number[];
   const seasonsCount = episodesBySeasons.size;
   const episodes = getAllEpisodeNumbers();
   const episodesCount = episodes.length;
