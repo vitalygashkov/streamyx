@@ -1,8 +1,8 @@
 import { AudioCodec, DynamicRange, VideoCodec } from 'dasha';
 
-export type RunArgs = {
-  urls: string[];
+export type Commands = string[];
 
+export type Options = {
   videoQuality?: string;
   videoCodecs?: VideoCodec[];
   videoRange?: DynamicRange;
@@ -13,33 +13,34 @@ export type RunArgs = {
   audioChannels?: number;
   audioBitrate?: number;
 
-  subtitleFormat: string;
-  subtitleLanguages: string[];
+  subtitleFormat?: string;
+  subtitleLanguages?: string[];
 
-  languages: string[];
+  languages?: string[];
 
-  skipVideo: boolean;
-  skipAudio: boolean;
-  skipSubtitles: boolean;
-  skipMux: boolean;
+  skipVideo?: boolean;
+  skipAudio?: boolean;
+  skipSubtitles?: boolean;
+  skipMux?: boolean;
 
-  episodes: Map<number, Set<number>>;
-  retry: number;
-  connections: number;
-  proxy: string | null;
-  proxyMeta: string | null;
-  proxyMedia: string | null;
+  episodes?: Map<number, Set<number>>;
+  retry?: number;
+  connections?: number;
+  proxy?: string | null;
+  proxyMeta?: string | null;
+  proxyMedia?: string | null;
 
-  movieTemplate: string;
-  episodeTemplate: string;
-  hardsub: boolean;
+  movieTemplate?: string;
+  episodeTemplate?: string;
+  hardsub?: boolean;
   trimBegin?: string;
   trimEnd?: string;
+
   pssh?: string;
+  drmTemplate?: string;
   header?: Record<string, string>;
-  http2: boolean;
+
+  http2?: boolean;
   keys?: { kid: string; key: string }[];
-  debug: boolean;
-  version: boolean;
-  help: boolean;
+  debug?: boolean;
 };
