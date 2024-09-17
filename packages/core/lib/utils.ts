@@ -25,17 +25,13 @@ export const execUrlPatterns = (url: string, patterns: string[], baseUrls: strin
   return { pathname, search };
 };
 
-// Like global eval but just for JS objects
+// Like eval but just for JS objects
 export const safeEval = <T = any>(jsObjectString: string): T | null => {
-  const jsonString = jsObjectString
-    .trim()
-    .replace(/(\w+):/g, '"$1":')
-    .replace(/'/g, '"');
   try {
-    return JSON.parse(jsonString);
+    return new Function('return ' + jsObjectString)();
   } catch (e) {
-    logger.error('JSON parsing failed');
-    logger.debug(jsonString);
+    logger.error('Evaluation JS object failed. Input:');
+    logger.debug(jsObjectString);
     logger.debug(e);
     return null as T;
   }
