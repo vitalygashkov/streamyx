@@ -1,4 +1,4 @@
-import { RunArgs } from './args';
+import { Options } from './args';
 import { IHttp } from './http';
 import { IPrompt } from './prompt';
 import { createStore } from './store';
@@ -73,17 +73,17 @@ export interface PluginInstance<T = unknown> {
   /**
    * Fetches content metadata from URL
    */
-  fetchContentMetadata: (url: string, args: RunArgs) => Promise<ContentMetadata[]>;
+  fetchContentMetadata: (url: string, options: Options) => Promise<ContentMetadata[]>;
 
   /**
    * Fetches data about content source (e.g. manifest URL, external subtitles, etc.)
    */
-  fetchContentSource?: (contentId: string, args: RunArgs) => Promise<ContentSource | null>;
+  fetchContentSource?: (contentId: string, options: Options) => Promise<ContentSource | null>;
 
   /**
    * Fetches just content DRM config (e.g. license server URL, request headers, etc.)
    */
-  fetchContentDrm?: (payload: any, args: RunArgs) => Promise<DrmConfig>;
+  fetchContentDrm?: (payload: any, options: Options) => Promise<DrmConfig>;
 }
 
 export interface CommonContentMetadata {
@@ -172,37 +172,6 @@ export const registerService = <T extends RegisterService<T>>(
   return instance as ServiceInstance<ReturnType<ReturnType<T>>['api']> & {
     api: NonNullable<ReturnType<ReturnType<T>>['api']>;
     core: StreamyxCore;
-  };
-};
-
-export const withDefaultArgs = (args: Partial<RunArgs>): RunArgs => {
-  return {
-    urls: args.urls || [],
-
-    subtitleFormat: args.subtitleFormat || '',
-    subtitleLanguages: args.subtitleLanguages || [],
-
-    languages: args.languages || [],
-
-    skipVideo: args.skipVideo || false,
-    skipAudio: args.skipAudio || false,
-    skipSubtitles: args.skipSubtitles || false,
-    skipMux: args.skipMux || false,
-
-    episodes: args.episodes || new Map(),
-    retry: args.retry || NaN,
-    connections: args.connections || NaN,
-    proxy: args.proxy || null,
-    proxyMeta: args.proxyMeta || null,
-    proxyMedia: args.proxyMedia || null,
-
-    movieTemplate: args.movieTemplate || '',
-    episodeTemplate: args.episodeTemplate || '',
-    hardsub: args.hardsub || false,
-    http2: args.http2 || false,
-    debug: args.debug || false,
-    version: args.version || false,
-    help: args.help || false,
   };
 };
 
