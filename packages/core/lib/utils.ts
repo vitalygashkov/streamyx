@@ -37,7 +37,7 @@ export const safeEval = <T = any>(jsObjectString: string): T | null => {
   }
 };
 
-export const extendEpisodes = (episodesBySeasons: Map<number, Set<number>>) => {
+export const extendEpisodes = (episodesBySeasons: Map<number, Set<number>> = new Map()) => {
   const has = (episode?: number, season?: number) => {
     for (const s of episodesBySeasons.keys()) {
       for (const e of episodesBySeasons.get(s) || []) {
