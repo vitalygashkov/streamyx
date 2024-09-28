@@ -368,6 +368,8 @@ class Http implements IHttp {
       const isSuccess = response.status >= 200 && response.status <= 299;
       if (!isSuccess && this.#hasAttempts(resource)) {
         await this.#nextRetry(resource);
+        logger.debug(response.text());
+        logger.debug(response.status);
         return this.fetchHttp1(resource, init);
       }
       const setCookie = response.headers.get('set-cookie');
