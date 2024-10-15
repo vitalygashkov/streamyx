@@ -26,17 +26,17 @@
     "dasha": "^3.0.5",
     "got-scraping": "^3.2.15",
     "ora-classic": "^5.4.2",
-    "pino": "^9.4.0",
-    "pino-pretty": "^11.2.2",
-    "puppeteer-core": "^23.3.0",
+    "pino": "^9.5.0",
+    "pino-pretty": "^11.3.0",
+    "puppeteer-core": "^23.5.3",
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
-    "undici": "^6.19.8"
+    "undici": "^6.20.1"
   },
   "devDependencies": {
-    "@types/node": "^22.5.4",
-    "tsup": "^8.2.4",
-    "typescript": "^5.6.2",
-    "vitest": "^2.0.5"
+    "@types/node": "^22.7.5",
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.3"
   }
 }
