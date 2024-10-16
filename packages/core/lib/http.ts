@@ -340,6 +340,7 @@ class Http implements IHttp {
       stream.on('error', async (err) => {
         if (!this.#hasAttempts(resource)) reject(err);
         await this.#nextRetry(resource);
+        logger.debug(err);
         const response = await this.fetchHttp2(session, resource, options);
         resolve(response);
       });
@@ -347,6 +348,8 @@ class Http implements IHttp {
         const status = Number(headers[':status']);
         if (status !== 200 && this.#hasAttempts(resource)) {
           await this.#nextRetry(resource);
+          logger.debug(headers);
+          logger.debug(status);
           const response = await this.fetchHttp2(session, resource, options);
           resolve(response);
         }
@@ -378,6 +381,7 @@ class Http implements IHttp {
     } catch (e) {
       if (!this.#hasAttempts(resource)) throw e;
       await this.#nextRetry(resource);
+      logger.debug(e);
       return this.fetchHttp1(resource, options);
     }
   }
