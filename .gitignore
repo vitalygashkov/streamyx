@@ -1,3 +1,7 @@
+/files
+device_client_id_blob
+device_private_key
+
 # Logs
 /logs
 npm-debug.log*
