@@ -148,19 +148,11 @@ export type RegisteredService<A = unknown> = {
   core: StreamyxCore;
 };
 
-export type Service<T = undefined, K = any> = (
-  options: T
-) => (core: StreamyxCore) => ServiceInstance<K>;
+export type Service<T = undefined, K = any> = (options: T) => (core: StreamyxCore) => ServiceInstance<K>;
 
-export type RegisterService<T extends Service> = Service<
-  Parameters<T>[0],
-  ReturnType<ReturnType<T>>['api']
->;
+export type RegisterService<T extends Service> = Service<Parameters<T>[0], ReturnType<ReturnType<T>>['api']>;
 
-export const registerService = <T extends RegisterService<T>>(
-  service: T,
-  options?: Parameters<T>[0]
-) => {
+export const registerService = <T extends RegisterService<T>>(service: T, options?: Parameters<T>[0]) => {
   const core = create('streamyx');
   const instance = service(options)(core) as ServiceInstance<ReturnType<ReturnType<T>>['api']> & {
     core: StreamyxCore;
