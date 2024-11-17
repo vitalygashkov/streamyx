@@ -23,7 +23,7 @@
     "dev": "tsup ./lib/main.ts --format esm,cjs --watch --dts --clean"
   },
   "dependencies": {
-    "dasha": "^3.0.5",
+    "dasha": "^3.1.0",
     "got-scraping": "^3.2.15",
     "ora-classic": "^5.4.2",
     "pino": "^9.5.0",
@@ -31,10 +31,10 @@
     "puppeteer-core": "^23.5.3",
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
-    "undici": "^6.20.1"
+    "undici": "^6.21.0"
   },
   "devDependencies": {
-    "@types/node": "^22.7.5",
+    "@types/node": "^22.9.0",
     "tsup": "^8.3.0",
     "typescript": "^5.6.3",
     "vitest": "^2.1.3"

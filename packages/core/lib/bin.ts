@@ -49,10 +49,7 @@ export const findPath = async (name: string) => {
   return null;
 };
 
-export const withOutput = (
-  process: ChildProcessWithoutNullStreams,
-  log: Pick<typeof console, 'debug'> = logger
-) => {
+export const withOutput = (process: ChildProcessWithoutNullStreams, log: Pick<typeof console, 'debug'> = logger) => {
   const handler = (message: string) => message && log.debug(message.trim());
   process.stdout.setEncoding('utf8');
   process.stdout.on('data', handler);
@@ -61,9 +58,7 @@ export const withOutput = (
 };
 
 export const logSpawn = (command: string, args: string[]) => {
-  logger.debug(
-    `${command} ${args.map((s) => (s.startsWith('-') ? s : `"${s.replaceAll('"', '\\"')}"`)).join(' ')}`
-  );
+  logger.debug(`${command} ${args.map((s) => (s.startsWith('-') ? s : `"${s.replaceAll('"', '\\"')}"`)).join(' ')}`);
 };
 
 export interface BinaryNamesByArch {
@@ -82,9 +77,7 @@ const getBinaryName = (names: BinaryNamesByPlatform) => {
   if (!name) {
     const archList: BinaryNamesByArch[] = Object.values(names);
     const archItem = archList.find((item) => item.x64 || item.arm64);
-    throw new Error(
-      `Unsupported platform (${platform}/${arch}) for binary ${archItem?.x64 || archItem?.arm64}`
-    );
+    throw new Error(`Unsupported platform (${platform}/${arch}) for binary ${archItem?.x64 || archItem?.arm64}`);
   }
   return name;
 };
@@ -149,19 +142,14 @@ export const fetchGitHubAsset = async ({ id, assets, repo, version }: DownloadBi
   return output;
 };
 
-export const useBinary = async (
-  name: string,
-  downloadFn?: (name: string) => string | Promise<string>
-) => {
+export const useBinary = async (name: string, downloadFn?: (name: string) => string | Promise<string>) => {
   let binaryPath = await findPath(name);
   if (!binaryPath) {
     if (downloads.paths.has(name)) binaryPath = downloads.paths.get(name)!;
     else if (isDownloading(name)) binaryPath = await waitForDownload(name);
-    binaryPath =
-      binaryPath && fs.exists(binaryPath) ? binaryPath : (await downloadFn?.(name)) || null;
+    binaryPath = binaryPath && fs.exists(binaryPath) ? binaryPath : (await downloadFn?.(name)) || null;
   }
-  if (!binaryPath || !fs.exists(binaryPath))
-    throw new Error(`Required package is missing: ${name}`);
+  if (!binaryPath || !fs.exists(binaryPath)) throw new Error(`Required package is missing: ${name}`);
   return binaryPath;
 };
 
