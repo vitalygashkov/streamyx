@@ -25,7 +25,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 20
           cache: 'npm'
       - run: git config --global url."https://${{ secrets.CONTROL_REPO_TOKEN }}@github.com/".insteadOf ssh://git@github.com/
 
@@ -94,7 +94,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 20
           cache: 'npm'
 
       - uses: actions/download-artifact@v4
