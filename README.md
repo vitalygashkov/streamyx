@@ -20,7 +20,7 @@ Streamyx is a tool that allows you to download videos for offline-viewing.
   <a href="https://github.com/vitalygashkov/streamyx/tree/main/README.ru.md">Pусский</a>
 </div>
 
-### Supported services
+### Built-in services
 
 <a aria-label="Crunchyroll" href="https://crunchyroll.com"><img alt="" src="https://img.shields.io/badge/Crunchyroll-F47521?style=flat-square&logo=crunchyroll&logoColor=white"></a>
 <a aria-label="Weibo" href="https://m.weibo.cn/"><img alt="" src="https://img.shields.io/badge/Weibo-D62B2A?style=flat-square&logo=sina-weibo&logoColor=white"></a>
@@ -30,7 +30,7 @@ Streamyx is a tool that allows you to download videos for offline-viewing.
 <a aria-label="VirtualRoom" href="https://virtualroom.ru/"><img alt="" src="https://img.shields.io/badge/VirtualRoom-01aade?style=flat-square&logoColor=white"></a>
 <a aria-label="НТВ" href="https://www.ntv.ru/"><img alt="" src="https://img.shields.io/badge/НТВ-00aa01?style=flat-square&logoColor=white"></a>
 
-#### and there's many more...
+> You can add support for any streaming service yourself! See [example](https://github.com/vitalygashkov/streamyx-service-example) for more details.
 
 ## Installation
 
@@ -46,7 +46,7 @@ Usage:
 streamyx [OPTIONS] URL [URL...]
 ```
 
-Use `-h` option to see all available options.
+Use `--help` flag to see all available options.
 
 ### Download a video
 
