@@ -1,0 +1,14 @@
+{
+  "name": "@streamyx/services",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Built-in services for Streamyx",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@streamyx/core": "^2.1.1"
+  }
+}
