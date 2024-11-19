@@ -1,8 +1,12 @@
 import { join } from 'node:path';
-import fs from './fs';
+import { fs, initDir } from './fs';
 import { http, importCookies } from './http';
+import { getSettings } from './settings';
 
-const createStorePath = (name: string) => join(process.cwd(), 'config', name, 'config.json');
+const createStorePath = (name: string) => {
+  const dir = initDir(join(getSettings().servicesDir, name));
+  return join(dir, 'config.json');
+};
 
 const getCookiesFromTxt = async (dir: string) => {
   const cookiesTxtPath = fs.join(dir, 'cookies.txt');

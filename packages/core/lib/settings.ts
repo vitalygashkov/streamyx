@@ -1,5 +1,5 @@
 import { join } from 'node:path';
-import fs from './fs';
+import { fs, BaseDirectory, initDir } from './fs';
 import { logger } from './logger';
 
 export type VideoQuality = (typeof VIDEO_QUALITY)[keyof typeof VIDEO_QUALITY];
@@ -29,11 +29,14 @@ export type Theme = (typeof THEME)[keyof typeof THEME];
 export const THEME = { dark: 'dark', light: 'light', system: 'system' } as const;
 
 export interface Settings {
-  theme: Theme;
-  language: string;
   // askForOptionsBeforeDownload: boolean;
   downloadDir: string;
+  servicesDir: string;
+  binariesDir: string;
+  drmDir: string;
   tempDir: string;
+  language: string;
+  theme: Theme;
   // preferredVideoQuality: VideoQuality;
   // preferredAudioQuality: string;
   // preferredAudioLanguages: string[];
@@ -61,11 +64,14 @@ const getDefaultLanguage = () => {
 };
 
 export const defaultSettings: Settings = {
-  theme: THEME.system,
-  language: getDefaultLanguage(),
   // askForOptionsBeforeDownload: true,
-  downloadDir: join(fs.homeDir, 'Downloads'),
-  tempDir: fs.tempDir,
+  downloadDir: BaseDirectory.Download,
+  servicesDir: initDir(join(BaseDirectory.AppData, 'services')),
+  binariesDir: initDir(join(BaseDirectory.AppData, 'bin')),
+  drmDir: initDir(join(BaseDirectory.AppData, 'drm')),
+  tempDir: BaseDirectory.Temp,
+  language: getDefaultLanguage(),
+  theme: THEME.system,
   // preferredVideoQuality: VIDEO_QUALITY.highest,
   // preferredAudioQuality: AUDIO_QUALITY.highest,
   // preferredAudioLanguages: [],
@@ -80,17 +86,14 @@ export const defaultSettings: Settings = {
   proxyMedia: null,
   // storeSubtitlesAs: SUBTITLE_STORE_TYPE.embedded,
   movieFilenameTemplate: '{title}.{audioType}.{quality}.{tag}.{format}.{codec}',
-  seriesFilenameTemplate:
-    '{title}.S{s}E{e}.{episodeTitle}.{audioType}.{quality}.{tag}.{format}.{codec}',
+  seriesFilenameTemplate: '{title}.S{s}E{e}.{episodeTitle}.{audioType}.{quality}.{tag}.{format}.{codec}',
   chromePath: null,
   bounds: undefined,
   services: {},
 };
 
 const getSettingsPath = async () => {
-  const configDir = join(process.cwd(), 'config');
-  await fs.createDir(configDir);
-  const settingsPath = join(configDir, 'settings.json');
+  const settingsPath = join(BaseDirectory.AppData, 'settings.json');
   if (!fs.exists(settingsPath)) await fs.writeJson(settingsPath, defaultSettings);
   return settingsPath;
 };
@@ -102,8 +105,7 @@ export const getSettings = (): Readonly<Settings> => settings;
 const validateSettings = (values: Partial<Settings>) => {
   const isInvalid = Object.keys(values).length !== Object.keys(defaultSettings).length;
   for (const [key, value] of Object.entries(defaultSettings)) {
-    if (!(key in values) || values[key as keyof Settings] === undefined)
-      values[key as keyof Settings] = value;
+    if (!(key in values) || values[key as keyof Settings] === undefined) values[key as keyof Settings] = value;
   }
   for (const key of Object.keys(values)) {
     if (!(key in defaultSettings)) delete values[key as keyof Settings];
@@ -133,4 +135,11 @@ export const saveSettings = async (settings: Partial<Settings>, customPath?: str
     ...currentSettings,
     ...settings,
   });
+};
+
+export const showSettings = async () => {
+  const settings = await loadSettings();
+  console.log(JSON.stringify(settings, null, 2));
+  console.log(`Edit settings.json here: ${BaseDirectory.AppData}`);
+  return settings;
 };
