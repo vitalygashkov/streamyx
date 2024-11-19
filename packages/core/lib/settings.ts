@@ -137,9 +137,28 @@ export const saveSettings = async (settings: Partial<Settings>, customPath?: str
   });
 };
 
+const printObject = (obj: any, depth = 0) => {
+  for (const [key, value] of Object.entries(obj)) {
+    const keyString = ('    '.repeat(depth) + key).padEnd(30);
+    if (typeof value === 'object' && value !== null) {
+      console.log(keyString);
+      printObject(value, depth + 1);
+    } else {
+      const valueString = typeof value === 'string' ? `"${value}"` : JSON.stringify(value || '').replace('""', '');
+      console.log(`${keyString} ${valueString}`);
+    }
+  }
+};
+
 export const showSettings = async () => {
   const settings = await loadSettings();
-  console.log(JSON.stringify(settings, null, 2));
-  console.log(`Edit settings.json here: ${BaseDirectory.AppData}`);
+  printObject(settings);
+  console.log(`\nEdit settings.json here: ${BaseDirectory.AppData}`);
   return settings;
+};
+
+export const setParameter = async (parameter: string) => {
+  const [key, value] = parameter.split('=');
+  await saveSettings({ [key]: value });
+  console.log('Settings updated');
 };
