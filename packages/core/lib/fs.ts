@@ -22,12 +22,15 @@ const getAppDataDir = (appName: string = APP_NAME) => {
 
 const appDataDir = getAppDataDir();
 
-if (!nodeFs.existsSync(appDataDir)) nodeFs.mkdirSync(appDataDir);
+const initDir = (dir: string) => {
+  if (!nodeFs.existsSync(dir)) nodeFs.mkdirSync(dir);
+  return dir;
+};
 
 export class BaseDirectory {
-  static AppData = appDataDir;
-  static AppLog = join(appDataDir, 'logs');
-  static Temp = join(appDataDir, 'tmp');
+  static AppData = initDir(appDataDir);
+  static AppLog = initDir(join(appDataDir, 'logs'));
+  static Temp = initDir(join(appDataDir, 'tmp'));
   static Download = join(homedir(), 'Downloads');
 }
 

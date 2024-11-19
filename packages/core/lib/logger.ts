@@ -1,6 +1,6 @@
 import { pid } from 'node:process';
 import { inspect } from 'node:util';
-import { Stats, mkdirSync, existsSync, createWriteStream } from 'node:fs';
+import { Stats, createWriteStream } from 'node:fs';
 import fsp from 'node:fs/promises';
 import pino from 'pino';
 import pretty from 'pino-pretty';
@@ -11,8 +11,6 @@ const MAX_LOGS_COUNT = 50;
 const CURRENT_DATETIME = new Date().toISOString().replace('T', '_').replace('Z', '').replaceAll(':', '-').split('.')[0];
 const LOG_DIR = fs.logsDir;
 const LOG_PATH = fs.join(LOG_DIR, `streamyx_${CURRENT_DATETIME}_${pid}.log`);
-
-if (!existsSync(LOG_DIR)) mkdirSync(LOG_DIR, { recursive: true });
 
 const clearOutdatedLogs = async () => {
   const files = await fs.readDir(LOG_DIR);
