@@ -3,7 +3,7 @@ import { IHttp } from './http';
 import { IPrompt } from './prompt';
 import { createStore } from './store';
 import { Http, http } from './http';
-import { default as fs } from './fs';
+import { fs } from './fs';
 import { logger as log } from './logger';
 import { prompt } from './prompt';
 import { execUrlPatterns, sanitizeString, safeEval, extendEpisodes } from './utils';
