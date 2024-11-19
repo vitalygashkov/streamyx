@@ -1,218 +1,41 @@
 import { cwd } from 'node:process';
-import { homedir, tmpdir } from 'node:os';
+import { homedir } from 'node:os';
 import nodeFs from 'node:fs';
 import type { WriteStream } from 'node:fs';
-import {
-  access,
-  appendFile,
-  mkdir,
-  readdir,
-  readFile,
-  rmdir,
-  unlink,
-  writeFile,
-  rename,
-} from 'node:fs/promises';
+import { appendFile, mkdir, readdir, readFile, unlink, writeFile, rename } from 'node:fs/promises';
 import { join, parse } from 'node:path';
 
-export enum BaseDirectory {
-  Audio = 1,
-  Cache,
-  Config,
-  Data,
-  LocalData,
-  Desktop,
-  Document,
-  Download,
-  Executable,
-  Font,
-  Home,
-  Picture,
-  Public,
-  Runtime,
-  Template,
-  Video,
-  Resource,
-  App,
-  Log,
-  Temp,
-  AppConfig,
-  AppData,
-  AppLocalData,
-  AppCache,
-  AppLog,
-}
+const APP_NAME = 'Streamyx';
 
-interface FsOptions {
-  dir?: BaseDirectory;
-}
-
-interface FsDirOptions extends FsOptions {
-  recursive?: boolean;
-}
-
-const getBaseDirectory = (dir?: BaseDirectory) => {
-  switch (dir) {
-    case BaseDirectory.App:
-      return cwd();
-    case BaseDirectory.Home:
-      return homedir();
-    case BaseDirectory.Temp:
-      return tmpdir();
+const getAppDataDir = (appName: string = APP_NAME) => {
+  switch (process.platform) {
+    case 'win32':
+      return join(process.env.APPDATA || join(homedir(), 'AppData', 'Roaming'), appName);
+    case 'darwin':
+      return join(homedir(), 'Library', 'Application Support', appName);
+    case 'linux':
+      return join(homedir(), '.local', 'share', appName);
     default:
-      return cwd();
-      break;
+      throw new Error('Unsupported platform');
   }
 };
 
-export const copyFile = async () => {
-  // TODO: Implement
-};
+const appDataDir = getAppDataDir();
 
-export const createDir = async (dir: string, options?: FsDirOptions) => {
-  const baseDir = getBaseDirectory(options?.dir);
-  try {
-    await access(join(baseDir, dir));
-  } catch (e) {
-    await mkdir(join(baseDir, dir), { recursive: options?.recursive || true });
-  }
-};
+if (!nodeFs.existsSync(appDataDir)) nodeFs.mkdirSync(appDataDir);
 
-export const exists = async (path: string, options?: FsOptions) => {
-  const baseDir = getBaseDirectory(options?.dir);
-  try {
-    await access(join(baseDir, path));
-    return true;
-  } catch (e) {
-    return false;
-  }
-};
+export class BaseDirectory {
+  static AppData = appDataDir;
+  static AppLog = join(appDataDir, 'logs');
+  static Temp = join(appDataDir, 'tmp');
+  static Download = join(homedir(), 'Downloads');
+}
 
-export const readBinaryFile = async (filePath: string, options?: FsOptions) => {
-  const baseDir = getBaseDirectory(options?.dir);
-  try {
-    return readFile(join(baseDir, filePath));
-  } catch (e) {
-    throw Error(`Failed to read binary file: ${filePath}`);
-  }
-};
-
-export const readDir = async (dir: string, options?: FsDirOptions) => {
-  const baseDir = getBaseDirectory(options?.dir);
-  try {
-    return readdir(join(baseDir, dir));
-  } catch (e) {
-    throw Error(`Failed to read directory: ${dir}`);
-  }
-};
-
-export const readTextFile = async (filePath: string, options?: FsOptions) => {
-  const baseDir = getBaseDirectory(options?.dir);
-  try {
-    return readFile(join(baseDir, filePath), { encoding: 'utf8' });
-  } catch (e) {
-    throw Error(`Failed to read text file: ${filePath}`);
-  }
-};
-
-export const readJsonFile = async <T = unknown>(
-  filePath: string,
-  options?: FsOptions
-): Promise<T> => {
-  const data = await readTextFile(filePath, options);
-  return JSON.parse(data);
-};
-
-export const removeDir = async (dir: string, options?: FsDirOptions) => {
-  const baseDir = getBaseDirectory(options?.dir);
-  try {
-    return rmdir(join(baseDir, dir), { recursive: options?.recursive });
-  } catch (e) {
-    throw Error(`Failed to remove directory: ${dir}`);
-  }
-};
-
-export const removeFile = async (file: string, options?: FsOptions) => {
-  const baseDir = getBaseDirectory(options?.dir);
-  try {
-    await unlink(join(baseDir, file));
-  } catch (e) {
-    throw Error(`Failed to remove file: ${file}`);
-  }
-};
-
-export const renameFile = async () => {
-  // TODO: Implement
-};
-
-export const writeBinaryFile = async (path: string, contents: Buffer, options?: FsOptions) => {
-  const baseDir = getBaseDirectory(options?.dir);
-  try {
-    await writeFile(join(baseDir, path), contents, 'binary');
-  } catch (e) {
-    throw Error(`Failed to write binary to file: ${path}`);
-  }
-};
-
-export const writeTextFile = async (path: string, contents: string, options?: FsOptions) => {
-  const baseDir = getBaseDirectory(options?.dir);
-  try {
-    await writeFile(join(baseDir, path), contents, 'utf8');
-  } catch (e) {
-    throw Error(`Failed to write text to file: ${path}`);
-  }
-};
-
-export const writeJsonFile = async (path: string, contents: object, options?: FsOptions) => {
-  await writeTextFile(path, JSON.stringify(contents, null, 2), options);
-};
-
-export const appendBinaryFile = async (path: string, contents: Buffer, options?: FsOptions) => {
-  const baseDir = getBaseDirectory(options?.dir);
-  try {
-    await appendFile(join(baseDir, path), contents, 'binary');
-  } catch (e) {
-    throw Error(`Failed to write binary to file: ${path}`);
-  }
-};
-
-export const appendTextFile = async (path: string, contents: string, options?: FsOptions) => {
-  const baseDir = getBaseDirectory(options?.dir);
-  try {
-    await appendFile(join(baseDir, path), contents, 'utf8');
-  } catch (e) {
-    throw Error(`Failed to write binary to file: ${path}`);
-  }
-};
-
-export const createWriteStream = async (path: string) => {
-  const dir = parse(path).dir;
-  const dirExists = exists(dir);
-  if (!dirExists) await createDir(dir);
-  return nodeFs.createWriteStream(path);
-};
-
-export const writeStream = (stream: WriteStream, contents: Buffer) => {
-  return new Promise<void>((resolve, reject) =>
-    stream.write(contents, (err) => (err ? reject(err) : resolve()))
-  );
-};
-
-export const closeStream = (stream: WriteStream) => {
-  return new Promise<void>((resolve) => {
-    stream.end(() => {
-      stream.close();
-      stream.destroy();
-      setTimeout(() => resolve(), 50);
-    });
-  });
-};
-
-const fs = {
+export const fs = {
   appDir: cwd(),
   homeDir: homedir(),
-  tempDir: tmpdir(),
-  logsDir: join(cwd(), 'logs'),
+  tempDir: BaseDirectory.Temp,
+  logsDir: BaseDirectory.AppLog,
   join(...paths: string[]) {
     return join(...paths);
   },
@@ -231,10 +54,7 @@ const fs = {
         return dirEntries.map((de) => de.name);
     }
   },
-  async createDir(
-    dir: string,
-    options: { recursive?: boolean } | number | string = { recursive: true }
-  ) {
+  async createDir(dir: string, options: { recursive?: boolean } | number | string = { recursive: true }) {
     if (!this.exists(dir)) await mkdir(dir, options);
   },
   async writeBinary(path: string, data: Buffer) {
@@ -318,9 +138,24 @@ const fs = {
   },
   rename: rename,
   exists: nodeFs.existsSync,
-  createWriteStream,
-  streamWrite: writeStream,
-  streamClose: closeStream,
+  createWriteStream: async (path: string) => {
+    const dir = parse(path).dir;
+    const dirExists = fs.exists(dir);
+    if (!dirExists) await fs.createDir(dir);
+    return nodeFs.createWriteStream(path);
+  },
+  streamWrite: (stream: WriteStream, contents: Buffer) => {
+    return new Promise<void>((resolve, reject) => stream.write(contents, (err) => (err ? reject(err) : resolve())));
+  },
+  streamClose: (stream: WriteStream) => {
+    return new Promise<void>((resolve) => {
+      stream.end(() => {
+        stream.close();
+        stream.destroy();
+        setTimeout(() => resolve(), 50);
+      });
+    });
+  },
 };
 
 export default fs;

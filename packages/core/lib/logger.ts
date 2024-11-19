@@ -8,12 +8,7 @@ import fs from './fs';
 
 const MAX_LOGS_COUNT = 50;
 
-const CURRENT_DATETIME = new Date()
-  .toISOString()
-  .replace('T', '_')
-  .replace('Z', '')
-  .replaceAll(':', '-')
-  .split('.')[0];
+const CURRENT_DATETIME = new Date().toISOString().replace('T', '_').replace('Z', '').replaceAll(':', '-').split('.')[0];
 const LOG_DIR = fs.logsDir;
 const LOG_PATH = fs.join(LOG_DIR, `streamyx_${CURRENT_DATETIME}_${pid}.log`);
 
@@ -71,8 +66,7 @@ const streams = [
       translateTime: 'SYS:HH:MM:ss.l',
       customPrettifiers: {
         time: (timestamp) => `${timestamp}`,
-        level: (_logLevel, _key, _log, { labelColorized }: any) =>
-          `${labelColorized}`.padEnd(15, ' '),
+        level: (_logLevel, _key, _log, { labelColorized }: any) => `${labelColorized}`.padEnd(15, ' '),
       },
       destination: prettyDestination,
       messageFormat: (log, messageKey, _levelLabel, { colors }) => {
@@ -114,6 +108,12 @@ export const getLogPrefix = (logLevel: LogLevel) => {
   const [start, end] = logLevelColor;
   const logLevelColored = `\x1B[${start}m${logLevelText}\x1B[${end}m`;
   return `${getCurrentTimeString()} ${logLevelColored.padEnd(15, ' ')}:`;
+};
+
+export const showLogsList = async () => {
+  const files = await fs.readDir(LOG_DIR);
+  const toPath = (name: string) => fs.join(LOG_DIR, name);
+  for (const file of files) console.log(toPath(file));
 };
 
 export type { LogLevel };
