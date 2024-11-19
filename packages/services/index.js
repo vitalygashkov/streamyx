@@ -11,7 +11,7 @@ const services = {};
 
 for (const file of files) {
   const serviceName = path.basename(file, '.js');
-  services[serviceName] = require(path.join(__dirname, file));
+  services[serviceName] = require(path.join(__dirname, 'src', file));
 }
 
 module.exports = { services };
