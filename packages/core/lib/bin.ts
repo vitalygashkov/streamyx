@@ -5,6 +5,7 @@ import { delimiter } from 'node:path';
 import { stat } from 'node:fs/promises';
 import { logger } from './logger';
 import fs from './fs';
+import { getSettings } from './settings';
 
 export const getAnyValidPath = async (paths: string[]) => {
   const getPathStat = (p: string) =>
@@ -32,15 +33,15 @@ const findExecutable = async (exe: string) => {
 };
 
 export const findPath = async (name: string) => {
-  const filesDir = fs.join(fs.appDir, 'files');
-  if (!fs.exists(filesDir)) await fs.createDir(filesDir, 0o755);
+  const { binariesDir } = getSettings();
+  if (!fs.exists(binariesDir)) await fs.createDir(binariesDir, 0o755);
 
-  const files = await fs.readDir(filesDir);
-  const localPath = fs.join(filesDir, name + (platform === 'win32' ? '.exe' : ''));
+  const files = await fs.readDir(binariesDir);
+  const localPath = fs.join(binariesDir, name + (platform === 'win32' ? '.exe' : ''));
   if (fs.exists(localPath)) return localPath;
 
   const similarFileName = files.find((f) => f.includes(name));
-  const similarFilePath = similarFileName ? fs.join(filesDir, similarFileName) : null;
+  const similarFilePath = similarFileName ? fs.join(binariesDir, similarFileName) : null;
   if (similarFilePath && fs.exists(similarFilePath)) return similarFilePath;
 
   const globalPath = await findExecutable(name);
@@ -132,7 +133,7 @@ export const waitForDownload = async (id: string) => {
 
 export const fetchGitHubAsset = async ({ id, assets, repo, version }: DownloadBinaryOptions) => {
   const name = getBinaryName(assets);
-  const output = fs.join(fs.appDir, 'files', name);
+  const output = fs.join(getSettings().binariesDir, name);
   downloads.state.set(id, 'downloading');
   const url = getGitHubAssetUrl({ repo, version, asset: name });
   await download(url, output);

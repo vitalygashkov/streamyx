@@ -1,5 +1,5 @@
 import { join } from 'node:path';
-import { fs, BaseDirectory } from './fs';
+import { fs, BaseDirectory, initDir } from './fs';
 import { logger } from './logger';
 
 export type VideoQuality = (typeof VIDEO_QUALITY)[keyof typeof VIDEO_QUALITY];
@@ -33,8 +33,8 @@ export interface Settings {
   downloadDir: string;
   servicesDir: string;
   binariesDir: string;
+  drmDir: string;
   tempDir: string;
-  logsDir: string;
   language: string;
   theme: Theme;
   // preferredVideoQuality: VideoQuality;
@@ -66,10 +66,10 @@ const getDefaultLanguage = () => {
 export const defaultSettings: Settings = {
   // askForOptionsBeforeDownload: true,
   downloadDir: BaseDirectory.Download,
-  servicesDir: join(BaseDirectory.AppData, 'services'),
-  binariesDir: join(BaseDirectory.AppData, 'bin'),
+  servicesDir: initDir(join(BaseDirectory.AppData, 'services')),
+  binariesDir: initDir(join(BaseDirectory.AppData, 'bin')),
+  drmDir: initDir(join(BaseDirectory.AppData, 'drm')),
   tempDir: BaseDirectory.Temp,
-  logsDir: BaseDirectory.AppLog,
   language: getDefaultLanguage(),
   theme: THEME.system,
   // preferredVideoQuality: VIDEO_QUALITY.highest,

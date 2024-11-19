@@ -22,7 +22,7 @@ const getAppDataDir = (appName: string = APP_NAME) => {
 
 const appDataDir = getAppDataDir();
 
-const initDir = (dir: string) => {
+export const initDir = (dir: string) => {
   if (!nodeFs.existsSync(dir)) nodeFs.mkdirSync(dir);
   return dir;
 };
