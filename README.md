@@ -32,9 +32,25 @@ Streamyx is a tool that allows you to download videos for offline-viewing.
 
 > You can add support for any streaming service yourself! See [example](https://github.com/vitalygashkov/streamyx-service-example) for more details.
 
-## Installation
+## Install
 
-Download build from [latest release](https://github.com/vitalygashkov/streamyx/releases/latest) and unzip.
+Streamyx supports Windows (x64), macOS (x64 & Apple Silicon) and Linux (x64).
+
+```shell
+# Windows
+powershell -c "irm https://dub.sh/streamyx-windows | iex"
+
+# Linux/macOS
+curl -fsSL https://dub.sh/streamyx-unix | bash
+```
+
+### Upgrade
+
+To upgrade to the latest version of Streamyx, run:
+
+```shell
+streamyx upgrade
+```
 
 ## Getting Started
 
