@@ -76,7 +76,7 @@ streamyx https://vk.com/video-29093629_456239905
 17:40:13.007 INFO : ✔ Muxed
 ```
 
-Output: `/downloads/Tsurune.S01.JA.1080p.CR.WEB-DL.x264/Tsurune.S01.E01.The.Young.Man.on.the.Shooting.Range.JA.1080p.CR.WEB-DL.x264.mkv`
+Output: `C:\Users\Admin\Downloads\Cocteau.Twins.-.Heaven.Or.Las.Vegas.(Official.Video).THE.SWEET.VINYL.720p.VK.WEB-DL.x264.mkv`
 
 ## Features
 
