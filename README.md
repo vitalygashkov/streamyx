@@ -32,18 +32,34 @@ Streamyx is a tool that allows you to download videos for offline-viewing.
 
 > You can add support for any streaming service yourself! See [example](https://github.com/vitalygashkov/streamyx-service-example) for more details.
 
-## Installation
+## Install
 
-Download build from [latest release](https://github.com/vitalygashkov/streamyx/releases/latest) and unzip.
+Streamyx supports Windows (x64), macOS (x64 & Apple Silicon) and Linux (x64).
+
+#### Windows
+
+```shell
+powershell -c "irm https://streamyx.ru/install.ps1 | iex"
+```
+
+#### Linux & macOS
+
+```shell
+curl -fsSL https://streamyx.ru/install.sh | bash
+```
+
+### Upgrade
+
+To upgrade to the latest version of Streamyx, run:
+
+```shell
+streamyx upgrade
+```
 
 ## Getting Started
 
-Open terminal from the folder where the executable file is located and run the application.
-
-Usage:
-
 ```shell
-streamyx [OPTIONS] URL [URL...]
+streamyx <command> [...options]
 ```
 
 Use `--help` flag to see all available options.
@@ -51,25 +67,13 @@ Use `--help` flag to see all available options.
 ### Download a video
 
 ```shell
-streamyx https://www.crunchyroll.com/ru/watch/G65PJWDQ6/the-young-man-on-the-shooting-range
-Username: example@gmail.com
-Password: 123456
-22:45:09.083 INFO : Fetching metadata...
-22:45:09.721 INFO : Fetching metadata finished
-22:45:10.518 INFO : Tsurune ∙ S1 ∙ E1 ∙ The Young Man on the Shooting Range
-17:45:11.761 INFO : ✔ Tsurune.S01.E01.The.Young.Man.on.the.Shooting.Range.JA.1080p.CR.WEB-DL.x264 ∙ VIDEO ∙ 1920x1080 ∙ 7991 KiB/s ∙ ~1439 MiB
-17:47:21.269 INFO : ✔ Tsurune.S01.E01.The.Young.Man.on.the.Shooting.Range.JA.1080p.CR.WEB-DL.x264 ∙ AUDIO ∙ JA-JP ∙ 128 KiB/s ∙ ~23 MiB
-17:47:25.630 INFO : ✔ Tsurune.S01.E01.The.Young.Man.on.the.Shooting.Range.JA.1080p.CR.WEB-DL.x264 ∙ SUBTITLES ∙ EN-US
-17:47:26.586 INFO : ✔ Tsurune.S01.E01.The.Young.Man.on.the.Shooting.Range.JA.1080p.CR.WEB-DL.x264 ∙ SUBTITLES ∙ DE-DE
-17:47:27.296 INFO : ✔ Tsurune.S01.E01.The.Young.Man.on.the.Shooting.Range.JA.1080p.CR.WEB-DL.x264 ∙ SUBTITLES ∙ ES-419
-17:47:27.791 INFO : ✔ Tsurune.S01.E01.The.Young.Man.on.the.Shooting.Range.JA.1080p.CR.WEB-DL.x264 ∙ SUBTITLES ∙ ES-ES
-17:47:28.380 INFO : ✔ Tsurune.S01.E01.The.Young.Man.on.the.Shooting.Range.JA.1080p.CR.WEB-DL.x264 ∙ SUBTITLES ∙ FR-FR
-17:47:29.165 INFO : ✔ Tsurune.S01.E01.The.Young.Man.on.the.Shooting.Range.JA.1080p.CR.WEB-DL.x264 ∙ SUBTITLES ∙ IT-IT
-17:47:29.715 INFO : ✔ Tsurune.S01.E01.The.Young.Man.on.the.Shooting.Range.JA.1080p.CR.WEB-DL.x264 ∙ SUBTITLES ∙ PT-BR
-17:47:30.400 INFO : ✔ Tsurune.S01.E01.The.Young.Man.on.the.Shooting.Range.JA.1080p.CR.WEB-DL.x264 ∙ SUBTITLES ∙ RU-RU
-17:47:30.964 INFO : ✔ Tsurune.S01.E01.The.Young.Man.on.the.Shooting.Range.JA.1080p.CR.WEB-DL.x264 ∙ SUBTITLES ∙ AR-SA
-17:47:31.510 INFO : ✔ Decrypted
-17:47:36.154 INFO : ✔ Muxed
+streamyx https://vk.com/video-29093629_456239905
+22:40:05.153 INFO : Fetching content metadata...
+22:40:06.168 INFO : Fetching metadata finished
+22:40:06.169 INFO : Cocteau Twins - Heaven Or Las Vegas (Official Video) THE SWEET VINYL
+17:40:06.330 INFO : ✔ Cocteau.Twins.-.Heaven.Or.Las.Vegas.(Official.Video).THE.SWEET.VINYL.720p.VK.WEB-DL.x264 ∙ VIDEO ∙ 1280x720 ∙ 2296 KiB/s ∙ ~66 MiB
+17:40:11.799 INFO : ✔ Cocteau.Twins.-.Heaven.Or.Las.Vegas.(Official.Video).THE.SWEET.VINYL.720p.VK.WEB-DL.x264 ∙ AUDIO ∙ 267 KiB/s ∙ ~8 MiB
+17:40:13.007 INFO : ✔ Muxed
 ```
 
 Output: `/downloads/Tsurune.S01.JA.1080p.CR.WEB-DL.x264/Tsurune.S01.E01.The.Young.Man.on.the.Shooting.Range.JA.1080p.CR.WEB-DL.x264.mkv`
