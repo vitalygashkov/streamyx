@@ -34,14 +34,32 @@
 
 ## Установка
 
-Скачайте сборку из [последнего релиза](https://github.com/vitalygashkov/streamyx/releases/latest) и разархивируйте.
+Стримикс поддерживает Windows (x64), macOS (x64 & Apple Silicon) и Linux (x64).
+
+#### Windows
+
+```shell
+powershell -c "irm https://streamyx.ru/install.ps1 | iex"
+```
+
+#### Linux & macOS
+
+```shell
+curl -fsSL https://streamyx.ru/install.sh | bash
+```
+
+### Upgrade
+
+Чтобы обновить Стримикс до последней версии, выполните следующую команду:
+
+```shell
+streamyx upgrade
+```
 
 ## Запуск
 
-Откройте терминал в папке, где находится скачанный исполняемый файл и вызовите утилиту из терминала:
-
 ```shell
-streamyx [OPTIONS] URL [URL...]
+streamyx <command> [...options]
 ```
 
 Используйте вызов с аргументом `-h`, чтобы получить справку по всем доступным опциям.
