@@ -66,3 +66,5 @@ export const extendEpisodes = (episodesBySeasons: Map<number, Set<number>> = new
   const getMax = () => Math.max(...episodes);
   return { items: episodesBySeasons, has, set, getMin, getMax, seasonsCount, episodesCount };
 };
+
+export const isExecutable = 'pkg' in process && process.pkg !== undefined;
