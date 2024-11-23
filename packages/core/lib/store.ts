@@ -5,7 +5,10 @@ import { fs, initDir } from './fs';
 import { http } from './http';
 import { getSettings } from './settings';
 import { importCookies } from './cookies';
+<<<<<<< HEAD
 import { logger } from './log';
+=======
+>>>>>>> 0010329 (refactor: migrate from ora to nanospinner, remove browser usage)
 
 const createStorePath = (name: string) => {
   const dir = initDir(join(getSettings().servicesDir, name));

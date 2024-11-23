@@ -34,6 +34,14 @@
 >>>>>>> a45c773 (chore: bump core version)
     "dasha": "^3.1.1",
     "got-scraping": "^3.2.15",
+<<<<<<< HEAD
+=======
+    "pino": "^9.5.0",
+    "pino-pretty": "^11.3.0",
+    "puppeteer-core": "^23.5.3",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
+>>>>>>> 0010329 (refactor: migrate from ora to nanospinner, remove browser usage)
     "undici": "^6.21.0"
   },
   "devDependencies": {
