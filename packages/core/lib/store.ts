@@ -1,7 +1,8 @@
 import { join } from 'node:path';
 import { fs, initDir } from './fs';
-import { http, importCookies } from './http';
+import { http } from './http';
 import { getSettings } from './settings';
+import { importCookies } from './cookies';
 
 const createStorePath = (name: string) => {
   const oldStoreDir = initDir(join(getSettings().servicesDir, name));

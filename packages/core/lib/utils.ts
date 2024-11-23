@@ -69,3 +69,6 @@ export const extendEpisodes = (episodesBySeasons: Map<number, Set<number>> = new
 
 // Check if app is packed to executable (pkg or electron)
 export const isExecutable = 'pkg' in process && process.pkg !== undefined;
+
+export const parseUrlFromResource = (resource: string | URL | Request) =>
+  resource instanceof Request ? new URL(resource.url) : typeof resource === 'string' ? new URL(resource) : resource;

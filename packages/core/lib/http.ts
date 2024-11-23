@@ -4,14 +4,12 @@ import http2, {
   IncomingHttpHeaders as IncomingHttp2Headers,
 } from 'node:http2';
 import { URL } from 'node:url';
-import { EOL } from 'node:os';
 import { fetch, ProxyAgent, Agent, buildConnector } from 'undici';
-import { Browser, Cookie, Page } from 'puppeteer-core';
 import { gotScraping } from 'got-scraping';
 import { logger } from './logger';
-import { browserCookiesToList, launchBrowser } from './browser';
 import { randomizeCiphers } from './tls';
-import fs from './fs';
+import { browserCookiesToList, Cookie } from './cookies';
+import { parseUrlFromResource } from './utils';
 
 const HTTP_METHOD = {
   GET: 'GET',
@@ -25,12 +23,10 @@ const USER_AGENTS = {
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36',
   chromeMacOS:
     'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36',
-  chromeLinux:
-    'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36',
+  chromeLinux: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36',
   smartTv:
     'Mozilla/5.0 (SMART-TV; LINUX; Tizen 6.0) AppleWebKit/537.36 (KHTML, like Gecko) 76.0.3809.146/6.0 TV Safari/537.36',
-  tizen:
-    'Mozilla/5.0 (Linux; U; Tizen 2.0; en-us) AppleWebKit/537.1 (KHTML, like Gecko) Mobile TizenBrowser/2.0',
+  tizen: 'Mozilla/5.0 (Linux; U; Tizen 2.0; en-us) AppleWebKit/537.1 (KHTML, like Gecko) Mobile TizenBrowser/2.0',
 };
 
 export const getDefaultUserAgent = () => {
@@ -54,13 +50,6 @@ const getOsFromPlatform = () => {
       return 'windows';
   }
 };
-
-const parseUrlFromResource = (resource: string | URL | Request) =>
-  resource instanceof Request
-    ? new URL(resource.url)
-    : typeof resource === 'string'
-      ? new URL(resource)
-      : resource;
 
 const DEFAULT_MAX_REDIRECTIONS = 5;
 
@@ -88,8 +77,6 @@ class Http implements IHttp {
   #retryThreshold: number;
   #retryDelayMs: number;
   #session?: ClientHttp2Session;
-  browser: Browser | null;
-  browserPage: Page | null;
   #failures: Map<string | URL | Request, number> = new Map();
 
   #agent!: ProxyAgent | Agent;
@@ -101,8 +88,6 @@ class Http implements IHttp {
     this.#sessions = new Map();
     this.#retryThreshold = 3;
     this.#retryDelayMs = 1500;
-    this.browser = null;
-    this.browserPage = null;
     this.setAgent(proxy);
   }
 
@@ -132,25 +117,14 @@ class Http implements IHttp {
   async fetch(resource: string | URL | Request, options?: RequestInit): Promise<Response> {
     if (!resource) throw new Error('Fetch resource is empty');
     const session = this.getHttp2Session(resource);
-    if (this.browser) {
-      return this.fetchViaBrowser(resource, options);
-    } else if (session) {
+    if (session) {
       return this.fetchHttp2(session, resource, options);
     } else {
       return this.fetchHttp1(resource, options);
     }
   }
 
-  async launchBrowser() {
-    const { browser, page } = await launchBrowser({}, this.#proxy);
-    this.browser = browser;
-    this.browserPage = page;
-  }
-
-  async fetchAsChrome(
-    resource: string | URL | Request,
-    { redirect, ...options }: RequestInit = {}
-  ): Promise<Response> {
+  async fetchAsChrome(resource: string | URL | Request, { redirect, ...options }: RequestInit = {}): Promise<Response> {
     try {
       const allHeaders: Record<string, string> = {
         ...this.headers,
@@ -199,86 +173,6 @@ class Http implements IHttp {
       if (!this.#hasAttempts(resource)) throw e;
       await this.#nextRetry(resource);
       return this.fetchAsChrome(resource, options);
-    }
-  }
-
-  async fetchViaBrowser(resource: string | URL | Request, options?: RequestInit) {
-    if (!this.browserPage || !this.browser) await this.launchBrowser();
-
-    // Load base url on page and parse cookies
-    const page = await this.browser!.newPage();
-    await page.bringToFront();
-    const { origin } = parseUrlFromResource(resource);
-    await page.evaluate((url) => {
-      window.open(url, '_self');
-    }, origin);
-    await page.waitForNavigation();
-    const cookies = await page.cookies();
-    this.setCookies(browserCookiesToList(cookies));
-
-    const headers = { ...this.headers, ...options?.headers };
-    const init = { ...options, headers };
-
-    const isWaitingForRedirect = init?.redirect === 'manual';
-    const response = await new Promise<Response>((resolve) => {
-      if (isWaitingForRedirect) {
-        page.on('response', async (httpResponse) => {
-          const url = httpResponse.request().url();
-          if (url !== resource) return;
-          const response = new Response(null, {
-            headers: httpResponse.headers(),
-            status: httpResponse.status(),
-            statusText: httpResponse.statusText(),
-          });
-          resolve(response);
-        });
-      }
-      page
-        .evaluate(
-          (resource, init: globalThis.RequestInit) => {
-            const fetchData = async () => {
-              const initBody = init.body as string | { type: 'Buffer'; data: number[] };
-              const body =
-                typeof initBody === 'object' && initBody.type === 'Buffer'
-                  ? Uint8Array.from(initBody.data)
-                  : init.body;
-              init.body = body;
-              const response = await globalThis.fetch(resource as globalThis.RequestInfo, init);
-              return {
-                body: new Uint8Array(await response.arrayBuffer()),
-                init: {
-                  headers: response.headers as unknown as Headers,
-                  status: response.status,
-                  statusText: response.statusText,
-                } as ResponseInit,
-              };
-            };
-            return fetchData();
-          },
-          resource,
-          init
-        )
-        .then(({ body, init }) => {
-          return isWaitingForRedirect
-            ? {}
-            : resolve(new Response(Buffer.from(Object.values(body)), init));
-        })
-        .catch((e) => {
-          logger.debug(`Error while evaluate browser fetch: ${e?.message}`);
-          return { body: null, init: undefined };
-        });
-    });
-
-    page.removeAllListeners('response');
-    if (!page.isClosed) await page.close();
-
-    return response;
-  }
-
-  async closeBrowser() {
-    if (this.browser) {
-      await this.browser.close().catch(() => null);
-      this.browser = null;
     }
   }
 
@@ -400,8 +294,7 @@ class Http implements IHttp {
 
   async #nextRetry(resource: string | URL | Request) {
     const failuresCount = this.#getFailuresCount(resource);
-    if (failuresCount)
-      await new Promise<void>((resolve) => setTimeout(resolve, this.#retryDelayMs));
+    if (failuresCount) await new Promise<void>((resolve) => setTimeout(resolve, this.#retryDelayMs));
     this.#addFailure(resource);
     logger.debug(`Retry ${failuresCount}/${this.#retryThreshold}: ${String(resource)}`);
   }
@@ -421,8 +314,7 @@ class Http implements IHttp {
       const cookieDomain = cookie.split('Domain=')[1]?.split(';')[0];
       const hasMatch = newCookies.some(
         (newCookie) =>
-          cookieKey === newCookie.split('=')[0] &&
-          cookieDomain === newCookie.split('Domain=')[1]?.split(';')[0]
+          cookieKey === newCookie.split('=')[0] && cookieDomain === newCookie.split('Domain=')[1]?.split(';')[0]
       );
       return !hasMatch;
     });
@@ -468,30 +360,6 @@ class Http implements IHttp {
   }
 }
 
-const importCookies = async (cookiesTxtPath: string): Promise<string[]> => {
-  const text = await fs.readText(cookiesTxtPath).catch(() => '');
-  if (!text) return [];
-  const lines = text.split(EOL).flatMap((line) => line.split('\n'));
-  const linesWithoutComments = lines.filter(
-    (line: string) => !!line.trim() && !line.startsWith('# ')
-  );
-  const rows = linesWithoutComments.map((line: string) => line.split('\t'));
-  const cookies: any[] = [];
-  for (const row of rows) {
-    const [domain, includeSubdomains, path, secure, expires, name, value] = row;
-    cookies.push({
-      name,
-      value,
-      domain: domain.replace('#HttpOnly_', ''),
-      hostOnly: includeSubdomains === 'FALSE',
-      path,
-      secure: secure === 'TRUE',
-      expires: Number(expires),
-    });
-  }
-  return browserCookiesToList(cookies);
-};
-
 const http = new Http();
 
-export { http, Http, HTTP_METHOD, USER_AGENTS, importCookies };
+export { http, Http, HTTP_METHOD, USER_AGENTS };
