@@ -4,8 +4,15 @@ import { http, importCookies } from './http';
 import { getSettings } from './settings';
 
 const createStorePath = (name: string) => {
-  const dir = initDir(join(getSettings().servicesDir, name));
-  return join(dir, 'config.json');
+  const oldStoreDir = initDir(join(getSettings().servicesDir, name));
+  const oldStorePath = join(oldStoreDir, 'config.json');
+  const storePath = join(getSettings().servicesDir, `${name}.json`);
+  // Migrate from old store to new store
+  if (fs.exists(oldStorePath)) {
+    fs.renameSync(oldStorePath, storePath);
+    fs.delete(oldStorePath).then(() => fs.delete(oldStoreDir));
+  }
+  return storePath;
 };
 
 const getCookiesFromTxt = async (dir: string) => {
