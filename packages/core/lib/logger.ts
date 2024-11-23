@@ -80,7 +80,7 @@ if (isExecutable) {
 
   const fileStream = isWindows
     ? createWriteStream(LOG_PATH, { flags: 'a' })
-    : pino.destination({ dest: LOG_PATH, append: true });
+    : pino.destination({ dest: LOG_PATH, append: true, mkdir: true });
 
   streams.unshift({ level: 'debug', stream: fileStream });
 }
