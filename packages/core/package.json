@@ -1,6 +1,10 @@
 {
   "name": "@streamyx/core",
+<<<<<<< HEAD
   "version": "2.3.3",
+=======
+  "version": "2.1.2",
+>>>>>>> a45c773 (chore: bump core version)
   "author": "Vitaly Gashkov <vitalygashkov@vk.com>",
   "description": "Core modules for Streamyx",
   "license": "AGPL-3.0",
@@ -23,8 +27,11 @@
     "dev": "tsup ./lib/main.ts --format esm,cjs --watch --dts --clean"
   },
   "dependencies": {
+<<<<<<< HEAD
     "@streamyx/loader": "^0.0.4",
     "@streamyx/logger": "^0.0.2",
+=======
+>>>>>>> a45c773 (chore: bump core version)
     "dasha": "^3.1.1",
     "got-scraping": "^3.2.15",
     "undici": "^6.21.0"
