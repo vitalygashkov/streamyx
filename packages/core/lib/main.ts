@@ -6,7 +6,6 @@ export * from './logger';
 export * from './browser';
 export * from './bin';
 export * from './prompt';
-export * from './spinner';
 export * from './store';
 export * from './utils';
 

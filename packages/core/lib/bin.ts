@@ -4,7 +4,7 @@ import { chmodSync } from 'node:fs';
 import { delimiter } from 'node:path';
 import { stat } from 'node:fs/promises';
 import { logger } from './logger';
-import fs from './fs';
+import { fs } from './fs';
 import { getSettings } from './settings';
 
 export const getAnyValidPath = async (paths: string[]) => {
