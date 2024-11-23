@@ -1,10 +1,12 @@
-import { Browser, BrowserLaunchArgumentOptions, Page, Cookie } from 'puppeteer-core';
+import { Browser, BrowserLaunchArgumentOptions, Page } from 'puppeteer-core';
 import puppeteer from 'puppeteer-extra';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import { logger } from './logger';
 import { prompt } from './prompt';
 import { getSettings, saveSettings } from './settings';
 import { getAnyValidPath } from './bin';
+import { parseUrlFromResource } from './utils';
+import { browserCookiesToList } from './cookies';
 
 puppeteer.use(StealthPlugin());
 
@@ -17,10 +19,7 @@ const findChromePath = async () => {
   return getAnyValidPath(paths);
 };
 
-export const launchBrowser = async (
-  options: BrowserLaunchArgumentOptions = {},
-  proxy?: string | null
-) => {
+export const launchBrowser = async (options: BrowserLaunchArgumentOptions = {}, proxy?: string | null) => {
   const { chromePath } = getSettings();
   let executablePath: string | null = chromePath || (await findChromePath());
   if (!chromePath && executablePath) await saveSettings({ chromePath: executablePath });
@@ -36,9 +35,7 @@ export const launchBrowser = async (
   };
   while (!browser || !page) {
     try {
-      const launchOptions = executablePath
-        ? { executablePath, ...mainOptions }
-        : { channel: 'chrome', ...mainOptions };
+      const launchOptions = executablePath ? { executablePath, ...mainOptions } : { channel: 'chrome', ...mainOptions };
       browser = await puppeteer.launch(launchOptions);
       page = (await browser?.newPage()) ?? null;
     } catch (e) {
@@ -70,15 +67,68 @@ export const launchBrowser = async (
   return { browser, page, chromePath: executablePath };
 };
 
-export const browserCookiesToList = (cookies: Cookie[]) => {
-  return cookies.map((cookie) => {
-    let row = `${cookie.name}=${cookie.value}`;
-    if (cookie.domain) row += `; Domain=${cookie.domain}`;
-    if (cookie.expires) row += `; Expires=${cookie.expires}`;
-    if (cookie.path) row += `; Path=${cookie.path}`;
-    if (cookie.sameSite) row += `; SameSite=${cookie.sameSite}`;
-    if (cookie.secure) row += `; Secure`;
-    if (cookie.httpOnly) row += `; HttpOnly`;
-    return row;
+export const fetchViaBrowser = async (resource: string | URL | Request, options: RequestInit, browser?: Browser) => {
+  const browserInstance = browser ? browser : (await launchBrowser()).browser;
+
+  // Load base url on page and parse cookies
+  const page = await browserInstance.newPage();
+  await page.bringToFront();
+  const { origin } = parseUrlFromResource(resource);
+  await page.evaluate((url) => {
+    window.open(url, '_self');
+  }, origin);
+  await page.waitForNavigation();
+  const browserCookies = await page.cookies();
+  const cookies = browserCookiesToList(browserCookies);
+
+  const isWaitingForRedirect = options?.redirect === 'manual';
+  const response = await new Promise<Response>((resolve) => {
+    if (isWaitingForRedirect) {
+      page.on('response', async (httpResponse) => {
+        const url = httpResponse.request().url();
+        if (url !== resource) return;
+        const response = new Response(null, {
+          headers: httpResponse.headers(),
+          status: httpResponse.status(),
+          statusText: httpResponse.statusText(),
+        });
+        resolve(response);
+      });
+    }
+    page
+      .evaluate(
+        (resource, init: globalThis.RequestInit) => {
+          const fetchData = async () => {
+            const initBody = init.body as string | { type: 'Buffer'; data: number[] };
+            const body =
+              typeof initBody === 'object' && initBody.type === 'Buffer' ? Uint8Array.from(initBody.data) : init.body;
+            init.body = body;
+            const response = await globalThis.fetch(resource as globalThis.RequestInfo, init);
+            return {
+              body: new Uint8Array(await response.arrayBuffer()),
+              init: {
+                headers: response.headers as unknown as Headers,
+                status: response.status,
+                statusText: response.statusText,
+              } as ResponseInit,
+            };
+          };
+          return fetchData();
+        },
+        resource,
+        options!
+      )
+      .then(({ body, init }) => {
+        return isWaitingForRedirect ? {} : resolve(new Response(Buffer.from(Object.values(body)), init));
+      })
+      .catch((e) => {
+        logger.debug(`Error while evaluate browser fetch: ${e?.message}`);
+        return { body: null, init: undefined };
+      });
   });
+
+  page.removeAllListeners('response');
+  if (!page.isClosed) await page.close();
+
+  return { response, cookies };
 };

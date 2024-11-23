@@ -1,5 +1,6 @@
 export * from './fs';
 export * from './http';
+export * from './cookies';
 export * from './settings';
 export * from './logger';
 export * from './browser';
