@@ -1,13 +1,15 @@
 import { cwd } from 'node:process';
 import { homedir } from 'node:os';
 import nodeFs from 'node:fs';
-import type { WriteStream } from 'node:fs';
+import { renameSync, type WriteStream } from 'node:fs';
 import { appendFile, mkdir, readdir, readFile, unlink, writeFile, rename } from 'node:fs/promises';
 import { join, parse } from 'node:path';
+import { isExecutable } from './utils';
 
 const APP_NAME = 'Streamyx';
 
 const getAppDataDir = (appName: string = APP_NAME) => {
+  if (!isExecutable) return process.cwd();
   switch (process.platform) {
     case 'win32':
       return join(process.env.APPDATA || join(homedir(), 'AppData', 'Roaming'), appName);
@@ -20,7 +22,12 @@ const getAppDataDir = (appName: string = APP_NAME) => {
   }
 };
 
+const getDownloadDir = () => {
+  return isExecutable ? join(homedir(), 'Downloads') : join(process.cwd(), 'downloads');
+};
+
 const appDataDir = getAppDataDir();
+const downloadDir = getDownloadDir();
 
 export const initDir = (dir: string) => {
   if (!nodeFs.existsSync(dir)) nodeFs.mkdirSync(dir);
@@ -31,7 +38,7 @@ export class BaseDirectory {
   static AppData = initDir(appDataDir);
   static AppLog = initDir(join(appDataDir, 'logs'));
   static Temp = initDir(join(appDataDir, 'tmp'));
-  static Download = join(homedir(), 'Downloads');
+  static Download = downloadDir;
 }
 
 export const fs = {
@@ -140,6 +147,7 @@ export const fs = {
     }
   },
   rename: rename,
+  renameSync: renameSync,
   exists: nodeFs.existsSync,
   createWriteStream: async (path: string) => {
     const dir = parse(path).dir;

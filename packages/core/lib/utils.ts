@@ -67,4 +67,5 @@ export const extendEpisodes = (episodesBySeasons: Map<number, Set<number>> = new
   return { items: episodesBySeasons, has, set, getMin, getMax, seasonsCount, episodesCount };
 };
 
+// Check if app is packed to executable (pkg or electron)
 export const isExecutable = 'pkg' in process && process.pkg !== undefined;
