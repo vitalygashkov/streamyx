@@ -1,4 +1,3 @@
-import { inspect } from 'node:util';
 // @ts-ignore
 import 'urlpattern-polyfill';
 
