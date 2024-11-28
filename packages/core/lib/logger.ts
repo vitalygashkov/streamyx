@@ -1,11 +1,15 @@
 import { pid } from 'node:process';
-import { inspect } from 'node:util';
-import { Stats, WriteStream, createWriteStream } from 'node:fs';
-import fsp from 'node:fs/promises';
+import { join } from 'node:path';
+import { Stats, WriteStream, createWriteStream, promises as fsp } from 'node:fs';
 import pino from 'pino';
 import pretty from 'pino-pretty';
-import fs from './fs';
-import { isExecutable } from './utils';
+import { BaseDirectory } from './fs';
+import { getCurrentDateTimeString, isExecutable } from './utils';
+
+const MAX_LOGS_COUNT = 50;
+const CURRENT_DATETIME = getCurrentDateTimeString();
+const LOG_DIR = BaseDirectory.AppLog;
+const LOG_PATH = join(LOG_DIR, `streamyx_${CURRENT_DATETIME}_${pid}.log`);
 
 // Enable debug mode if needed
 if (
@@ -47,14 +51,9 @@ const streams: LogStream[] = [
   },
 ];
 
-const MAX_LOGS_COUNT = 50;
-const CURRENT_DATETIME = new Date().toISOString().replace('T', '_').replace('Z', '').replaceAll(':', '-').split('.')[0];
-const LOG_DIR = fs.logsDir;
-const LOG_PATH = fs.join(LOG_DIR, `streamyx_${CURRENT_DATETIME}_${pid}.log`);
-
 const clearOutdatedLogs = async () => {
-  const files = await fs.readDir(LOG_DIR);
-  const toPath = (name: string) => fs.join(LOG_DIR, name);
+  const files = await fsp.readdir(LOG_DIR);
+  const toPath = (name: string) => join(LOG_DIR, name);
   const statsQueue = files.map((name: string) =>
     fsp
       .stat(toPath(name))
@@ -65,13 +64,13 @@ const clearOutdatedLogs = async () => {
   const stats = results.filter(Boolean) as { stats: Stats; path: string }[];
   stats.sort((a, b) => b.stats.mtime.getTime() - a.stats.mtime.getTime());
   const oldLogs = stats.slice(MAX_LOGS_COUNT);
-  const deleteQueue = oldLogs.map((log) => fs.delete(log.path));
+  const deleteQueue = oldLogs.map((log) => fsp.unlink(log.path));
   await Promise.allSettled(deleteQueue).catch(logger.error);
 };
 
 export const showLogsList = async () => {
-  const files = await fs.readDir(LOG_DIR);
-  const toPath = (name: string) => fs.join(LOG_DIR, name);
+  const files = await fsp.readdir(LOG_DIR);
+  const toPath = (name: string) => join(LOG_DIR, name);
   for (const file of files) console.log(toPath(file));
 };
 
@@ -81,7 +80,7 @@ if (isExecutable) {
 
   const fileStream = isWindows
     ? createWriteStream(LOG_PATH, { flags: 'a' })
-    : pino.destination({ dest: LOG_PATH, append: true });
+    : pino.destination({ dest: LOG_PATH, append: true, mkdir: true });
 
   streams.unshift({ level: 'debug', stream: fileStream });
 }
@@ -97,26 +96,4 @@ const logger = pino(
   pino.multistream(streams)
 );
 
-type LogLevel = 'debug' | 'info' | 'warn' | 'error';
-
-const logLevelsColors: Record<LogLevel, string> = {
-  debug: 'blue',
-  info: 'green',
-  warn: 'yellow',
-  error: 'red',
-};
-
-const getCurrentTimeString = () => {
-  return new Date().toISOString().split('T')[1].replace('Z', '');
-};
-
-export const getLogPrefix = (logLevel: LogLevel) => {
-  const logLevelColor = inspect.colors[logLevelsColors[logLevel]] ?? [0, 0];
-  const logLevelText = logLevel.toUpperCase();
-  const [start, end] = logLevelColor;
-  const logLevelColored = `\x1B[${start}m${logLevelText}\x1B[${end}m`;
-  return `${getCurrentTimeString()} ${logLevelColored.padEnd(15, ' ')}:`;
-};
-
-export type { LogLevel };
 export { logger, LOG_DIR, LOG_PATH };

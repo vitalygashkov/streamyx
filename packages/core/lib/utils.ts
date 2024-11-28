@@ -1,6 +1,5 @@
 // @ts-ignore
 import 'urlpattern-polyfill';
-import { logger } from './logger';
 
 export const sanitizeString = (text: string) => {
   const forbidden = ['}', '{', '%', '>', '<', '^', ';', '`', '$', '"', '@', '='];
@@ -30,9 +29,8 @@ export const safeEval = <T = any>(jsObjectString: string): T | null => {
   try {
     return new Function('return ' + jsObjectString)();
   } catch (e) {
-    logger.error('Evaluation JS object failed. Input:');
-    logger.debug(jsObjectString);
-    logger.debug(e);
+    console.error('Evaluation JS object failed. Input:');
+    console.error(jsObjectString);
     return null as T;
   }
 };
@@ -72,3 +70,39 @@ export const isExecutable = 'pkg' in process && process.pkg !== undefined;
 
 export const parseUrlFromResource = (resource: string | URL | Request) =>
   resource instanceof Request ? new URL(resource.url) : typeof resource === 'string' ? new URL(resource) : resource;
+
+export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
+
+const dateTimeFormatter = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+  hour: '2-digit',
+  minute: '2-digit',
+  second: '2-digit',
+  hour12: false,
+});
+
+const timeFormatter = new Intl.DateTimeFormat('en-US', {
+  hour: '2-digit',
+  minute: '2-digit',
+  second: '2-digit',
+  hour12: false,
+});
+
+export const getCurrentDateTimeString = () => {
+  const date = new Date();
+  const formatted = dateTimeFormatter.format(date);
+  return formatted.replace('/', '-').replace(', ', '_').replaceAll(':', '_');
+};
+
+export const getCurrentTimeString = () => {
+  const date = new Date();
+  const milliseconds = date.getMilliseconds().toString().padStart(3, '0');
+  const formatted = timeFormatter.format(date);
+  return `${formatted}.${milliseconds}`;
+};
+
+export const getLogPrefix = (logLevel: string) => {
+  return `${getCurrentTimeString().slice(2)} ${logLevel.padEnd(15, ' ')}:`;
+};

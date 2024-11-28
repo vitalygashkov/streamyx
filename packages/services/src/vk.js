@@ -8,7 +8,7 @@ module.exports = () => (core) => ({
     const html = await core.http
       .fetch(url)
       .then((r) => r.arrayBuffer())
-      .then((r) => new TextDecoder('windows-1251').decode(r))
+      .then((r) => new TextDecoder('utf-8').decode(new Uint8Array(r)))
       .catch(() => '');
     if (!html) core.log.error('Could not fetch video info');
 
