@@ -5,15 +5,18 @@ import { getSettings } from './settings';
 import { importCookies } from './cookies';
 
 const createStorePath = (name: string) => {
+  // TODO: Make new store filename format
+  // const storePath = join(getSettings().servicesDir, `${name}.json`);
+  // if (fs.exists(storePath)) return storePath;
+
+  // Old store support
   const oldStoreDir = initDir(join(getSettings().servicesDir, name));
   const oldStorePath = join(oldStoreDir, 'config.json');
-  const storePath = join(getSettings().servicesDir, `${name}.json`);
   // Migrate from old store to new store
-  if (fs.exists(oldStorePath)) {
-    fs.renameSync(oldStorePath, storePath);
-    fs.delete(oldStorePath).then(() => fs.delete(oldStoreDir));
-  }
-  return storePath;
+  // if (fs.exists(oldStorePath)) {
+  //   fs.readText(oldStorePath).then((data) => fs.writeText(storePath, data));
+  // }
+  return oldStorePath;
 };
 
 const getCookiesFromTxt = async (dir: string) => {
