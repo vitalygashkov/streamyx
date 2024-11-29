@@ -93,7 +93,7 @@ const timeFormatter = new Intl.DateTimeFormat('en-US', {
 export const getCurrentDateTimeString = () => {
   const date = new Date();
   const formatted = dateTimeFormatter.format(date);
-  return formatted.replace('/', '-').replace(', ', '_').replaceAll(':', '_');
+  return formatted.replaceAll('/', '-').replace(', ', '_').replaceAll(':', '-');
 };
 
 export const getCurrentTimeString = () => {
