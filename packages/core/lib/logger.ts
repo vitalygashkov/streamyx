@@ -9,7 +9,7 @@ import { getCurrentDateTimeString, isExecutable } from './utils';
 const MAX_LOGS_COUNT = 50;
 const CURRENT_DATETIME = getCurrentDateTimeString();
 const LOG_DIR = BaseDirectory.AppLog;
-const LOG_PATH = join(LOG_DIR, `streamyx_${CURRENT_DATETIME}_${pid}.log`);
+const LOG_PATH = join(LOG_DIR, `${CURRENT_DATETIME}_${pid}.log`);
 
 // Enable debug mode if needed
 if (
