@@ -1,6 +1,6 @@
 import { join } from 'node:path';
 import { fs, BaseDirectory, initDir } from './fs';
-import { logger } from './logger';
+import { logger } from './log';
 
 export type VideoQuality = (typeof VIDEO_QUALITY)[keyof typeof VIDEO_QUALITY];
 export const VIDEO_QUALITY = {

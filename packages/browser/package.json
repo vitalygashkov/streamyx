@@ -1,0 +1,59 @@
+{
+  "name": "@streamyx/browser",
+  "version": "0.0.1",
+  "description": "Browser utilities for Streamyx",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "files": [
+    "index.js",
+    "index.d.ts"
+  ],
+  "scripts": {
+    "lint": "eslint . && prettier --check .",
+    "fix": "eslint . --fix && prettier --write ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vitalygashkov/streamyx.git"
+  },
+  "keywords": [
+    "streamyx",
+    "puppeteer",
+    "browser"
+  ],
+  "bugs": {
+    "url": "https://github.com/vitalygashkov/streamyx/issues",
+    "email": "vitalygashkov@vk.com"
+  },
+  "author": "Vitaly Gashkov <vitalygashkov@vk.com>",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "funding": [
+    {
+      "type": "individual",
+      "url": "https://boosty.to/vitalygashkov"
+    },
+    {
+      "type": "patreon",
+      "url": "https://www.patreon.com/vitalygashkov"
+    }
+  ],
+  "engines": {
+    "node": "20 || 21 || 22 || 23"
+  },
+  "dependencies": {
+    "puppeteer-core": "^23.9.0",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.16.0",
+    "@types/node": "^22.10.1",
+    "eslint": "^9.16.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "globals": "^15.12.0",
+    "prettier": "^3.4.1",
+    "typescript": "^5.7.2"
+  }
+}

@@ -6,7 +6,7 @@ import http2, {
 import { URL } from 'node:url';
 import { fetch, ProxyAgent, Agent, buildConnector } from 'undici';
 import { gotScraping } from 'got-scraping';
-import { logger } from './logger';
+import { logger } from './log';
 import { randomizeCiphers } from './tls';
 import { browserCookiesToList, Cookie } from './cookies';
 import { parseUrlFromResource } from './utils';
@@ -56,6 +56,7 @@ const DEFAULT_MAX_REDIRECTIONS = 5;
 export interface IHttp {
   headers: Record<string, string>;
   cookies: string[];
+  userAgents: Record<'chromeWindows' | 'chromeMacOS' | 'chromeLinux' | 'smartTv' | 'tizen', string>;
   fetch(resource: string | URL | Request, options?: RequestInit): Promise<Response>;
   fetchAsChrome(resource: string | URL | Request, options?: RequestInit): Promise<Response>;
   appendCookies(setCookie: string | string[]): void;
@@ -72,6 +73,7 @@ const sessionToken = { id: crypto.randomUUID() };
 class Http implements IHttp {
   headers: Record<string, string>;
   cookies: string[];
+  userAgents = USER_AGENTS;
 
   #sessions: Map<string, ClientHttp2Session>;
   #retryThreshold: number;

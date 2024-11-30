@@ -3,7 +3,7 @@ import { ChildProcessWithoutNullStreams, spawn } from 'node:child_process';
 import { chmodSync } from 'node:fs';
 import { delimiter } from 'node:path';
 import { stat } from 'node:fs/promises';
-import { logger } from './logger';
+import { logger } from './log';
 import { fs } from './fs';
 import { getSettings } from './settings';
 
