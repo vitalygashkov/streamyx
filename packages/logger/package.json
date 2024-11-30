@@ -1,6 +1,6 @@
 {
   "name": "@streamyx/logger",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Logger for Streamyx",
   "main": "index.js",
   "types": "index.d.ts",
@@ -18,8 +18,8 @@
   },
   "keywords": [
     "streamyx",
-    "puppeteer",
-    "browser"
+    "logger",
+    "pino"
   ],
   "bugs": {
     "url": "https://github.com/vitalygashkov/streamyx/issues",
