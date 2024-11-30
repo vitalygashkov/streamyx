@@ -6,7 +6,7 @@ import http2, {
 import { URL } from 'node:url';
 import { fetch, ProxyAgent, Agent, buildConnector } from 'undici';
 import { gotScraping } from 'got-scraping';
-import { logger } from './logger';
+import { logger } from './log';
 import { randomizeCiphers } from './tls';
 import { browserCookiesToList, Cookie } from './cookies';
 import { parseUrlFromResource } from './utils';

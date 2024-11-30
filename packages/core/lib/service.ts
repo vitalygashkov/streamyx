@@ -4,7 +4,7 @@ import { IPrompt } from './prompt';
 import { createStore } from './store';
 import { Http, http } from './http';
 import { fs } from './fs';
-import { logger as log } from './logger';
+import { logger as log } from './log';
 import { prompt } from './prompt';
 import { execUrlPatterns, sanitizeString, safeEval, extendEpisodes } from './utils';
 

@@ -1,8 +1,9 @@
-import { pid } from 'node:process';
-import { join } from 'node:path';
-import { Stats, WriteStream, createWriteStream, promises as fsp } from 'node:fs';
-import pino from 'pino';
-import pretty from 'pino-pretty';
+const { pid } = require('node:process');
+const { join } = require('node:path');
+const { createWriteStream } = require('node:fs');
+const { readdir, stat, unlink } = require('node:fs/promises');
+const pino = require('pino');
+const pretty = require('pino-pretty');
 
 const dateTimeFormatter = new Intl.DateTimeFormat('en-US', {
   year: 'numeric',
@@ -22,12 +23,7 @@ const getCurrentDateTimeString = () => {
 
 const MAX_LOGS_COUNT = 50;
 
-type CreateLoggerOptions = {
-  dir?: string;
-  writeToFile?: boolean;
-};
-
-const createLogger = (options: CreateLoggerOptions = {}) => {
+const createLogger = (options = {}) => {
   const dateTimeString = getCurrentDateTimeString();
   const logDir = options.dir || process.cwd();
   const logPath = join(logDir, `${dateTimeString}_${pid}.log`);
@@ -49,9 +45,7 @@ const createLogger = (options: CreateLoggerOptions = {}) => {
 
   const level = process.env.DEBUG?.startsWith('streamyx') ? 'debug' : 'info';
 
-  type LogStream = { level: string; stream: WriteStream | any };
-
-  const streams: LogStream[] = [
+  const streams = [
     {
       level,
       stream: pretty({
@@ -60,32 +54,32 @@ const createLogger = (options: CreateLoggerOptions = {}) => {
         translateTime: 'SYS:HH:MM:ss.l',
         customPrettifiers: {
           time: (timestamp) => `${timestamp}`,
-          level: (_logLevel, _key, _log, { labelColorized }: any) => `${labelColorized}`.padEnd(15, ' '),
+          level: (_logLevel, _key, _log, { labelColorized }) =>
+            `${labelColorized}`.padEnd(15, ' '),
         },
         destination: prettyDestination,
         messageFormat: (log, messageKey, _levelLabel, { colors }) => {
           const message = log[messageKey];
           if (typeof message === 'string') return colors.whiteBright(message);
-          else return message as string;
+          else return message;
         },
       }),
     },
   ];
 
   const clearOutdatedLogs = async () => {
-    const files = await fsp.readdir(logDir);
-    const toPath = (name: string) => join(logDir, name);
-    const statsQueue = files.map((name: string) =>
-      fsp
-        .stat(toPath(name))
+    const files = await readdir(logDir);
+    const toPath = (name) => join(logDir, name);
+    const statsQueue = files.map((name) =>
+      stat(toPath(name))
         .catch(() => null)
-        .then((stats) => ({ stats, path: toPath(name) }))
+        .then((stats) => ({ stats, path: toPath(name) })),
     );
     const results = await Promise.all(statsQueue);
-    const stats = results.filter(Boolean) as { stats: Stats; path: string }[];
+    const stats = results.filter(Boolean);
     stats.sort((a, b) => b.stats.mtime.getTime() - a.stats.mtime.getTime());
     const oldLogs = stats.slice(MAX_LOGS_COUNT);
-    const deleteQueue = oldLogs.map((log) => fsp.unlink(log.path));
+    const deleteQueue = oldLogs.map((log) => unlink(log.path));
     await Promise.allSettled(deleteQueue).catch(logger.error);
   };
 
@@ -107,10 +101,10 @@ const createLogger = (options: CreateLoggerOptions = {}) => {
       },
       timestamp: pino.stdTimeFunctions.isoTime,
     },
-    pino.multistream(streams)
+    pino.multistream(streams),
   );
 
   return logger;
 };
 
-export { createLogger };
+module.exports = { createLogger };

@@ -1,7 +1,7 @@
 {
-  "name": "@streamyx/browser",
+  "name": "@streamyx/logger",
   "version": "0.0.1",
-  "description": "Browser utilities for Streamyx",
+  "description": "Logger for Streamyx",
   "main": "index.js",
   "types": "index.d.ts",
   "files": [
@@ -42,9 +42,8 @@
     "node": "20 || 21 || 22 || 23"
   },
   "dependencies": {
-    "puppeteer-core": "^23.9.0",
-    "puppeteer-extra": "^3.3.6",
-    "puppeteer-extra-plugin-stealth": "^2.11.2"
+    "pino": "^9.5.0",
+    "pino-pretty": "^13.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.16.0",
