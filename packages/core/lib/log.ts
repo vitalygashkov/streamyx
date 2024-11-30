@@ -1,7 +1,7 @@
 import { join } from 'node:path';
 import { promises as fsp } from 'node:fs';
+import { createLogger } from '@streamyx/logger';
 import { BaseDirectory } from './fs';
-import { createLogger } from './logger';
 import { isExecutable } from './utils';
 
 const logger = createLogger({ dir: BaseDirectory.AppLog, writeToFile: isExecutable });
