@@ -37,7 +37,7 @@ export const createStore = (name: string) => {
     const hasCookiesInState = cookiesKey && data[cookiesKey];
     if (hasCookiesInTxt) http.setCookies(cookies);
     else if (hasCookiesInState) http.setCookies(data[cookiesKey]);
-    return data as T;
+    return state as T;
   };
   const setState = async <T = Record<string, any>>(data?: T) => {
     Object.assign(state, data || {});
