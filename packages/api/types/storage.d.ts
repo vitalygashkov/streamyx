@@ -4,5 +4,7 @@ export type AppStorage<T = Record<string, any>> = {
   set(key: string, value: any): Promise<void>;
   delete(key: string): Promise<void>;
   clear(): Promise<void>;
-  save(items: T): Promise<void>;
+  save(items?: T): Promise<void>;
+  append(items: T): Promise<void>;
+  items(): T;
 } & T;
