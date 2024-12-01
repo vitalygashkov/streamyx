@@ -26,6 +26,58 @@ const getCookiesFromTxt = async (dir: string) => {
   return cookies;
 };
 
+export const createStorage = async (name: string) => {
+  const storageDir = initDir(join(getSettings().servicesDir, name));
+  const storagePath = join(storageDir, `${name}.storage.json`);
+
+  const configPath = join(storageDir, 'config.json');
+  if (fs.exists(configPath)) await fs.rename(configPath, storagePath);
+
+  const serializable = (obj: any) => {
+    const result: any = {};
+    for (const [key, value] of Object.entries(obj)) {
+      if (typeof value !== 'function') result[key] = value;
+    }
+    return result;
+  };
+
+  const storage: Record<string, any> = {
+    async load() {
+      const data = (await fs.readJson<any>(storagePath).catch(() => {})) || {};
+      for (const [key, value] of Object.entries(data)) storage[key] = value;
+      // Automatically load cookies from cookies.txt
+      const cookies = await getCookiesFromTxt(storagePath);
+      if (!!cookies.length) await storage.set('cookies', cookies);
+    },
+    async get(key: string) {
+      const data = (await fs.readJson<any>(storagePath).catch(() => {})) || {};
+      return data[key];
+    },
+    async set(key: string, value: any) {
+      storage[key] = value;
+      await fs.writeJson(storagePath, serializable(storage));
+    },
+    async delete(key: string) {
+      delete storage[key];
+      await fs.writeJson(storagePath, serializable(storage));
+    },
+    async clear() {
+      for (const [key, value] of Object.entries(storage)) {
+        const isFn = typeof value === 'function';
+        if (!isFn) delete storage[key];
+      }
+      await fs.writeJson(storagePath, serializable(storage));
+    },
+    async save(items?: Record<string, any>) {
+      const data = items || serializable(storage);
+      for (const [key, value] of Object.entries(data)) storage[key] = value;
+      await fs.writeJson(storagePath, data);
+    },
+  };
+
+  return storage;
+};
+
 export const createStore = (name: string) => {
   const storePath = createStorePath(name);
   const state = {} as Record<string, any>;

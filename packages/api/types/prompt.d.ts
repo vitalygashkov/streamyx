@@ -1,3 +1,10 @@
+export type PromptForm = {
+  title?: string;
+  subtitle?: string;
+} & {
+  [field: string]: { label: string; defaultValue?: string };
+};
+
 export type PromptFormResponse = { [field: string]: string };
 
 export type AppPrompt = {

@@ -1,5 +1,8 @@
-export type AppStorage = {
-  state: Record<string, any>;
-  getState: <T = any>(cookiesKey?: string | null) => Promise<T>;
-  setState: <T = Record<string, any>>(data?: T) => Promise<void>;
-};
+export type AppStorage<T = Record<string, any>> = {
+  load(): Promise<void>;
+  get(key: string): Promise<any>;
+  set(key: string, value: any): Promise<void>;
+  delete(key: string): Promise<void>;
+  clear(): Promise<void>;
+  save(items: T): Promise<void>;
+} & T;
