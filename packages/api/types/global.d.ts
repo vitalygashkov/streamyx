@@ -11,5 +11,5 @@ declare global {
   const http: HttpClient;
   const logger: Logger;
   const question: Question;
-  const utils: Common;
+  const common: Common;
 }

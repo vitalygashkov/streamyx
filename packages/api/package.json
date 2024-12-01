@@ -1,6 +1,6 @@
 {
   "name": "@streamyx/api",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Type definitions for the latest Streamyx API",
   "main": "streamyx.js",
   "types": "streamyx.d.ts",
