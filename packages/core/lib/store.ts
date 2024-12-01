@@ -78,12 +78,7 @@ export const createStorage = async (name: string) => {
       await fs.writeJson(storagePath, serializable(storage));
     },
     items() {
-      const items: Record<string, any> = {};
-      for (const [key, value] of Object.entries(storage)) {
-        const isFn = typeof value === 'function';
-        if (!isFn) items[key] = value;
-      }
-      return items;
+      return serializable(storage);
     },
     async save(items?: Record<string, any>) {
       clear(storage);
