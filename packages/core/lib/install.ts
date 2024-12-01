@@ -5,6 +5,7 @@ import { Http } from './http';
 import { execUrlPatterns, extendEpisodes, safeEval, sanitizeString } from './utils';
 import { logger } from './log';
 import { PluginInstance } from './service';
+import { prompt } from './prompt';
 
 export const install = async (pluginPath: string): Promise<PluginInstance> => {
   const pluginName = path.parse(pluginPath).name;
