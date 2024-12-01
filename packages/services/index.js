@@ -5,7 +5,6 @@ const services = {
   soundcloud: require('./src/soundcloud'),
   weibo: require('./src/weibo'),
   vk: require('./src/vk'),
-  virtualroom: require('./src/virtualroom'),
   ntv: require('./src/ntv'),
 };
 
