@@ -10,4 +10,5 @@ export * from './utils';
 
 export * from './args';
 export * from './service';
+export * from './install';
 export * from './shell';
