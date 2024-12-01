@@ -2,9 +2,6 @@
 [submodule "packages/dasha"]
 	path = packages/dasha
 	url = https://github.com/vitalygashkov/dasha.git
-[submodule "packages/crunchyroll"]
-	path = packages/crunchyroll
-	url = https://github.com/vitalygashkov/streamyx-crunchyroll.git
 [submodule "packages/esor"]
 	path = packages/molnia
 	url = https://github.com/vitalygashkov/esor.git
