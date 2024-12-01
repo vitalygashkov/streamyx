@@ -16,6 +16,7 @@
   "scripts": {},
   "workspaces": [
     "packages/*",
+    "packages/extensions/extensions/*",
     "apps/*"
   ],
   "devDependencies": {

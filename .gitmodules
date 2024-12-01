@@ -14,3 +14,6 @@
 [submodule "apps/desktop"]
 	path = apps/desktop
 	url = https://github.com/vitalygashkov/streamyx-desktop.git
+[submodule "packages/extensions"]
+	path = packages/extensions
+	url = https://github.com/vitalygashkov/streamyx-extensions.git
