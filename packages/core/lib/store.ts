@@ -41,6 +41,14 @@ export const createStorage = async (name: string) => {
     return result;
   };
 
+  const clear = (obj: any) => {
+    for (const [key, value] of Object.entries(obj)) {
+      const isFn = typeof value === 'function';
+      if (!isFn) delete obj[key];
+    }
+    return obj;
+  };
+
   const storage: Record<string, any> = {
     async load() {
       const data = (await fs.readJson<any>(storagePath).catch(() => {})) || {};
@@ -62,13 +70,18 @@ export const createStorage = async (name: string) => {
       await fs.writeJson(storagePath, serializable(storage));
     },
     async clear() {
-      for (const [key, value] of Object.entries(storage)) {
-        const isFn = typeof value === 'function';
-        if (!isFn) delete storage[key];
-      }
+      clear(storage);
+      await fs.writeJson(storagePath, {});
+    },
+    async append(items: Record<string, any>) {
+      for (const [key, value] of Object.entries(items)) storage[key] = value;
       await fs.writeJson(storagePath, serializable(storage));
     },
+    items() {
+      return serializable(storage);
+    },
     async save(items?: Record<string, any>) {
+      clear(storage);
       const data = items || serializable(storage);
       for (const [key, value] of Object.entries(data)) storage[key] = value;
       await fs.writeJson(storagePath, data);

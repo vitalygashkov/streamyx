@@ -1,13 +1,12 @@
 {
-  "name": "@streamyx/api",
-  "version": "0.0.5",
-  "description": "Type definitions for the latest Streamyx API",
-  "main": "streamyx.js",
-  "types": "streamyx.d.ts",
+  "name": "@streamyx/loader",
+  "version": "0.0.3",
+  "description": "Plugin loader for Streamyx",
+  "main": "index.js",
+  "types": "index.d.ts",
   "files": [
-    "streamyx.js",
-    "streamyx.d.ts",
-    "types"
+    "index.js",
+    "index.d.ts"
   ],
   "scripts": {
     "lint": "eslint . && prettier --check .",
@@ -19,8 +18,9 @@
   },
   "keywords": [
     "streamyx",
-    "types",
-    "api"
+    "loader",
+    "context",
+    "vm"
   ],
   "bugs": {
     "url": "https://github.com/vitalygashkov/streamyx/issues",
@@ -41,6 +41,9 @@
   ],
   "engines": {
     "node": "20 || 21 || 22 || 23"
+  },
+  "dependencies": {
+    "metavm": "^1.4.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.16.0",

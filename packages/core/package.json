@@ -1,6 +1,6 @@
 {
   "name": "@streamyx/core",
-  "version": "2.2.1",
+  "version": "2.3.2",
   "author": "Vitaly Gashkov <vitalygashkov@vk.com>",
   "description": "Core modules for Streamyx",
   "license": "AGPL-3.0",
@@ -23,6 +23,7 @@
     "dev": "tsup ./lib/main.ts --format esm,cjs --watch --dts --clean"
   },
   "dependencies": {
+    "@streamyx/loader": "^0.0.3",
     "@streamyx/logger": "^0.0.2",
     "dasha": "^3.1.1",
     "got-scraping": "^3.2.15",

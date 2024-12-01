@@ -1,9 +1,18 @@
-export type AppHttp = {
+export type HttpClient = {
   headers: Record<string, string>;
   cookies: string[];
-  userAgents: Record<'chromeWindows' | 'chromeMacOS' | 'chromeLinux' | 'smartTv' | 'tizen', string>;
-  fetch(resource: string | URL | Request, options?: RequestInit): Promise<Response>;
-  fetchAsChrome(resource: string | URL | Request, options?: RequestInit): Promise<Response>;
+  userAgents: Record<
+    'chromeWindows' | 'chromeMacOS' | 'chromeLinux' | 'smartTv' | 'tizen',
+    string
+  >;
+  fetch(
+    resource: string | URL | Request,
+    options?: RequestInit,
+  ): Promise<Response>;
+  fetchAsChrome(
+    resource: string | URL | Request,
+    options?: RequestInit,
+  ): Promise<Response>;
   appendCookies(setCookie: string | string[]): void;
   setAgent(proxy?: string | null): void;
   setCookies(cookies: string[]): void;

@@ -1,10 +1,10 @@
-export type AppUtils = {
+export type Common = {
   sanitizeString: (text: string) => string;
 
   execUrlPatterns: (
     url: string,
     patterns: string[],
-    baseUrls: string[]
+    baseUrls: string[],
   ) => {
     pathname: Record<string, string | undefined>;
     search: Record<string, string | undefined>;
