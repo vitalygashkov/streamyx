@@ -1,6 +1,6 @@
 {
   "name": "@streamyx/loader",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Plugin loader for Streamyx",
   "main": "index.js",
   "types": "index.d.ts",
@@ -42,7 +42,9 @@
   "engines": {
     "node": "20 || 21 || 22 || 23"
   },
-  "dependencies": {},
+  "dependencies": {
+    "metavm": "^1.4.2"
+  },
   "devDependencies": {
     "@eslint/js": "^9.16.0",
     "@types/node": "^22.10.1",
