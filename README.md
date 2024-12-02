@@ -39,7 +39,7 @@ Streamyx supports Windows (x64), macOS (x64 & Apple Silicon) and Linux (x64).
 #### Windows
 
 ```shell
-powershell -c "irm https://streamyx.ru/install.ps1 | iex"
+powershell -c "irm streamyx.ru/install.ps1 | iex"
 ```
 
 #### Linux & macOS

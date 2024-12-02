@@ -39,7 +39,7 @@
 #### Windows
 
 ```shell
-powershell -c "irm https://streamyx.ru/install.ps1 | iex"
+powershell -c "irm streamyx.ru/install.ps1 | iex"
 ```
 
 #### Linux & macOS
@@ -48,7 +48,7 @@ powershell -c "irm https://streamyx.ru/install.ps1 | iex"
 curl -fsSL https://streamyx.ru/install.sh | bash
 ```
 
-### Upgrade
+### Обновление
 
 Чтобы обновить Стримикс до последней версии, выполните следующую команду:
 
