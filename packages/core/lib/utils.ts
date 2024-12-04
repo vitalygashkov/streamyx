@@ -25,6 +25,7 @@ export const execUrlPatterns = (url: string, patterns: string[], baseUrls: strin
 };
 
 // Like eval but just for JS objects
+// TODO: Use metavm
 export const safeEval = <T = any>(jsObjectString: string): T | null => {
   try {
     return new Function('return ' + jsObjectString)();

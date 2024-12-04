@@ -12,4 +12,18 @@ declare global {
   const logger: Logger;
   const question: Question;
   const common: Common;
+
+  const navigator: {
+    appName: string;
+    appVersion: string;
+    platform: string;
+  };
+  const document: { cookie: string };
+  const console: Console;
+  const localStorage: Storage;
+  const fetch: (
+    input: RequestInfo | URL,
+    init?: RequestInit,
+  ) => Promise<Response>;
+  const prompt: (message: string) => Promise<string>;
 }
