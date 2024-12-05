@@ -1,4 +1,6 @@
 import { join } from 'node:path';
+import { writeFileSync } from 'node:fs';
+import { readFile } from 'node:fs/promises';
 import { fs, initDir } from './fs';
 import { http } from './http';
 import { getSettings } from './settings';
@@ -18,6 +20,86 @@ const createStorePath = (name: string) => {
   // }
   return oldStorePath;
 };
+
+class LocalStorage implements Storage {
+  items: Map<string, any>;
+  filePath: string;
+
+  constructor(filePath: string) {
+    this.items = new Map();
+    this.filePath = filePath;
+
+    process.on('SIGINT', () => {
+      this.save();
+      process.exit(0); // Ensure the app exits
+    });
+
+    process.on('SIGTERM', () => {
+      this.save();
+      process.exit(0);
+    });
+
+    // Catch uncaught exceptions
+    process.on('uncaughtException', () => {
+      this.save();
+      process.exit(1);
+    });
+
+    // Optional: Catch exit event (not ideal for async operations)
+    process.on('exit', () => this.save());
+  }
+
+  async load() {
+    try {
+      const data = await readFile(this.filePath, { encoding: 'utf8' });
+      this.items = this.parse(data);
+    } catch (e) {
+      this.items = new Map();
+    }
+    // Automatically load cookies from cookies.txt
+    // const cookies = await getCookiesFromTxt(this.filePath);
+    // if (!!cookies.length) this.setItem('cookies', cookies);
+  }
+
+  get length(): number {
+    return this.items.size;
+  }
+
+  clear() {
+    this.items.clear();
+  }
+
+  getItem(key: string): string | null {
+    return this.items.get(key) || null;
+  }
+
+  key(index: number) {
+    return Array.from(this.items.keys())[index];
+  }
+
+  removeItem(key: string) {
+    this.items.delete(key);
+  }
+
+  setItem(key: string, value: string) {
+    this.items.set(key, value);
+  }
+
+  parse(text: string) {
+    const items = JSON.parse(text);
+    const entries = Object.entries(items);
+    return new Map(entries);
+  }
+
+  stringify() {
+    const data = Object.fromEntries(this.items.entries());
+    return JSON.stringify(data);
+  }
+
+  save() {
+    writeFileSync(this.filePath, this.stringify());
+  }
+}
 
 const getCookiesFromTxt = async (dir: string) => {
   const cookiesTxtPath = fs.join(dir, 'cookies.txt');
@@ -88,7 +170,10 @@ export const createStorage = async (name: string) => {
     },
   };
 
-  return storage;
+  const localStorage = new LocalStorage(storagePath);
+  await localStorage.load();
+
+  return { storage, localStorage };
 };
 
 export const createStore = (name: string) => {

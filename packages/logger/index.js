@@ -104,6 +104,8 @@ const createLogger = (options = {}) => {
     pino.multistream(streams),
   );
 
+  logger.log = logger.info;
+
   return logger;
 };
 
