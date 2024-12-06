@@ -12,3 +12,5 @@ export function load(
   scriptPath: string,
   options?: LoadOptions,
 ): Promise<metavm.MetaScript>;
+
+export function create(src: string): metavm.MetaScript;

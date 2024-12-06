@@ -5,6 +5,19 @@ import { Logger } from './logger';
 import { Question } from './question';
 import { Common } from './common';
 
+type NavigatorUABrandVersion = {
+  brand: string;
+  version: string;
+};
+
+type UADataValues = {
+  architecture: string;
+  fullVersionList: NavigatorUABrandVersion[];
+  mobile: boolean;
+  platform: string;
+  platformVersion: string;
+};
+
 declare global {
   const app: App;
   const storage: AppStorage;
@@ -17,13 +30,21 @@ declare global {
     appName: string;
     appVersion: string;
     platform: string;
+    userAgentData: {
+      mobile: boolean;
+      platform: string;
+      getHighEntropyValues(hints: string[]): Promise<UADataValues>;
+    };
   };
   const document: { cookie: string };
   const console: Console;
   const localStorage: Storage;
-  const fetch: (
+
+  function eval(x: string): any;
+  function fetch(
     input: RequestInfo | URL,
     init?: RequestInit,
-  ) => Promise<Response>;
-  const prompt: (message: string) => Promise<string>;
+  ): Promise<Response>;
+
+  function prompt(message: string): Promise<string>;
 }

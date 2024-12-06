@@ -49,4 +49,9 @@ const load = async (scriptPath, options = {}) => {
   return script;
 };
 
-module.exports = { load };
+const create = (src, name = 'Eval') => {
+  const script = metavm.createScript(name, src);
+  return script;
+};
+
+module.exports = { load, create };
