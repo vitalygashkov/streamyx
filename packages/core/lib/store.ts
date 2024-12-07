@@ -58,13 +58,13 @@ class LocalStorage implements Storage {
   constructor(filePath: string) {
     this.items = new Map();
     this.filePath = filePath;
-    exitQueue.push(() => this.save());
   }
 
   async load() {
     try {
       const data = await readFile(this.filePath, { encoding: 'utf8' });
       this.items = this.parse(data);
+      exitQueue.push(() => this.save());
     } catch (e) {
       this.items = new Map();
     }
@@ -105,7 +105,7 @@ class LocalStorage implements Storage {
 
   stringify() {
     const data = Object.fromEntries(this.items.entries());
-    return JSON.stringify(data);
+    return JSON.stringify(data, null, 2);
   }
 
   save() {
@@ -121,11 +121,7 @@ const getCookiesFromTxt = async (dir: string) => {
 };
 
 export const createStorage = async (name: string) => {
-  const storageDir = initDir(join(getSettings().servicesDir, name));
-  const storagePath = join(storageDir, `${name}.storage.json`);
-
-  const configPath = join(storageDir, 'config.json');
-  if (fs.exists(configPath)) await fs.rename(configPath, storagePath);
+  const storagePath = createStorePath(name);
 
   const serializable = (obj: any) => {
     const result: any = {};
@@ -204,6 +200,8 @@ export const createStore = (name: string) => {
   };
   const setState = async <T = Record<string, any>>(data?: T) => {
     Object.assign(state, data || {});
+    logger.debug(`Saving state...`);
+    logger.debug(data || state);
     await fs.writeJson(storePath, data || state);
   };
   return { state, getState, setState };
