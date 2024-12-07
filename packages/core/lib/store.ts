@@ -21,6 +21,32 @@ const createStorePath = (name: string) => {
   return oldStorePath;
 };
 
+const exitQueue: (() => void)[] = [];
+
+const onExit = () => {
+  for (const fn of exitQueue) fn();
+  exitQueue.length = 0;
+};
+
+process.on('SIGINT', () => {
+  onExit();
+  process.exit(0); // Ensure the app exits
+});
+
+process.on('SIGTERM', () => {
+  onExit();
+  process.exit(0);
+});
+
+// Catch uncaught exceptions
+process.on('uncaughtException', () => {
+  onExit;
+  process.exit(1);
+});
+
+// Optional: Catch exit event (not ideal for async operations)
+process.on('exit', () => onExit());
+
 class LocalStorage implements Storage {
   items: Map<string, any>;
   filePath: string;
@@ -28,25 +54,7 @@ class LocalStorage implements Storage {
   constructor(filePath: string) {
     this.items = new Map();
     this.filePath = filePath;
-
-    process.on('SIGINT', () => {
-      this.save();
-      process.exit(0); // Ensure the app exits
-    });
-
-    process.on('SIGTERM', () => {
-      this.save();
-      process.exit(0);
-    });
-
-    // Catch uncaught exceptions
-    process.on('uncaughtException', () => {
-      this.save();
-      process.exit(1);
-    });
-
-    // Optional: Catch exit event (not ideal for async operations)
-    process.on('exit', () => this.save());
+    exitQueue.push(() => this.save());
   }
 
   async load() {
