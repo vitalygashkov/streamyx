@@ -39,7 +39,13 @@ const load = async (scriptPath, options = {}) => {
       crypto,
     }),
     dirname: options.dirname,
-    access: { '@streamyx/api': true, ...access, ...options.access },
+    access: {
+      'node:crypto': true,
+      crypto: true,
+      '@streamyx/api': true,
+      ...access,
+      ...options.access,
+    },
     type:
       options.format === 'esm'
         ? metavm.MODULE_TYPE.ECMA
