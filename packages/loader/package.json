@@ -1,6 +1,6 @@
 {
   "name": "@streamyx/loader",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Plugin loader for Streamyx",
   "main": "index.js",
   "types": "index.d.ts",
