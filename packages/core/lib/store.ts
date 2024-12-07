@@ -105,7 +105,7 @@ class LocalStorage implements Storage {
 
   stringify() {
     const data = Object.fromEntries(this.items.entries());
-    return JSON.stringify(data);
+    return JSON.stringify(data, null, 2);
   }
 
   save() {
