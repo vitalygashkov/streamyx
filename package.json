@@ -15,8 +15,13 @@
   "homepage": "https://streamyx.ru",
   "scripts": {},
   "workspaces": [
-    "packages/*",
+    "packages/browser",
+    "packages/core",
+    "packages/dasha",
     "packages/extensions/extensions/*",
+    "packages/loader",
+    "packages/logger",
+    "packages/molnia",
     "apps/*"
   ],
   "devDependencies": {
