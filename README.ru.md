@@ -13,24 +13,13 @@
   <img alt="" src="https://img.shields.io/github/downloads/vitalygashkov/streamyx/total?style=flat&color=black">
 </p>
 
-Стримикс - программа для скачивания видео для последующего оффлайн просмотра.
+Стримикс позволяет легко, быстро и с удовольствием скачивать видео для последующего оффлайн просмотра.
 
-<div align="left">
-  <a href="https://github.com/vitalygashkov/streamyx/tree/main/README.md">English</a> •
-  <span>Русский</span>
-</div>
+[English](https://github.com/vitalygashkov/streamyx/tree/main/README.md) • Pусский
 
-### Встроенные сервисы
+Стримикс имеет встроенную поддержку [Crunchyroll](https://github.com/vitalygashkov/streamyx-extensions/tree/main/extensions/crunchyroll), [Weibo](https://github.com/vitalygashkov/streamyx-extensions/tree/main/extensions/weibo), [Soundcloud](https://github.com/vitalygashkov/streamyx-extensions/tree/main/extensions/soundcloud), [VK](https://github.com/vitalygashkov/streamyx-extensions/tree/main/extensions/vk), [RUTUBE](https://github.com/vitalygashkov/streamyx-extensions/tree/main/extensions/rutube) и многих других сервисов.
 
-<a aria-label="Crunchyroll" href="https://crunchyroll.com"><img alt="" src="https://img.shields.io/badge/Crunchyroll-F47521?style=flat-square&logo=crunchyroll&logoColor=white"></a>
-<a aria-label="Weibo" href="https://m.weibo.cn/"><img alt="" src="https://img.shields.io/badge/Weibo-D62B2A?style=flat-square&logo=sina-weibo&logoColor=white"></a>
-<a aria-label="SoundCloud" href="https://soundcloud.com/"><img alt="" src="https://img.shields.io/badge/SoundCloud-FF3300?style=flat-square&logo=soundcloud&logoColor=white"></a>
-<a aria-label="VK" href="https://vk.com/video"><img alt="" src="https://img.shields.io/badge/VK-0077ff.svg?&style=flat-square&logo=vk&logoColor=white"></a>
-<a aria-label="Rutube" href="https://rutube.ru/"><img alt="" src="https://img.shields.io/badge/RUTUBE-100943?style=flat-square&logoColor=white"></a>
-<a aria-label="VirtualRoom" href="https://virtualroom.ru/"><img alt="" src="https://img.shields.io/badge/VirtualRoom-01aade?style=flat-square&logoColor=white"></a>
-<a aria-label="НТВ" href="https://www.ntv.ru/"><img alt="" src="https://img.shields.io/badge/НТВ-00aa01?style=flat-square&logoColor=white"></a>
-
-> Вы можете добавить поддержку любого стриминг-сервиса самостоятельно! Посмотрите [пример](https://github.com/vitalygashkov/streamyx-service-example), чтобы узнать больше.
+Посмотреть все расширения с открытым исходным кодом можно [здесь](https://github.com/vitalygashkov/streamyx-extensions).
 
 ## Установка
 
