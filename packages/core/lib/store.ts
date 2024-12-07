@@ -1,29 +1,33 @@
 import { join } from 'node:path';
-import { writeFileSync } from 'node:fs';
+import { renameSync, unlinkSync, writeFileSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import { fs, initDir } from './fs';
 import { http } from './http';
 import { getSettings } from './settings';
 import { importCookies } from './cookies';
+import { logger } from './log';
 
 const createStorePath = (name: string) => {
   // TODO: Make new store filename format
-  // const storePath = join(getSettings().servicesDir, `${name}.json`);
+  // const storePath = join(getSettings().servicesDir, `${name}.storage.json`);
   // if (fs.exists(storePath)) return storePath;
 
   // Old store support
   const oldStoreDir = initDir(join(getSettings().servicesDir, name));
   const oldStorePath = join(oldStoreDir, 'config.json');
+  const newStorePath = join(oldStoreDir, `${name}.storage.json`);
   // Migrate from old store to new store
-  // if (fs.exists(oldStorePath)) {
-  //   fs.readText(oldStorePath).then((data) => fs.writeText(storePath, data));
-  // }
-  return oldStorePath;
+  if (fs.exists(oldStorePath)) {
+    renameSync(oldStorePath, newStorePath);
+    unlinkSync(oldStorePath);
+  }
+  return newStorePath;
 };
 
 const exitQueue: (() => void)[] = [];
 
 const onExit = () => {
+  logger.debug('Exiting...');
   for (const fn of exitQueue) fn();
   exitQueue.length = 0;
 };
@@ -40,7 +44,7 @@ process.on('SIGTERM', () => {
 
 // Catch uncaught exceptions
 process.on('uncaughtException', () => {
-  onExit;
+  onExit();
   process.exit(1);
 });
 
@@ -186,6 +190,7 @@ export const createStorage = async (name: string) => {
 
 export const createStore = (name: string) => {
   const storePath = createStorePath(name);
+  logger.debug(`Store path: ${storePath}`);
   const state = {} as Record<string, any>;
   const getState = async <T = any>(cookiesKey: string | null = 'cookies') => {
     const data = (await fs.readJson<any>(storePath).catch(() => {})) || {};
