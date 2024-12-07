@@ -21,4 +21,6 @@ export type Common = {
     seasonsCount: number;
     episodesCount: number;
   };
+
+  getRandomElements: (array: unknown, count?: number) => unknown[];
 };
