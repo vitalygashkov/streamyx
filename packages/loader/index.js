@@ -50,8 +50,13 @@ const load = async (scriptPath, options = {}) => {
 };
 
 const create = (src, name = 'Eval') => {
-  const script = metavm.createScript(name, src);
-  return script;
+  try {
+    const script = metavm.createScript(name, src);
+    return script;
+  } catch (e) {
+    console.error(`Syntax Error: ${e.message}`);
+    return null;
+  }
 };
 
 module.exports = { load, create };
