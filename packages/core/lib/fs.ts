@@ -27,20 +27,26 @@ const getDownloadDir = () => {
 };
 
 const appDataDir = getAppDataDir();
+const downloadDir = getDownloadDir();
+
+const BaseDirectory = {
+  AppData: appDataDir,
+  AppLog: join(appDataDir, 'logs'),
+  Temp: join(appDataDir, 'tmp'),
+  Download: downloadDir,
+};
 
 export const initDir = (dir: string) => {
   if (!nodeFs.existsSync(dir)) nodeFs.mkdirSync(dir, { recursive: true });
   return dir;
 };
 
-export class BaseDirectory {
-  static AppData = initDir(appDataDir);
-  static AppLog = initDir(join(appDataDir, 'logs'));
-  static Temp = initDir(join(appDataDir, 'tmp'));
-  static Download = join(homedir(), 'Downloads');
-}
+// Initialize directories
+initDir(BaseDirectory.AppData);
+initDir(BaseDirectory.AppLog);
+initDir(BaseDirectory.Temp);
 
-export const fs = {
+const fs = {
   appDir: cwd(),
   homeDir: homedir(),
   tempDir: BaseDirectory.Temp,

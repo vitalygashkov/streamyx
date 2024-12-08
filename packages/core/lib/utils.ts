@@ -71,7 +71,6 @@ export const isExecutable = 'pkg' in process && process.pkg !== undefined;
 
 export const parseUrlFromResource = (resource: string | URL | Request) =>
   resource instanceof Request ? new URL(resource.url) : typeof resource === 'string' ? new URL(resource) : resource;
-<<<<<<< HEAD
 
 export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
@@ -108,5 +107,3 @@ export const getCurrentTimeString = () => {
 export const getLogPrefix = (logLevel: string) => {
   return `${getCurrentTimeString().slice(2)} ${logLevel.padEnd(15, ' ')}:`;
 };
-=======
->>>>>>> 0010329 (refactor: migrate from ora to nanospinner, remove browser usage)

@@ -5,15 +5,113 @@ import { fs, initDir } from './fs';
 import { http } from './http';
 import { getSettings } from './settings';
 import { importCookies } from './cookies';
-<<<<<<< HEAD
 import { logger } from './log';
-=======
->>>>>>> 0010329 (refactor: migrate from ora to nanospinner, remove browser usage)
 
 const createStorePath = (name: string) => {
-  const dir = initDir(join(getSettings().servicesDir, name));
-  return join(dir, 'config.json');
+  // TODO: Make new store filename format
+  // const storePath = join(getSettings().servicesDir, `${name}.storage.json`);
+  // if (fs.exists(storePath)) return storePath;
+
+  // Old store support
+  const oldStoreDir = initDir(join(getSettings().servicesDir, name));
+  const oldStorePath = join(oldStoreDir, 'config.json');
+  const newStorePath = join(oldStoreDir, `${name}.storage.json`);
+  // Migrate from old store to new store
+  if (fs.exists(oldStorePath)) {
+    renameSync(oldStorePath, newStorePath);
+    unlinkSync(oldStorePath);
+  }
+  return newStorePath;
 };
+
+const exitQueue: (() => void)[] = [];
+
+const onExit = () => {
+  logger.debug('Exiting...');
+  for (const fn of exitQueue) fn();
+  exitQueue.length = 0;
+};
+
+process.on('SIGINT', () => {
+  onExit();
+  process.exit(0); // Ensure the app exits
+});
+
+process.on('SIGTERM', () => {
+  onExit();
+  process.exit(0);
+});
+
+// Catch uncaught exceptions
+process.on('uncaughtException', () => {
+  onExit();
+  process.exit(1);
+});
+
+// Optional: Catch exit event (not ideal for async operations)
+process.on('exit', () => onExit());
+
+class LocalStorage implements Storage {
+  items: Map<string, any>;
+  filePath: string;
+
+  constructor(filePath: string) {
+    this.items = new Map();
+    this.filePath = filePath;
+  }
+
+  async load() {
+    try {
+      const data = await readFile(this.filePath, { encoding: 'utf8' });
+      this.items = this.parse(data);
+      exitQueue.push(() => this.save());
+    } catch (e) {
+      this.items = new Map();
+    }
+    // Automatically load cookies from cookies.txt
+    // const cookies = await getCookiesFromTxt(this.filePath);
+    // if (!!cookies.length) this.setItem('cookies', cookies);
+  }
+
+  get length(): number {
+    return this.items.size;
+  }
+
+  clear() {
+    this.items.clear();
+  }
+
+  getItem(key: string): string | null {
+    return this.items.get(key) || null;
+  }
+
+  key(index: number) {
+    return Array.from(this.items.keys())[index];
+  }
+
+  removeItem(key: string) {
+    this.items.delete(key);
+  }
+
+  setItem(key: string, value: string) {
+    this.items.set(key, value);
+  }
+
+  parse(text: string) {
+    const items = JSON.parse(text);
+    const entries = Object.entries(items);
+    return new Map(entries);
+  }
+
+  stringify() {
+    const data = Object.fromEntries(this.items.entries());
+    return JSON.stringify(data, null, 2);
+  }
+
+  save() {
+    writeFileSync(this.filePath, this.stringify());
+  }
+}
 
 const getCookiesFromTxt = async (dir: string) => {
   const cookiesTxtPath = fs.join(dir, 'cookies.txt');

@@ -1,10 +1,6 @@
 {
   "name": "@streamyx/core",
-<<<<<<< HEAD
-  "version": "2.3.3",
-=======
-  "version": "2.1.2",
->>>>>>> a45c773 (chore: bump core version)
+  "version": "2.3.4",
   "author": "Vitaly Gashkov <vitalygashkov@vk.com>",
   "description": "Core modules for Streamyx",
   "license": "AGPL-3.0",
@@ -27,21 +23,10 @@
     "dev": "tsup ./lib/main.ts --format esm,cjs --watch --dts --clean"
   },
   "dependencies": {
-<<<<<<< HEAD
     "@streamyx/loader": "^0.0.4",
     "@streamyx/logger": "^0.0.2",
-=======
->>>>>>> a45c773 (chore: bump core version)
     "dasha": "^3.1.1",
     "got-scraping": "^3.2.15",
-<<<<<<< HEAD
-=======
-    "pino": "^9.5.0",
-    "pino-pretty": "^11.3.0",
-    "puppeteer-core": "^23.5.3",
-    "puppeteer-extra": "^3.3.6",
-    "puppeteer-extra-plugin-stealth": "^2.11.2",
->>>>>>> 0010329 (refactor: migrate from ora to nanospinner, remove browser usage)
     "undici": "^6.21.0"
   },
   "devDependencies": {
