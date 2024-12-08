@@ -6,11 +6,7 @@ import http2, {
 import { URL } from 'node:url';
 import { fetch, ProxyAgent, Agent, buildConnector } from 'undici';
 import { gotScraping } from 'got-scraping';
-<<<<<<< HEAD
 import { logger } from './log';
-=======
-import { logger } from './logger';
->>>>>>> 0010329 (refactor: migrate from ora to nanospinner, remove browser usage)
 import { randomizeCiphers } from './tls';
 import { browserCookiesToList, Cookie } from './cookies';
 import { parseUrlFromResource } from './utils';
