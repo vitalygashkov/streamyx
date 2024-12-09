@@ -15,12 +15,12 @@
   "homepage": "https://streamyx.ru",
   "scripts": {},
   "workspaces": [
+    "packages/logger",
     "packages/browser",
     "packages/core",
     "packages/dasha",
     "packages/extensions/extensions/*",
     "packages/loader",
-    "packages/logger",
     "packages/molnia",
     "apps/*"
   ],
