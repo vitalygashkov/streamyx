@@ -23,6 +23,8 @@ export type Options = {
   skipSubtitles?: boolean;
   skipMux?: boolean;
 
+  experimentalSelectTracks?: boolean;
+
   episodes?: Map<number, Set<number>>;
   retry?: number;
   connections?: number;
