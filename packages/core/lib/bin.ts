@@ -3,6 +3,7 @@ import { ChildProcessWithoutNullStreams, spawn } from 'node:child_process';
 import { chmodSync } from 'node:fs';
 import { delimiter } from 'node:path';
 import { stat } from 'node:fs/promises';
+import { download } from 'molnia';
 import { logger } from './log';
 import { fs } from './fs';
 import { getSettings } from './settings';
@@ -93,25 +94,6 @@ const getGitHubAssetUrl = ({ repo, version, asset }: GitHubUrlOptions) => {
   return `https://github.com/${repo}/releases/download/${version}/${asset}`;
 };
 
-export const download = async (url: string, outputPath: string) => {
-  // Curl args:
-  const args = [
-    '-L', // follow redirects
-    '-f', // fail if the request fails
-    // output destination:
-    '-o',
-    outputPath,
-    '--show-error', // show errors
-    '--silent', // but no progress bar
-    url,
-  ];
-  // Now fetch the binary and fail the script if that fails:
-  logger.debug(`Downloading ${url} to ${outputPath}`);
-  const process = spawn('curl', args, { stdio: 'inherit' });
-  const code = await new Promise<number | null>((resolve) => process.on('exit', resolve));
-  if (code != 0) throw new Error('Download of ' + url + ' failed: ' + code);
-};
-
 interface DownloadBinaryOptions extends Omit<GitHubUrlOptions, 'asset'> {
   id: string;
   assets: BinaryNamesByPlatform;
@@ -136,7 +118,15 @@ export const fetchGitHubAsset = async ({ id, assets, repo, version }: DownloadBi
   const output = fs.join(getSettings().binariesDir, name);
   downloads.state.set(id, 'downloading');
   const url = getGitHubAssetUrl({ repo, version, asset: name });
-  await download(url, output);
+  logger.debug(`Downloading ${url} to ${output}`);
+  await download(url, {
+    output,
+    onError: (e) => logger.error(e.message),
+    onProgress: (progress) => {
+      logger.debug(progress.toString());
+    },
+  });
+  logger.debug(`Downloaded: ${output}`);
   chmodSync(output, 0o755);
   downloads.paths.set(id, output);
   downloads.state.set(id, 'finished');
