@@ -1,8 +1,8 @@
 import { arch, platform } from 'node:process';
-import { ChildProcessWithoutNullStreams, spawn } from 'node:child_process';
+import { ChildProcessWithoutNullStreams } from 'node:child_process';
 import { chmodSync } from 'node:fs';
 import { delimiter } from 'node:path';
-import { stat } from 'node:fs/promises';
+import { readdir, stat } from 'node:fs/promises';
 import { download } from 'molnia';
 import { logger } from './log';
 import { fs } from './fs';
@@ -37,12 +37,14 @@ export const findPath = async (name: string) => {
   const { binariesDir } = getSettings();
   if (!fs.exists(binariesDir)) await fs.createDir(binariesDir, 0o755);
 
-  const files = await fs.readDir(binariesDir);
+  const files = await readdir(binariesDir, { withFileTypes: true, recursive: true });
   const localPath = fs.join(binariesDir, name + (platform === 'win32' ? '.exe' : ''));
   if (fs.exists(localPath)) return localPath;
 
-  const similarFileName = files.find((f) => f.includes(name));
-  const similarFilePath = similarFileName ? fs.join(binariesDir, similarFileName) : null;
+  const similarFile = files.find(
+    (f) => !f.isDirectory() && f.name.includes(name) && (platform === 'win32' ? f.name.endsWith('.exe') : true)
+  );
+  const similarFilePath = similarFile ? fs.join(similarFile.parentPath, similarFile.name) : null;
   if (similarFilePath && fs.exists(similarFilePath)) return similarFilePath;
 
   const globalPath = await findExecutable(name);
