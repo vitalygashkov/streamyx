@@ -29,7 +29,7 @@ jobs:
           cache: 'npm'
       - run: git config --global url."https://${{ secrets.CONTROL_REPO_TOKEN }}@github.com/".insteadOf ssh://git@github.com/
 
-      - run: npm ci
+      - run: npm install
         working-directory: ./
 
       - name: build-linux
