@@ -109,6 +109,7 @@ class LocalStorage implements Storage {
   }
 
   save() {
+    logger.debug(`Saving localStorage state to ${this.filePath}`);
     writeFileSync(this.filePath, this.stringify());
   }
 }
@@ -138,6 +139,9 @@ export const createStorage = async (name: string) => {
     }
     return obj;
   };
+
+  const localStorage = new LocalStorage(storagePath);
+  await localStorage.load();
 
   const storage: Record<string, any> = {
     async load() {
@@ -171,15 +175,13 @@ export const createStorage = async (name: string) => {
       return serializable(storage);
     },
     async save(items?: Record<string, any>) {
+      exitQueue.length = 0;
       clear(storage);
       const data = items || serializable(storage);
       for (const [key, value] of Object.entries(data)) storage[key] = value;
       await fs.writeJson(storagePath, data);
     },
   };
-
-  const localStorage = new LocalStorage(storagePath);
-  await localStorage.load();
 
   return { storage, localStorage };
 };
@@ -199,8 +201,9 @@ export const createStore = (name: string) => {
     return state as T;
   };
   const setState = async <T = Record<string, any>>(data?: T) => {
+    exitQueue.length = 0;
     Object.assign(state, data || {});
-    logger.debug(`Saving state...`);
+    logger.debug(`Saving state to ${storePath}`);
     logger.debug(data || state);
     await fs.writeJson(storePath, data || state);
   };
