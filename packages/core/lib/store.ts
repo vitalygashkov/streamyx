@@ -1,6 +1,6 @@
 import { join } from 'node:path';
-import { renameSync, unlinkSync, writeFileSync } from 'node:fs';
-import { readFile } from 'node:fs/promises';
+import { readFileSync, renameSync, unlinkSync, writeFileSync } from 'node:fs';
+import { readFile, writeFile } from 'node:fs/promises';
 import { fs, initDir } from './fs';
 import { http } from './http';
 import { getSettings } from './settings';
@@ -51,7 +51,7 @@ process.on('uncaughtException', () => {
 // Optional: Catch exit event (not ideal for async operations)
 process.on('exit', () => onExit());
 
-class LocalStorage implements Storage {
+export class LocalStorage implements Storage {
   items: Map<string, any>;
   filePath: string;
 
@@ -64,13 +64,23 @@ class LocalStorage implements Storage {
     try {
       const data = await readFile(this.filePath, { encoding: 'utf8' });
       this.items = this.parse(data);
-      exitQueue.push(() => this.save());
     } catch (e) {
       this.items = new Map();
     }
     // Automatically load cookies from cookies.txt
     // const cookies = await getCookiesFromTxt(this.filePath);
     // if (!!cookies.length) this.setItem('cookies', cookies);
+    return this;
+  }
+
+  loadSync() {
+    try {
+      const data = readFileSync(this.filePath, { encoding: 'utf8' });
+      this.items = this.parse(data);
+    } catch (e) {
+      this.items = new Map();
+    }
+    return this;
   }
 
   get length(): number {
@@ -108,9 +118,14 @@ class LocalStorage implements Storage {
     return JSON.stringify(data, null, 2);
   }
 
-  save() {
+  saveSync() {
     logger.debug(`Saving localStorage state to ${this.filePath}`);
     writeFileSync(this.filePath, this.stringify());
+  }
+
+  save() {
+    logger.debug(`Saving localStorage state to ${this.filePath}`);
+    return writeFile(this.filePath, this.stringify());
   }
 }
 
@@ -142,6 +157,7 @@ export const createStorage = async (name: string) => {
 
   const localStorage = new LocalStorage(storagePath);
   await localStorage.load();
+  exitQueue.push(() => localStorage.saveSync());
 
   const storage: Record<string, any> = {
     async load() {
