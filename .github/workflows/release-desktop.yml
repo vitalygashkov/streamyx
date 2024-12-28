@@ -1,21 +1,19 @@
 name: Release Desktop
 
-on: workflow_dispatch
-
-env:
-  APP_NAME: streamyx
+on:
+  workflow_dispatch:
 
 defaults:
   run:
     working-directory: apps/desktop
 
 jobs:
-  release:
-    runs-on: ${{ matrix.os }}
-
+  build:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [macos-latest, ubuntu-latest, windows-latest]
+
+    runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v4
@@ -29,44 +27,9 @@ jobs:
           cache: 'npm'
       - run: git config --global url."https://${{ secrets.CONTROL_REPO_TOKEN }}@github.com/".insteadOf ssh://git@github.com/
 
-      - run: npm install
-        working-directory: ./
+      - run: npm ci
 
-      - name: build-linux
-        if: matrix.os == 'ubuntu-latest'
-        run: npm run build:linux
-
-      - name: build-mac
-        if: matrix.os == 'macos-latest'
-        run: npm run build:mac
-
-      - name: build-win
-        if: matrix.os == 'windows-latest'
-        run: npm run build:win
-
-      - name: Get package name and version
-        run: |
-          test -n $(node -p -e "require('./package.json').version") &&
-          echo APP_VERSION=$(node -p -e "require('./package.json').version") >> $GITHUB_ENV || exit 1
-
-      - name: release
-        uses: softprops/action-gh-release@v2
-        with:
-          name: CLI v${{ env.APP_VERSION }}
-          tag_name: cli-v${{ env.APP_VERSION }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-          generate_release_notes: true
-          draft: true
-          files: |
-            dist/*.exe
-            dist/*.zip
-            dist/*.dmg
-            dist/*.AppImage
-            dist/*.snap
-            dist/*.deb
-            dist/*.rpm
-            dist/*.tar.gz
-            dist/*.yml
-            dist/*.blockmap
+      - name: Publish app
         env:
-          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run publish

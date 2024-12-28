@@ -1,5 +1,5 @@
 {
-  "name": "streamyx",
+  "name": "streamyx-monorepo",
   "private": true,
   "version": "0.0.0",
   "description": "Streamyx Client Applications",
@@ -22,7 +22,7 @@
     "packages/extensions/extensions/*",
     "packages/loader",
     "packages/molnia",
-    "apps/*"
+    "apps/cli"
   ],
   "devDependencies": {
     "@types/node": "^22.7.5",
