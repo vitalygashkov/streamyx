@@ -198,4 +198,5 @@ export type DrmConfig =
       template?: string;
       http2?: boolean;
     }
-  | { payload: any };
+  | { payload: any }
+  | { keys: { kid: string; key: string }[] };
