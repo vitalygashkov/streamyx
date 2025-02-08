@@ -36,6 +36,7 @@ const load = async (scriptPath, options = {}) => {
     context: metavm.createContext({
       ...COMMON_CONTEXT,
       ...options.context,
+      structuredClone,
       crypto,
     }),
     dirname: options.dirname,
