@@ -35,10 +35,10 @@ jobs:
         run: python3 -m pip install setuptools --break-system-packages
 
       - run: npm install
-        working-directory: ./
+        working-directory: ./apps/desktop
 
       - run: npm install
-        working-directory: ./apps/desktop
+        working-directory: ./
 
       - run: |
           test -n $(node -p -e "require('./package.json').version") &&
