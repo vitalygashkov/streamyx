@@ -40,9 +40,6 @@ jobs:
       - run: npm install
         working-directory: ./
 
-      - run: npm install
-        working-directory: ./apps/desktop
-
       - run: |
           test -n $(node -p -e "require('./package.json').version") &&
           echo APP_VERSION=$(node -p -e "require('./package.json').version") >> $GITHUB_ENV || exit 1
