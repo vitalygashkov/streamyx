@@ -11,7 +11,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [macos-latest, windows-latest, ubuntu-latest]
+        os: [macos-latest, macos-13, windows-latest, ubuntu-latest, ubuntu-24.04-arm]
 
     runs-on: ${{ matrix.os }}
 
@@ -22,7 +22,7 @@ jobs:
           submodules: recursive
 
       - name: Install Apple codesigning certificate
-        if: matrix.os == 'macos-latest'
+        if: matrix.os == 'macos-latest' || matrix.os == 'macos-13'
         env:
           BUILD_CERTIFICATE_BASE64: ${{ secrets.CSC_LINK }}
           P12_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
