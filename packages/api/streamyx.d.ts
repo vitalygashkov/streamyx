@@ -6,6 +6,7 @@ export * from './types/http';
 export * from './types/logger';
 export * from './types/question';
 export * from './types/common';
+export * from './types/options';
 export * from './types/extension';
 
 export function defineExtension(extension: Extension): Extension;
