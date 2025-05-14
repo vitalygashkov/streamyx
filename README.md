@@ -17,9 +17,7 @@ Streamyx makes it simple, fast and delightful to download videos, so you can wat
 
 English • [Pусский](https://github.com/vitalygashkov/streamyx/tree/main/README.ru.md)
 
-Streamyx has built-in support for [Crunchyroll](https://github.com/vitalygashkov/streamyx-extensions/tree/main/extensions/crunchyroll), [Weibo](https://github.com/vitalygashkov/streamyx-extensions/tree/main/extensions/weibo), [Soundcloud](https://github.com/vitalygashkov/streamyx-extensions/tree/main/extensions/soundcloud), [VK](https://github.com/vitalygashkov/streamyx-extensions/tree/main/extensions/vk), [RUTUBE](https://github.com/vitalygashkov/streamyx-extensions/tree/main/extensions/rutube) and more.
-
-Browse all open source extensions [here](https://github.com/vitalygashkov/streamyx-extensions).
+Streamyx has extensions for [Crunchyroll](https://gitlab.com/streamyx-extensions/crunchyroll), [RUTUBE](https://gitlab.com/streamyx-extensions/rutube) and many more.
 
 ## Install
 

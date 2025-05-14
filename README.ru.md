@@ -13,13 +13,11 @@
   <img alt="" src="https://img.shields.io/github/downloads/vitalygashkov/streamyx/total?style=flat&color=black">
 </p>
 
-Стримикс позволяет легко, быстро и с удовольствием скачивать видео для последующего оффлайн просмотра.
+Стримикс позволяет легко и быстро скачивать видео для последующего оффлайн просмотра.
 
 [English](https://github.com/vitalygashkov/streamyx/tree/main/README.md) • Pусский
 
-Стримикс имеет встроенную поддержку [Crunchyroll](https://github.com/vitalygashkov/streamyx-extensions/tree/main/extensions/crunchyroll), [Weibo](https://github.com/vitalygashkov/streamyx-extensions/tree/main/extensions/weibo), [Soundcloud](https://github.com/vitalygashkov/streamyx-extensions/tree/main/extensions/soundcloud), [VK](https://github.com/vitalygashkov/streamyx-extensions/tree/main/extensions/vk), [RUTUBE](https://github.com/vitalygashkov/streamyx-extensions/tree/main/extensions/rutube) и многих других сервисов.
-
-Посмотреть все расширения с открытым исходным кодом можно [здесь](https://github.com/vitalygashkov/streamyx-extensions).
+Стримикс имеет расширения для [Crunchyroll](https://gitlab.com/streamyx-extensions/crunchyroll), [RUTUBE](https://gitlab.com/streamyx-extensions/rutube) и многих других сервисов.
 
 ## Установка
 
