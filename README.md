@@ -17,7 +17,7 @@ Streamyx makes it simple, fast and delightful to download videos, so you can wat
 
 English • [Pусский](https://github.com/vitalygashkov/streamyx/tree/main/README.ru.md)
 
-Streamyx has extensions for [Crunchyroll](https://gitlab.com/streamyx-extensions/crunchyroll), [RUTUBE](https://gitlab.com/streamyx-extensions/rutube) and many more.
+You can create your own extension. Examples are available at [streamyx-labs/extensions](https://github.com/streamyx-labs/extensions).
 
 ## Install
 

@@ -17,7 +17,7 @@
 
 [English](https://github.com/vitalygashkov/streamyx/tree/main/README.md) • Pусский
 
-Стримикс имеет расширения для [Crunchyroll](https://gitlab.com/streamyx-extensions/crunchyroll), [RUTUBE](https://gitlab.com/streamyx-extensions/rutube) и многих других сервисов.
+Вы можете создать собственное расширение. Примеры доступны в [streamyx-labs/extensions](https://github.com/streamyx-labs/extensions).
 
 ## Установка
 
