@@ -5,9 +5,6 @@
 [submodule "packages/esor"]
 	path = packages/molnia
 	url = https://github.com/vitalygashkov/esor.git
-[submodule "src/app"]
-	path = apps/cli
-	url = https://github.com/vitalygashkov/streamyx-sources.git
 [submodule "apps/desktop"]
 	path = apps/desktop
 	url = https://github.com/vitalygashkov/streamyx-desktop.git
