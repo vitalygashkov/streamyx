@@ -45,6 +45,8 @@ azot upgrade
 
 ## Getting Started
 
+> Use `streamyx` command if you have v4.x.x or older version installed.
+
 ```shell
 azot <command> [...options]
 ```
