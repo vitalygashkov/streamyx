@@ -1,18 +1,17 @@
 {
-  "name": "streamyx-monorepo",
+  "name": "azot-monorepo",
   "private": true,
   "version": "0.0.0",
-  "description": "Streamyx Client Applications",
+  "description": "Azot Client Applications",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vitalygashkov/streamyx.git"
+    "url": "git+https://github.com/azot-labs/azot.git"
   },
   "author": "Vitaly Gashkov <vitalygashkov@vk.com>",
   "license": "AGPL-3.0",
   "bugs": {
-    "url": "https://github.com/vitalygashkov/streamyx/issues"
+    "url": "https://github.com/azot-labs/azot/issues"
   },
-  "homepage": "https://streamyx.ru",
   "scripts": {},
   "workspaces": [
     "packages/logger",
