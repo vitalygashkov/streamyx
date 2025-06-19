@@ -6,7 +6,7 @@
   <a aria-label="Дискорд" href="https://discord.gg/fHMgAgc7gU">
     <img alt="" src="https://img.shields.io/badge/Дискорд-сервер-black?style=flat&logo=Discord&logoColor=white">
   </a>
-  <a aria-label="Телеграм" href="https://t.me/streamyxnews">
+  <a aria-label="Телеграм" href="https://t.me/AzotApp">
     <img alt="" src="https://img.shields.io/badge/Телеграм-канал-black?style=flat&logo=Telegram&logoColor=white">
   </a>
   <img alt="" src="https://img.shields.io/github/downloads/azot-labs/azot/latest/total?style=flat&color=black">
