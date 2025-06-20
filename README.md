@@ -23,6 +23,8 @@ You can create your own extension. Examples are available at [azot-labs/extensio
 
 Azot supports Windows (x64), macOS (x64 & Apple Silicon) and Linux (x64).
 
+> Install scripts below are for CLI v4.x.x. Starting from v5.x.x CLI is included in the desktop app and can be installed from settings.
+
 #### Windows
 
 ```shell
